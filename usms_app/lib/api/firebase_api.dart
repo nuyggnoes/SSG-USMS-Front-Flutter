@@ -107,8 +107,4 @@ class FirebaseApi {
     initPushNotifications();
     initLocalNotifications();
   }
-
-  // void _requestNotificationPermissions() async {
-  //   final status =
-  // }
 }
