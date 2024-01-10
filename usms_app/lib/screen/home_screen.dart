@@ -38,7 +38,12 @@ class _HomeScreenState extends State<HomeScreen> {
   logoutAction() async {
     await storage.delete(key: 'auto_login');
     await storage.delete(key: 'login');
-    Navigator.popUntil(context, ModalRoute.withName('/'));
+    // Navigator.popUntil(context, ModalRoute.withName('/'));
+    _pagePopAction();
+  }
+
+  _pagePopAction() {
+    Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
   }
 
   @override

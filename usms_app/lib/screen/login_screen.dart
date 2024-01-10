@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'dart:convert';
 
@@ -60,7 +62,7 @@ class _LoginState extends State<Login> {
     );
     Dio dio = Dio(baseoptions);
 
-    dio.interceptors.add(CustomInterceptor(storage: storage));
+    // dio.interceptors.add(CustomInterceptor(storage: storage));
 
     var param = {
       'username': user.username,
@@ -69,8 +71,7 @@ class _LoginState extends State<Login> {
     try {
       response = await dio.post('/login', data: param);
       if (response.statusCode == 200) {
-        print(
-            '==============================response 200==============================');
+        print('====================response 200=====================');
         var val = jsonEncode(user.toJson());
         await storage.write(
           key: 'login',
@@ -88,11 +89,13 @@ class _LoginState extends State<Login> {
       } else {
         print('처리되지 않은 에러');
       }
-    } catch (e) {
-      print("서버 연결 Error: $e");
-      Future.microtask(() {
-        _showErrorDialog('서버에 연결할 수 없습니다. 나중에 다시 시도해주세요.');
-      });
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 400) {
+        print("[Error] : [$e]");
+        Future.microtask(() {
+          _showErrorDialog('아이디와 비밀번호가 일치하지 않습니다.');
+        });
+      }
     }
   }
 
