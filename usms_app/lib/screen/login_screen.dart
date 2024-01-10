@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
-// import 'package:get/get.dart';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:usms_app/interceptor/custom_interceptor.dart';
 
 import 'package:usms_app/models/user_model.dart';
 import 'package:usms_app/screen/home_screen.dart';
-// import 'package:usms_app/screen/register_screen.dart';
+import 'package:usms_app/screen/register_screen.dart';
 // import 'package:usms_app/screen/test_screen.dart';
 // import 'package:usms_app/screen/video_screen.dart';
 import 'package:usms_app/widget/my_checkbox.dart';
@@ -51,48 +51,34 @@ class _LoginState extends State<Login> {
   }
 
   loginAction(User user, bool autoLogin) async {
-    // try {
-    //   final response = await http.post(
-    //     Uri.parse('http://10.0.2.2:3003/login'), //http://10.0.2.2:3003/
-    //     headers: <String, String>{
-    //       'Content-Type': 'application/json; charset=utf-8',
-    //       HttpHeaders.authorizationHeader: 'Basic your_api_token_here',
-    //       //JWT
-    //     },
-    //     body: jsonEncode(user.toJson()),
-    //   );
-    //   print('response status code = ${response.statusCode}');
-    //   print('response data = ${response.body}');
-    // } catch (e) {
-    //   print("Failed to send post data:$e");
-    // }
     Response response;
     var baseoptions = BaseOptions(
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
+        'accessToken': 'fake_token',
       },
       baseUrl: "http://10.0.2.2:3003",
     );
     Dio dio = Dio(baseoptions);
+
+    dio.interceptors.add(CustomInterceptor(storage: storage));
+
     var param = {
       'id': user.id,
       'pwd': user.pwd,
     };
     try {
       response = await dio.post('/login', data: param);
-      print(response.statusCode);
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        print("===========response OK===========");
+      if (response.statusCode == 200) {
+        print(
+            '==============================response 200==============================');
         var val = jsonEncode(user.toJson());
-        print(val);
         if (autoLogin) {
-          print('자동로그인 체크');
           await storage.write(
             key: 'login',
             value: val,
           );
         }
-        print('접속 성공!');
         Navigator.pushNamed(context, HomeScreen.route);
       } else if (response.statusCode == 400) {
         print("아이디 또는 비밀번호가 일치하지 않습니다.");
@@ -100,8 +86,31 @@ class _LoginState extends State<Login> {
         print('처리되지 않은 에러');
       }
     } catch (e) {
-      print("Error: $e");
+      print("서버 연결 Error: $e");
+      Future.microtask(() {
+        _showErrorDialog('서버에 연결할 수 없습니다. 나중에 다시 시도해주세요.');
+      });
     }
+  }
+
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('오류'),
+          content: Text(message),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('확인'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -337,13 +346,13 @@ class _LoginState extends State<Login> {
                       ),
                       TextButton(
                         onPressed: () {
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //     builder: (context) => const RegisterScreen(),
-                          //     // fullscreenDialog: true, // true : bottom
-                          //   ),
-                          // );
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const RegisterScreen(),
+                              // fullscreenDialog: true, // true : bottom
+                            ),
+                          );
                         },
                         child: const Text(
                           '회원가입',
