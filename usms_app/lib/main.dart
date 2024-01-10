@@ -4,6 +4,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 // api
 import 'package:usms_app/api/firebase_api.dart';
@@ -13,6 +14,7 @@ import 'package:usms_app/screen/home_screen.dart';
 import 'package:usms_app/screen/login_screen.dart';
 import 'package:usms_app/screen/notification_screen.dart';
 import 'package:usms_app/screen/register_store_screen.dart';
+import 'package:usms_app/screen/set_security_level_screen.dart';
 
 // route
 final navigatorKey = GlobalKey<NavigatorState>();
@@ -41,7 +43,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
         textTheme: const TextTheme(
-          bodyMedium: TextStyle(fontSize: 40),
+          bodyMedium: TextStyle(fontSize: 16),
         ),
       ),
       navigatorKey: navigatorKey,
@@ -50,6 +52,7 @@ class MyApp extends StatelessWidget {
         NotificationScreen.route: (context) => const NotificationScreen(),
         HomeScreen.route: (context) => const HomeScreen(),
         RegisterStore.route: (context) => const RegisterStore(),
+        SecurityLevel.route: (context) => const SecurityLevel(),
       },
     );
   }

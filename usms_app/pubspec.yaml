@@ -71,6 +71,8 @@ dependencies:
 
   #flutter secure storage
   flutter_secure_storage: ^5.0.2
+
+  google_fonts: ^6.1.0
   
 
 dev_dependencies:

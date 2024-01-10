@@ -89,6 +89,12 @@ class _RegisterStoreState extends State<RegisterStore> {
         },
         child: Scaffold(
           appBar: AppBar(
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back_ios_new_rounded),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
             title: const Text('매장 등록'),
             elevation: 10,
           ),
@@ -111,6 +117,34 @@ class _RegisterStoreState extends State<RegisterStore> {
                             ),
                           ),
                           hintText: '업체명을 입력해주세요.',
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(12),
+                            ),
+                            borderSide: BorderSide(
+                              color: Colors.blueAccent,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.06,
+                    width: MediaQuery.of(context).size.width * 0.65,
+                    child: SizedBox(
+                      child: TextFormField(
+                        keyboardType: TextInputType.text,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(12),
+                            ),
+                          ),
+                          hintText: '사업자 등록 번호를 입력해주세요.',
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.all(
                               Radius.circular(12),
@@ -229,7 +263,7 @@ class _RegisterStoreState extends State<RegisterStore> {
                         ),
                         _fileInput(),
                         SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.3,
+                          height: MediaQuery.of(context).size.height * 0.1,
                         ),
                         SizedBox(
                           width: MediaQuery.of(context).size.width * 0.7,
