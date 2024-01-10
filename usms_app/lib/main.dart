@@ -12,6 +12,7 @@ import 'package:usms_app/api/firebase_api.dart';
 import 'package:usms_app/screen/home_screen.dart';
 import 'package:usms_app/screen/login_screen.dart';
 import 'package:usms_app/screen/notification_screen.dart';
+import 'package:usms_app/screen/register_store_screen.dart';
 
 // route
 final navigatorKey = GlobalKey<NavigatorState>();
@@ -47,7 +48,8 @@ class MyApp extends StatelessWidget {
       home: const Login(),
       routes: {
         NotificationScreen.route: (context) => const NotificationScreen(),
-        HomeScreen.route: (context) => HomeScreen(),
+        HomeScreen.route: (context) => const HomeScreen(),
+        RegisterStore.route: (context) => const RegisterStore(),
       },
     );
   }

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:usms_app/models/user_model.dart';
+import 'package:usms_app/screen/register_store_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -125,8 +126,40 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
         ),
-        body: const Center(
-          child: Text('메인화면입니다.'),
+        body: Center(
+          child: GestureDetector(
+            onTap: () {
+              Navigator.pushNamed(context, RegisterStore.route);
+            },
+            child: Container(
+              width: MediaQuery.of(context).size.width * 0.7,
+              height: MediaQuery.of(context).size.height * 0.2,
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Colors.black87,
+                ),
+                color: Colors.grey[200],
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: const Center(
+                  child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.add_outlined,
+                    size: 80,
+                    color: Colors.grey,
+                  ),
+                  Text(
+                    '매장을 추가해주세요',
+                    style: TextStyle(
+                      fontSize: 16,
+                    ),
+                  ),
+                ],
+              )),
+            ),
+          ),
         ),
       ),
     );

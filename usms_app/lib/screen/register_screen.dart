@@ -51,6 +51,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
   //   });
   // }
 
+  bool helper = false;
+  final FocusNode _focusNode = FocusNode();
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -297,6 +300,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               SizedBox(
                                 height: 70,
                                 child: TextFormField(
+                                  focusNode: _focusNode,
                                   keyboardType: TextInputType.text,
                                   decoration: const InputDecoration(
                                     hintText: '아이디',
@@ -304,6 +308,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   ),
                                   validator: (String? value) {
                                     if (value?.isEmpty ?? true) {
+                                      setState(() {
+                                        helper = true;
+                                      });
+                                      _focusNode.requestFocus();
+                                      print(helper);
                                       return '아이디를 입력해주세요!';
                                     }
                                     return null;
@@ -355,8 +364,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     hintText: '비밀번호 확인',
                                     helperText: '',
                                   ),
+                                  focusNode: FocusNode(
+                                    onKeyEvent: (node, event) {
+                                      print('hi');
+                                      return KeyEventResult.ignored;
+                                    },
+                                  ),
                                 ),
                               ),
+                              helper
+                                  ? const SizedBox(
+                                      child: Text('data'),
+                                    )
+                                  : Container(),
                               SizedBox(
                                 height:
                                     MediaQuery.of(context).size.height * 0.2,
