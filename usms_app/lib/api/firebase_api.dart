@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import 'package:usms_app/main.dart';
 import 'package:usms_app/screen/notification_screen.dart';
@@ -99,6 +100,7 @@ class FirebaseApi {
   }
 
   Future<void> initNotifications() async {
+    _checkNotificationPermission();
     await _firebaseMessaging.requestPermission();
     final fcmToken = await _firebaseMessaging.getToken();
     // 여기서 받은 토큰을 백엔드 서버로 전송
@@ -106,5 +108,12 @@ class FirebaseApi {
     print('My Token : $fcmToken');
     initPushNotifications();
     initLocalNotifications();
+  }
+
+  _checkNotificationPermission() async {
+    PermissionStatus status = await Permission.notification.status;
+    if (status.isDenied) {
+      await Permission.notification.request();
+    }
   }
 }
