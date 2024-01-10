@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:usms_app/models/user_model.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -13,25 +14,27 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final storage = const FlutterSecureStorage();
-  // ignore: prefer_typing_uninitialized_variables
   late String name = '';
+  //로그인 한 userDTO
+  dynamic user;
+
   @override
   void initState() {
     super.initState();
-    // getUsernameInStorage();
+    getUserInfoFromStorage();
   }
 
-  Future<void> getUsernameInStorage() async {
+  Future<void> getUserInfoFromStorage() async {
     final jsonString = await storage.read(key: 'login');
     final Map<String, dynamic> storageInfo = json.decode(jsonString!);
+    print('[STORAGE INFORMATION] $storageInfo');
     setState(() {
       name = storageInfo['id'];
     });
-    print(name);
   }
 
   logoutAction() async {
-    await storage.delete(key: 'login');
+    await storage.delete(key: 'auto_login');
     Navigator.popUntil(context, ModalRoute.withName('/'));
   }
 
@@ -56,15 +59,34 @@ class _HomeScreenState extends State<HomeScreen> {
             padding: EdgeInsets.zero,
             children: [
               UserAccountsDrawerHeader(
-                currentAccountPicture: const CircleAvatar(
-                  backgroundImage: AssetImage('assets/unknownuser.png'),
-                  backgroundColor: Colors.white,
+                decoration: const BoxDecoration(
+                  color: Colors.blueAccent,
                 ),
-                accountName: Text(name),
-                accountEmail: Text('$name@example.com'),
-                onDetailsPressed: () {
-                  print('detail clicked');
+                accountName: Text(
+                  '$name님',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 40,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                accountEmail: Text(
+                  '$name@example.com',
+                  style: const TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+                // onDetailsPressed: () {
+                //   print('detail clicked');
+                // },
+              ),
+              IconButton(
+                onPressed: () {
+                  print('SecurityLevel!');
                 },
+                icon: const Icon(
+                  Icons.security,
+                ),
               ),
               ListTile(
                 leading: const Icon(
@@ -87,25 +109,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               ListTile(
                 leading: const Icon(
-                  Icons.settings,
-                  color: Colors.grey,
-                ),
-                title: const Text(
-                  'setting',
-                  style: TextStyle(
-                    color: Colors.grey,
-                  ),
-                ),
-                onTap: () {
-                  print('Setting is Clicked');
-                },
-                trailing: const Icon(
-                  Icons.add,
-                  color: Colors.grey,
-                ),
-              ),
-              ListTile(
-                leading: const Icon(
                   Icons.logout_rounded,
                   color: Colors.grey,
                 ),
@@ -118,7 +121,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 onTap: () {
                   logoutAction();
                 },
-              )
+              ),
             ],
           ),
         ),

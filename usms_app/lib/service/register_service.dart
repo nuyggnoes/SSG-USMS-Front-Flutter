@@ -6,7 +6,7 @@ class AutorizationUser {
 
   AutorizationUser({required this.code, required this.value});
 
-  requestAuthenticationCode() async {
+  Future<String> requestAuthenticationCode() async {
     Response response;
     var baseoptions = BaseOptions(
       baseUrl: 'http://10.0.2.2:3003',
@@ -26,5 +26,6 @@ class AutorizationUser {
         print(response.data);
       }
     } catch (e) {}
+    return 'hi';
   }
 }

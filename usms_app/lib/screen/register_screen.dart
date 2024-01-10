@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:usms_app/service/register_service.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -13,6 +14,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   bool isVerificationVisible = false;
   bool isPasswordValid = false;
+
+  final _phoneTextEditController = TextEditingController();
   final _passwordTextEditController = TextEditingController();
   final _checkPasswordTextEditController = TextEditingController();
 
@@ -123,6 +126,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   children: [
                                     Expanded(
                                       child: TextFormField(
+                                        controller: _phoneTextEditController,
                                         maxLength: 11,
                                         keyboardType: TextInputType.number,
                                         decoration: const InputDecoration(
@@ -162,6 +166,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                             print('인증번호받기');
                                             isVerificationVisible = true;
                                           });
+                                          var authoInfo = AutorizationUser(
+                                            code: 1,
+                                            value:
+                                                _phoneTextEditController.text,
+                                          );
+                                          var res = authoInfo
+                                              .requestAuthenticationCode();
                                         }
                                       },
                                       style: ButtonStyle(

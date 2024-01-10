@@ -9,8 +9,6 @@ import 'package:usms_app/interceptor/custom_interceptor.dart';
 import 'package:usms_app/models/user_model.dart';
 import 'package:usms_app/screen/home_screen.dart';
 import 'package:usms_app/screen/register_screen.dart';
-// import 'package:usms_app/screen/test_screen.dart';
-// import 'package:usms_app/screen/video_screen.dart';
 import 'package:usms_app/widget/my_checkbox.dart';
 
 class Login extends StatefulWidget {
@@ -40,7 +38,7 @@ class _LoginState extends State<Login> {
   _asyncMethod() async {
     // read 함수로 key값에 맞는 정보를 불러오고 데이터타입은 String 타입
     // 데이터가 없을때는 null을 반환
-    userInfo = await storage.read(key: 'login');
+    userInfo = await storage.read(key: 'auto_login');
 
     if (userInfo != null) {
       print("자동로그인!");
@@ -64,8 +62,8 @@ class _LoginState extends State<Login> {
     dio.interceptors.add(CustomInterceptor(storage: storage));
 
     var param = {
-      'id': user.id,
-      'pwd': user.pwd,
+      'username': user.username,
+      'password': user.password,
     };
     try {
       response = await dio.post('/login', data: param);
@@ -73,9 +71,13 @@ class _LoginState extends State<Login> {
         print(
             '==============================response 200==============================');
         var val = jsonEncode(user.toJson());
+        await storage.write(
+          key: 'login',
+          value: val,
+        );
         if (autoLogin) {
           await storage.write(
-            key: 'login',
+            key: 'auto_login',
             value: val,
           );
         }
@@ -244,8 +246,9 @@ class _LoginState extends State<Login> {
                                       false) {
                                     loginAction(
                                       User(
-                                        id: _idTextEditController.text,
-                                        pwd: _passwordTextEditController.text,
+                                        username: _idTextEditController.text,
+                                        password:
+                                            _passwordTextEditController.text,
                                       ),
                                       _AutoLoginChecked,
                                     );
