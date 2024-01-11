@@ -2,9 +2,11 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:usms_app/models/user_model.dart';
+
 import 'package:usms_app/screen/register_store_screen.dart';
+import 'package:usms_app/screen/secondary_password_screen.dart';
 import 'package:usms_app/screen/set_security_level_screen.dart';
+import 'package:usms_app/screen/store_detail_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -38,7 +40,6 @@ class _HomeScreenState extends State<HomeScreen> {
   logoutAction() async {
     await storage.delete(key: 'auto_login');
     await storage.delete(key: 'login');
-    // Navigator.popUntil(context, ModalRoute.withName('/'));
     _pagePopAction();
   }
 
@@ -100,26 +101,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 //   print('detail clicked');
                 // },
               ),
-              // SizedBox(
-              //   height: 100,
-              //   child: Column(
-              //     mainAxisAlignment: MainAxisAlignment.center,
-              //     children: [
-              //       Icon(
-              //         Icons.gpp_bad_outlined,
-              //         color: Colors.red[400],
-              //         size: 50,
-              //       ),
-              //       const Text(
-              //         '현재 보안레벨은 0레벨입니다.',
-              //         style: TextStyle(
-              //           color: Colors.grey,
-              //           fontSize: 16,
-              //         ),
-              //       ),
-              //     ],
-              //   ),
-              // ),
               ListTile(
                 leading: const Icon(
                   Icons.policy_outlined,
@@ -172,6 +153,36 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 onTap: () {
                   logoutAction();
+                },
+              ),
+              ListTile(
+                leading: const Icon(
+                  Icons.science_outlined,
+                  color: Colors.grey,
+                ),
+                title: const Text(
+                  '매장 상세 페이지',
+                  style: TextStyle(
+                    color: Colors.grey,
+                  ),
+                ),
+                onTap: () {
+                  Navigator.pushNamed(context, StoreDetail.route);
+                },
+              ),
+              ListTile(
+                leading: const Icon(
+                  Icons.science_outlined,
+                  color: Colors.grey,
+                ),
+                title: const Text(
+                  '2차 비밀번호',
+                  style: TextStyle(
+                    color: Colors.grey,
+                  ),
+                ),
+                onTap: () {
+                  Navigator.pushNamed(context, SecondaryPasswordScreen.route);
                 },
               ),
             ],

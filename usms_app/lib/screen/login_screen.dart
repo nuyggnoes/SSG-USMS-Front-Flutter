@@ -6,7 +6,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:usms_app/interceptor/custom_interceptor.dart';
+// import 'package:usms_app/interceptor/custom_interceptor.dart';
 
 import 'package:usms_app/models/user_model.dart';
 import 'package:usms_app/screen/home_screen.dart';
@@ -84,10 +84,6 @@ class _LoginState extends State<Login> {
           );
         }
         Navigator.pushNamed(context, HomeScreen.route);
-      } else if (response.statusCode == 400) {
-        print("아이디 또는 비밀번호가 일치하지 않습니다.");
-      } else {
-        print('처리되지 않은 에러');
       }
     } on DioException catch (e) {
       if (e.response?.statusCode == 400) {
@@ -96,6 +92,16 @@ class _LoginState extends State<Login> {
           _showErrorDialog('아이디와 비밀번호가 일치하지 않습니다.');
         });
       }
+    } on SocketException catch (e) {
+      print("[Server ERR] : $e");
+      Future.microtask(() {
+        _showErrorDialog('서버에 연결할 수 없습니다. 나중에 다시 시도해주세요.');
+      });
+    } catch (e) {
+      print("[Error] : [$e]");
+      Future.microtask(() {
+        _showErrorDialog('알 수 없는 오류가 발생했습니다.');
+      });
     }
   }
 

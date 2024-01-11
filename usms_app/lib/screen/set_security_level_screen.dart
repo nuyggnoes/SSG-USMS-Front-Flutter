@@ -12,6 +12,7 @@ class _SecurityLevelState extends State<SecurityLevel> {
   Color security0 = Colors.grey;
   Color security1 = Colors.grey;
   Color security2 = Colors.grey;
+  Color descriptColor = Colors.grey;
 
   bool _onTab = false;
   int selectedIconIndex = -1;
@@ -64,6 +65,7 @@ class _SecurityLevelState extends State<SecurityLevel> {
                           security0 = Colors.red.shade400;
                           security1 = Colors.grey;
                           security2 = Colors.grey;
+                          descriptColor = security0;
                           print(selectedIconIndex);
                         });
                       },
@@ -89,6 +91,7 @@ class _SecurityLevelState extends State<SecurityLevel> {
                           security0 = Colors.grey;
                           security1 = Colors.amber;
                           security2 = Colors.grey;
+                          descriptColor = security1;
                           print(selectedIconIndex);
                         });
                       },
@@ -114,6 +117,7 @@ class _SecurityLevelState extends State<SecurityLevel> {
                           security0 = Colors.grey;
                           security1 = Colors.grey;
                           security2 = Colors.green;
+                          descriptColor = security2;
                           print(selectedIconIndex);
                           print(securityMap[selectedIconIndex]);
                         });
@@ -140,10 +144,10 @@ class _SecurityLevelState extends State<SecurityLevel> {
                 _onTab
                     ? Container(
                         decoration: BoxDecoration(
-                          color: Colors.grey.shade300,
+                          color: descriptColor.withOpacity(0.5),
                           borderRadius: BorderRadius.circular(14),
                           border: Border.all(
-                            color: Colors.grey,
+                            color: descriptColor,
                           ),
                         ),
                         width: 350,

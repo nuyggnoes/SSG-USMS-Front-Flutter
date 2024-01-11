@@ -1,6 +1,5 @@
 // package
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -14,7 +13,9 @@ import 'package:usms_app/screen/home_screen.dart';
 import 'package:usms_app/screen/login_screen.dart';
 import 'package:usms_app/screen/notification_screen.dart';
 import 'package:usms_app/screen/register_store_screen.dart';
+import 'package:usms_app/screen/secondary_password_screen.dart';
 import 'package:usms_app/screen/set_security_level_screen.dart';
+import 'package:usms_app/screen/store_detail_screen.dart';
 
 // route
 final navigatorKey = GlobalKey<NavigatorState>();
@@ -53,6 +54,9 @@ class MyApp extends StatelessWidget {
         HomeScreen.route: (context) => const HomeScreen(),
         RegisterStore.route: (context) => const RegisterStore(),
         SecurityLevel.route: (context) => const SecurityLevel(),
+        StoreDetail.route: (context) => const StoreDetail(),
+        SecondaryPasswordScreen.route: (context) =>
+            const SecondaryPasswordScreen(),
       },
     );
   }
