@@ -10,8 +10,10 @@ import 'package:usms_app/api/firebase_api.dart';
 
 // screen
 import 'package:usms_app/screen/home_screen.dart';
+import 'package:usms_app/screen/identity_verification_screen.dart';
 import 'package:usms_app/screen/login_screen.dart';
 import 'package:usms_app/screen/notification_screen.dart';
+import 'package:usms_app/screen/register_screen.dart';
 import 'package:usms_app/screen/register_store_screen.dart';
 import 'package:usms_app/screen/secondary_password_screen.dart';
 import 'package:usms_app/screen/set_security_level_screen.dart';
@@ -52,11 +54,13 @@ class MyApp extends StatelessWidget {
       routes: {
         NotificationScreen.route: (context) => const NotificationScreen(),
         HomeScreen.route: (context) => const HomeScreen(),
+        RegisterScreen.route: (context) => const RegisterScreen(),
         RegisterStore.route: (context) => const RegisterStore(),
         SecurityLevel.route: (context) => const SecurityLevel(),
         StoreDetail.route: (context) => const StoreDetail(),
         SecondaryPasswordScreen.route: (context) =>
             const SecondaryPasswordScreen(),
+        VerificationScreen.route: (context) => const VerificationScreen(),
       },
     );
   }

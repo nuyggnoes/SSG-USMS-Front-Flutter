@@ -10,6 +10,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'package:usms_app/models/user_model.dart';
 import 'package:usms_app/screen/home_screen.dart';
+import 'package:usms_app/screen/identity_verification_screen.dart';
 import 'package:usms_app/screen/register_screen.dart';
 
 import 'package:usms_app/widget/my_checkbox.dart';
@@ -317,13 +318,8 @@ class _LoginState extends State<Login> {
                       TextButton(
                         onPressed: () {
                           print('아이디 찾기');
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //     builder: (context) => const CalendarScreen(),
-                          //     // fullscreenDialog: true, // true : bottom
-                          //   ),
-                          // );
+                          Navigator.pushNamed(
+                              context, VerificationScreen.route);
                         },
                         child: const Text(
                           '아이디 찾기 ',
@@ -359,13 +355,15 @@ class _LoginState extends State<Login> {
                       ),
                       TextButton(
                         onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const RegisterScreen(),
-                              // fullscreenDialog: true, // true : bottom
-                            ),
-                          );
+                          // Navigator.push(
+                          //   context,
+                          //   MaterialPageRoute(
+                          //     builder: (context) => const RegisterScreen(),
+                          //     // fullscreenDialog: true, // true : bottom
+                          //   ),
+                          // );
+                          Navigator.pushNamed(
+                              context, VerificationScreen.route);
                         },
                         child: const Text(
                           '회원가입',

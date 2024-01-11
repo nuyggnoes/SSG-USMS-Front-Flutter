@@ -3,6 +3,7 @@ import 'package:usms_app/service/register_service.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
+  static const route = 'register-user';
 
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
@@ -40,16 +41,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     _checkPasswordTextEditController.dispose();
     super.dispose();
   }
-
-  // void _validatePassword(value) {
-  //   setState(() {
-  //     if (_passwordTextEditController.text == value) {
-  //       isPasswordValid = true;
-  //     } else {
-  //       isPasswordValid = false;
-  //     }
-  //   });
-  // }
 
   bool helper = false;
   final FocusNode _focusNode = FocusNode();
@@ -105,7 +96,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               SizedBox(
                                 height: 70,
                                 child: TextFormField(
-                                  autofocus: true,
                                   keyboardType: TextInputType.text,
                                   decoration: const InputDecoration(
                                     hintText: '이름',

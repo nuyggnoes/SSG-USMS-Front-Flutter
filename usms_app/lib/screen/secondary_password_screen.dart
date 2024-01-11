@@ -21,66 +21,20 @@ class _SecondaryPasswordScreenState extends State<SecondaryPasswordScreen> {
     false,
     false,
   ];
-
   final keys = [
     ['1', '2', '3'],
     ['4', '5', '6'],
     ['7', '8', '9'],
     [' ', '0', const Icon(Icons.keyboard_backspace)],
   ];
+
   @override
   void initState() {
     super.initState();
     secondaryPassword = '';
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('2차 비밀번호 입력'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Expanded(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  for (int i = 0; i < _filledCircles.length; i++)
-                    _buildPasswordCircle(_filledCircles[i]),
-                ],
-              ),
-            ),
-            ...renderKeyboard(),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed:
-                    secondaryPassword.length == 6 ? onConfirmPressed : null,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: secondaryPassword.length == 6
-                      ? Colors.blueAccent
-                      : Colors.grey,
-                ),
-                child: const Text(
-                  '확인',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w900,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  onConfirmPressed() {
+  onConfirmClicked() {
     print('ConfirmButton Clicked');
     print('2차 비밀번호는 $secondaryPassword');
   }
@@ -111,7 +65,6 @@ class _SecondaryPasswordScreenState extends State<SecondaryPasswordScreen> {
                   onTap: (y) {
                     y is Widget ? onBackspacePress(y) : onNumberPress(y);
                     _updateFilledCircles(secondaryPassword.length);
-                    print('password = $secondaryPassword');
                   },
                   value: y,
                 ),
@@ -140,5 +93,51 @@ class _SecondaryPasswordScreenState extends State<SecondaryPasswordScreen> {
         _filledCircles[i] = i < length;
       }
     });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('2차 비밀번호 입력'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  for (int i = 0; i < _filledCircles.length; i++)
+                    _buildPasswordCircle(_filledCircles[i]),
+                ],
+              ),
+            ),
+            ...renderKeyboard(),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed:
+                    secondaryPassword.length == 6 ? onConfirmClicked : null,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: secondaryPassword.length == 6
+                      ? Colors.blueAccent
+                      : Colors.grey,
+                ),
+                child: const Text(
+                  '확인',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
