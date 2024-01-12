@@ -1,16 +1,11 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'dart:convert';
-
-import 'package:dio/dio.dart';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:dio/dio.dart';
+import 'dart:io';
 
-import 'package:usms_app/models/user_model.dart';
 import 'package:usms_app/screen/home_screen.dart';
 import 'package:usms_app/screen/identity_verification_screen.dart';
-import 'package:usms_app/screen/register_screen.dart';
 
 import 'package:usms_app/widget/my_checkbox.dart';
 
@@ -51,7 +46,11 @@ class _LoginState extends State<Login> {
     }
   }
 
-  loginAction(User user, bool autoLogin) async {
+  loginAction({
+    required String username,
+    required String password,
+    required bool autoLogin,
+  }) async {
     Response response;
     var baseoptions = BaseOptions(
       headers: {
@@ -65,22 +64,22 @@ class _LoginState extends State<Login> {
     // dio.interceptors.add(CustomInterceptor(storage: storage));
 
     var param = {
-      'username': user.username,
-      'password': user.password,
+      'username': username,
+      'password': password,
     };
     try {
       response = await dio.post('/login', data: param);
       if (response.statusCode == 200) {
         print('====================response 200=====================');
-        var val = jsonEncode(user.toJson());
+        // var val = jsonEncode(user.toJson());
         await storage.write(
-          key: 'login',
-          value: val,
+          key: 'cookie',
+          value: username,
         );
         if (autoLogin) {
           await storage.write(
             key: 'auto_login',
-            value: val,
+            value: username,
           );
         }
         Navigator.pushNamed(context, HomeScreen.route);
@@ -207,9 +206,7 @@ class _LoginState extends State<Login> {
                             SizedBox(
                               height: 70,
                               child: TextFormField(
-                                controller: _passwordTextEditController,
-                                onChanged: (text) {},
-                                obscureText: true,
+                                controller: _idTextEditController,
                                 keyboardType: TextInputType.text,
                                 decoration: InputDecoration(
                                   border: OutlineInputBorder(
@@ -233,7 +230,6 @@ class _LoginState extends State<Login> {
                               height: 70,
                               child: TextFormField(
                                 controller: _passwordTextEditController,
-                                onChanged: (text) {},
                                 obscureText: true,
                                 keyboardType: TextInputType.text,
                                 decoration: InputDecoration(
@@ -261,12 +257,10 @@ class _LoginState extends State<Login> {
                                   if (_formKey.currentState?.validate() ??
                                       false) {
                                     loginAction(
-                                      User(
-                                        username: _idTextEditController.text,
-                                        password:
-                                            _passwordTextEditController.text,
-                                      ),
-                                      _AutoLoginChecked,
+                                      username: _idTextEditController.text,
+                                      password:
+                                          _passwordTextEditController.text,
+                                      autoLogin: _AutoLoginChecked,
                                     );
                                   }
                                 },

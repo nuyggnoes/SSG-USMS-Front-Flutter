@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:usms_app/widget/register_text_field.dart';
+import 'package:usms_app/models/user_model.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({
@@ -16,12 +16,14 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  final _nameFormKey = GlobalKey<FormState>();
-  final _idFormKey = GlobalKey<FormState>();
+  late User user;
+  final _formKey = GlobalKey<FormState>();
 
   bool isVerificationVisible = false;
   bool isPasswordValid = false;
 
+  final _nameController = TextEditingController();
+  final _usernameController = TextEditingController();
   final TextEditingController _phoneTextEditController =
       TextEditingController();
   final TextEditingController _emailTextEditController =
@@ -53,13 +55,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   void dispose() {
+    _nameController.dispose();
+    _usernameController.dispose();
+    _phoneTextEditController.dispose();
+    _emailTextEditController.dispose();
     _passwordTextEditController.dispose();
     _checkPasswordTextEditController.dispose();
     super.dispose();
   }
 
+  requestRegister(User user) async {
+    print(user.toJson());
+  }
+
   bool helper = false;
-  final FocusNode _focusNode = FocusNode();
+  String? _passwordMatchError;
 
   @override
   Widget build(BuildContext context) {
@@ -100,101 +110,192 @@ class _RegisterScreenState extends State<RegisterScreen> {
               child: Center(
                 child: SizedBox(
                   width: 400,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const RegisterTextField(
-                        labelText: '이름',
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      SizedBox(
-                        height: 70,
-                        child: TextFormField(
-                          enabled: widget.flag ? false : true,
-                          controller: _phoneTextEditController,
-                          maxLength: 11,
-                          keyboardType: TextInputType.number,
-                          decoration: const InputDecoration(
-                            counterText: '',
-                            labelText: '휴대전화 번호',
-                            helperText: '',
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          height: 70,
+                          child: TextFormField(
+                            controller: _nameController,
+                            maxLength: 21,
+                            keyboardType: TextInputType.text,
+                            decoration: const InputDecoration(
+                              counterText: '',
+                              labelText: '이름',
+                              helperText: '',
+                            ),
+                            validator: (String? value) {
+                              if (value?.isEmpty ?? true) {
+                                return '이름을 입력해주세요!';
+                              }
+                              return null;
+                            },
                           ),
-                          validator: (String? value) {
-                            if (value?.isEmpty ?? true) {
-                              return '전화번호를 입력해주세요!';
-                            }
-                            return null;
-                          },
                         ),
-                      ),
-                      const SizedBox(
-                        height: 50,
-                      ),
-                      const RegisterTextField(
-                        labelText: '아이디',
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      SizedBox(
-                        height: 70,
-                        child: TextFormField(
-                          enabled: widget.flag ? true : false,
-                          controller: _emailTextEditController,
-                          maxLength: 21,
-                          keyboardType: TextInputType.emailAddress,
-                          decoration: const InputDecoration(
-                            counterText: '',
-                            labelText: '이메일',
-                            helperText: '',
-                          ),
-                          validator: (String? value) {
-                            if (value?.isEmpty ?? true) {
-                              return '이메일을 입력해주세요!';
-                            }
-                            return null;
-                          },
+                        const SizedBox(
+                          height: 10,
                         ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      const RegisterTextField(
-                        labelText: '비밀번호',
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      const RegisterTextField(
-                        labelText: '비밀번호 확인',
-                      ),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.2,
-                      ),
-                      SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            if (_idFormKey.currentState?.validate() ?? false) {
-                              print('회원가입버튼');
-                            }
-                            // FlutterLocalNotification.showNotification();
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blueAccent,
+                        SizedBox(
+                          height: 70,
+                          child: TextFormField(
+                            enabled: widget.flag ? false : true,
+                            controller: _phoneTextEditController,
+                            maxLength: 11,
+                            keyboardType: TextInputType.number,
+                            decoration: const InputDecoration(
+                              counterText: '',
+                              labelText: '휴대전화 번호',
+                              helperText: '',
+                            ),
+                            validator: (String? value) {
+                              if (value?.isEmpty ?? true) {
+                                return '전화번호를 입력해주세요!';
+                              }
+                              return null;
+                            },
                           ),
-                          child: const Text(
-                            '회원가입',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w900,
+                        ),
+                        const SizedBox(
+                          height: 50,
+                        ),
+                        SizedBox(
+                          height: 70,
+                          child: TextFormField(
+                            controller: _usernameController,
+                            maxLength: 20,
+                            keyboardType: TextInputType.text,
+                            decoration: const InputDecoration(
+                              counterText: '',
+                              labelText: '아이디',
+                              helperText: '',
+                            ),
+                            validator: (String? value) {
+                              if (value?.isEmpty ?? true) {
+                                return '아이디를 입력해주세요!';
+                              }
+                              if (value!.length < 5) {
+                                return '아이디는 최소 5자 이상 최대 20자 이하입니다.';
+                              }
+                              return null;
+                            },
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        SizedBox(
+                          height: 70,
+                          child: TextFormField(
+                            enabled: widget.flag ? true : false,
+                            controller: _emailTextEditController,
+                            maxLength: 21,
+                            keyboardType: TextInputType.emailAddress,
+                            decoration: const InputDecoration(
+                              counterText: '',
+                              labelText: '이메일',
+                              helperText: '',
+                            ),
+                            validator: (String? value) {
+                              if (value?.isEmpty ?? true) {
+                                return '이메일을 입력해주세요!';
+                              }
+                              return null;
+                            },
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        SizedBox(
+                          height: 70,
+                          child: TextFormField(
+                            controller: _passwordTextEditController,
+                            maxLength: 21,
+                            obscureText: true,
+                            keyboardType: TextInputType.text,
+                            decoration: const InputDecoration(
+                              counterText: '',
+                              labelText: '비밀번호',
+                              helperText: '',
+                            ),
+                            validator: (String? value) {
+                              if (value?.isEmpty ?? true) {
+                                return '비밀번호를 입력해주세요!';
+                              }
+                              return null;
+                            },
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        SizedBox(
+                          height: 70,
+                          child: TextFormField(
+                            controller: _checkPasswordTextEditController,
+                            onChanged: (value) {
+                              if (value != _passwordTextEditController.text) {
+                                setState(() {
+                                  _passwordMatchError = '비밀번호가 일치하지 않습니다!';
+                                });
+                              } else {
+                                setState(() {
+                                  _passwordMatchError = null;
+                                });
+                              }
+                            },
+                            maxLength: 21,
+                            obscureText: true,
+                            keyboardType: TextInputType.text,
+                            decoration: const InputDecoration(
+                              counterText: '',
+                              labelText: '비밀번호 확인',
+                              helperText: '',
+                            ),
+                            validator: (String? value) {
+                              if (value?.isEmpty ?? true) {
+                                return '비밀번호를 한 번 더 입력해주세요!';
+                              }
+                              return _passwordMatchError;
+                            },
+                          ),
+                        ),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.2,
+                        ),
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              if (_formKey.currentState?.validate() ?? false) {
+                                print('회원가입버튼');
+                                user = User(
+                                  username: _usernameController.text,
+                                  password: _passwordTextEditController.text,
+                                  email: _emailTextEditController.text,
+                                  person_name: _nameController.text,
+                                  phone_number: _phoneTextEditController.text,
+                                );
+                                requestRegister(user);
+                              }
+                              // FlutterLocalNotification.showNotification();
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.blueAccent,
+                            ),
+                            child: const Text(
+                              '회원가입',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w900,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),

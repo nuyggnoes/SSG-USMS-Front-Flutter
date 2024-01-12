@@ -1,15 +1,18 @@
 class User {
   final String username;
   final String password;
-  String person_name = '';
-  String email = '';
-  String phone_number = '';
+  final String person_name;
+  final String email;
+  final String phone_number;
   int security_state = 0;
   bool is_lock = false;
 
   User({
     required this.username,
     required this.password,
+    required this.person_name,
+    required this.email,
+    required this.phone_number,
   });
 
   User.fromJson(Map<String, dynamic> json)
