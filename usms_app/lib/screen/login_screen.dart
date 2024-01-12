@@ -214,7 +214,7 @@ class _LoginState extends State<Login> {
                                   helperText: "",
                                 ),
                                 validator: (String? value) {
-                                  if (value?.isEmpty ?? true) {
+                                  if (value?.isEmpty == true) {
                                     return '아이디를 입력해주세요!';
                                   }
                                   return null;

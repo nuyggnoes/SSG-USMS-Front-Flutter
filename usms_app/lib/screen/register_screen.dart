@@ -2,8 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:usms_app/service/register_service.dart';
 
 class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({super.key});
+  const RegisterScreen({
+    super.key,
+    required this.data,
+    required this.flag,
+  });
   static const route = 'register-user';
+  final String data;
+  final bool flag;
 
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
@@ -16,7 +22,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
   bool isVerificationVisible = false;
   bool isPasswordValid = false;
 
-  final _phoneTextEditController = TextEditingController();
+  final TextEditingController _phoneTextEditController =
+      TextEditingController();
+  final TextEditingController _emailTextEditController =
+      TextEditingController();
   final _passwordTextEditController = TextEditingController();
   final _checkPasswordTextEditController = TextEditingController();
 
@@ -33,6 +42,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return value!.isNotEmpty && !regex.hasMatch(value)
         ? '이메일 형식에 맞지 않습니다.'
         : null;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _phoneTextEditController.text = widget.flag ? widget.data : '';
+    _emailTextEditController.text = widget.flag ? '' : widget.data;
   }
 
   @override
@@ -119,6 +135,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   children: [
                                     Expanded(
                                       child: TextFormField(
+                                        enabled: widget.flag ? false : true,
                                         controller: _phoneTextEditController,
                                         maxLength: 11,
                                         keyboardType: TextInputType.number,
@@ -312,6 +329,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               SizedBox(
                                 height: 70,
                                 child: TextFormField(
+                                  enabled: widget.flag ? true : false,
+                                  controller: _emailTextEditController,
                                   keyboardType: TextInputType.text,
                                   decoration: const InputDecoration(
                                     hintText: '이메일',
