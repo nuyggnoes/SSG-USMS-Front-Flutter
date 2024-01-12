@@ -6,7 +6,6 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-// import 'package:usms_app/interceptor/custom_interceptor.dart';
 
 import 'package:usms_app/models/user_model.dart';
 import 'package:usms_app/screen/home_screen.dart';
@@ -137,75 +136,81 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).unfocus();
-      },
-      child: Scaffold(
-        body: Stack(
-          children: [
-            Column(
-              children: [
-                Flexible(
-                  flex: 1,
-                  child: Container(
-                    decoration: const BoxDecoration(
-                      color: Colors.blueAccent,
-                    ),
-                  ),
-                ),
-                Flexible(
-                  flex: 1,
-                  child: Container(
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                    ),
-                  ),
-                )
-              ],
+    return MaterialApp(
+      theme: ThemeData(
+        primaryColor: Colors.grey,
+        inputDecorationTheme: InputDecorationTheme(
+          labelStyle:
+              TextStyle(color: Colors.black.withOpacity(0.8), fontSize: 15),
+          border: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(12),
             ),
-            Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+          ),
+          focusedBorder: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(12),
+            ),
+            borderSide: BorderSide(
+              color: Colors.blueAccent,
+            ),
+          ),
+        ),
+      ),
+      home: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: Scaffold(
+          body: Stack(
+            children: [
+              Column(
                 children: [
-                  Container(
-                    padding: const EdgeInsets.only(
-                      top: 90,
-                      left: 30,
-                      right: 30,
+                  Flexible(
+                    flex: 1,
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        color: Colors.blueAccent,
+                      ),
                     ),
-                    width: 300,
-                    height: 391,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[100],
-                      borderRadius: BorderRadius.circular(30),
+                  ),
+                  Flexible(
+                    flex: 1,
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                      ),
                     ),
-                    child: Form(
-                      key: _formKey,
-                      child: Theme(
-                        data: ThemeData(
-                          primaryColor: Colors.grey,
-                          inputDecorationTheme: InputDecorationTheme(
-                            labelStyle: TextStyle(
-                                color: Colors.black.withOpacity(0.8),
-                                fontSize: 15),
-                            focusedBorder: const OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(15)),
-                              borderSide: BorderSide(
-                                color: Colors.blueAccent,
-                              ),
-                            ),
-                          ),
-                        ),
+                  )
+                ],
+              ),
+              Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.only(
+                        top: 90,
+                        left: 30,
+                        right: 30,
+                      ),
+                      width: 300,
+                      height: 391,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[100],
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      child: Form(
+                        key: _formKey,
                         child: Column(
                           children: [
                             SizedBox(
                               height: 70,
                               child: TextFormField(
-                                controller: _idTextEditController,
+                                controller: _passwordTextEditController,
                                 onChanged: (text) {},
-                                keyboardType: TextInputType.emailAddress,
+                                obscureText: true,
+                                keyboardType: TextInputType.text,
                                 decoration: InputDecoration(
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(15),
@@ -214,7 +219,7 @@ class _LoginState extends State<Login> {
                                   helperText: "",
                                 ),
                                 validator: (String? value) {
-                                  if (value?.isEmpty == true) {
+                                  if (value?.isEmpty ?? true) {
                                     return '아이디를 입력해주세요!';
                                   }
                                   return null;
@@ -311,74 +316,74 @@ class _LoginState extends State<Login> {
                         ),
                       ),
                     ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      TextButton(
-                        onPressed: () {
-                          print('아이디 찾기');
-                          Navigator.pushNamed(
-                              context, VerificationScreen.route);
-                        },
-                        child: const Text(
-                          '아이디 찾기 ',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 12,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        TextButton(
+                          onPressed: () {
+                            print('아이디 찾기');
+                            Navigator.pushNamed(
+                                context, VerificationScreen.route);
+                          },
+                          child: const Text(
+                            '아이디 찾기 ',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 12,
+                            ),
                           ),
                         ),
-                      ),
-                      const SizedBox(
-                        child: Text('|'),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          print('비밀번호 찾기');
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //     builder: (context) => const VideoScreen(),
-                          //   ),
-                          // );
-                        },
-                        child: const Text(
-                          '비밀번호 찾기',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 12,
+                        const SizedBox(
+                          child: Text('|'),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            print('비밀번호 찾기');
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //     builder: (context) => const VideoScreen(),
+                            //   ),
+                            // );
+                          },
+                          child: const Text(
+                            '비밀번호 찾기',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 12,
+                            ),
                           ),
                         ),
-                      ),
-                      const SizedBox(
-                        child: Text('|'),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //     builder: (context) => const RegisterScreen(),
-                          //     // fullscreenDialog: true, // true : bottom
-                          //   ),
-                          // );
-                          Navigator.pushNamed(
-                              context, VerificationScreen.route);
-                        },
-                        child: const Text(
-                          '회원가입',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 12,
+                        const SizedBox(
+                          child: Text('|'),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //     builder: (context) => const RegisterScreen(),
+                            //     // fullscreenDialog: true, // true : bottom
+                            //   ),
+                            // );
+                            Navigator.pushNamed(
+                                context, VerificationScreen.route);
+                          },
+                          child: const Text(
+                            '회원가입',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 12,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                ],
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

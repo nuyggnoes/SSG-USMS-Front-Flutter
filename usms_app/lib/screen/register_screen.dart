@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:usms_app/service/register_service.dart';
+import 'package:usms_app/widget/register_text_field.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({
@@ -64,6 +64,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(
+        primaryColor: Colors.grey,
+        inputDecorationTheme: InputDecorationTheme(
+          labelStyle:
+              TextStyle(color: Colors.black.withOpacity(0.8), fontSize: 15),
+          border: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(12),
+            ),
+          ),
+          focusedBorder: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(12),
+            ),
+            borderSide: BorderSide(
+              color: Colors.blueAccent,
+            ),
+          ),
+        ),
+      ),
       home: GestureDetector(
         onTap: () {
           FocusScope.of(context).unfocus();
@@ -78,346 +98,104 @@ class _RegisterScreenState extends State<RegisterScreen> {
               padding:
                   const EdgeInsets.symmetric(vertical: 100, horizontal: 25),
               child: Center(
-                child: Column(
-                  children: [
-                    Form(
-                      key: _nameFormKey,
-                      child: Theme(
-                        data: ThemeData(
-                          primaryColor: Colors.grey,
-                          inputDecorationTheme: InputDecorationTheme(
-                            labelStyle: TextStyle(
-                                color: Colors.black.withOpacity(0.8),
-                                fontSize: 15),
-                            border: const OutlineInputBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(12),
-                              ),
-                            ),
-                            focusedBorder: const OutlineInputBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(12),
-                              ),
-                              borderSide: BorderSide(
-                                color: Colors.blueAccent,
-                              ),
-                            ),
+                child: SizedBox(
+                  width: 400,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const RegisterTextField(
+                        labelText: '이름',
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      SizedBox(
+                        height: 70,
+                        child: TextFormField(
+                          enabled: widget.flag ? false : true,
+                          controller: _phoneTextEditController,
+                          maxLength: 11,
+                          keyboardType: TextInputType.number,
+                          decoration: const InputDecoration(
+                            counterText: '',
+                            labelText: '휴대전화 번호',
+                            helperText: '',
                           ),
+                          validator: (String? value) {
+                            if (value?.isEmpty ?? true) {
+                              return '전화번호를 입력해주세요!';
+                            }
+                            return null;
+                          },
                         ),
-                        child: SizedBox(
-                          width: 400,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                height: 70,
-                                child: TextFormField(
-                                  keyboardType: TextInputType.text,
-                                  decoration: const InputDecoration(
-                                    hintText: '이름',
-                                    helperText: '',
-                                  ),
-                                  validator: (String? value) {
-                                    if (value?.isEmpty ?? true) {
-                                      return '이름을 입력해주세요!';
-                                    }
-                                    return null;
-                                  },
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              SizedBox(
-                                height: 70,
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Expanded(
-                                      child: TextFormField(
-                                        enabled: widget.flag ? false : true,
-                                        controller: _phoneTextEditController,
-                                        maxLength: 11,
-                                        keyboardType: TextInputType.number,
-                                        decoration: const InputDecoration(
-                                          counterText: '',
-                                          border: OutlineInputBorder(
-                                            borderRadius: BorderRadius.only(
-                                              topLeft: Radius.circular(12),
-                                              bottomLeft: Radius.circular(12),
-                                            ),
-                                          ),
-                                          labelText: '휴대전화 번호',
-                                          helperText: '',
-                                          focusedBorder: OutlineInputBorder(
-                                            borderRadius: BorderRadius.only(
-                                              topLeft: Radius.circular(12),
-                                              bottomLeft: Radius.circular(12),
-                                            ),
-                                            borderSide: BorderSide(
-                                              color: Colors.blueAccent,
-                                            ),
-                                          ),
-                                        ),
-                                        validator: (String? value) {
-                                          if (value?.isEmpty ?? true) {
-                                            return '전화번호를 입력해주세요!';
-                                          }
-                                          return null;
-                                        },
-                                      ),
-                                    ),
-                                    ElevatedButton(
-                                      onPressed: () {
-                                        if (_nameFormKey.currentState
-                                                ?.validate() ??
-                                            false) {
-                                          setState(() {
-                                            print('인증번호받기');
-                                            isVerificationVisible = true;
-                                          });
-                                          var authoInfo = AutorizationUser(
-                                            code: 1,
-                                            value:
-                                                _phoneTextEditController.text,
-                                          );
-                                          var res = authoInfo
-                                              .requestAuthenticationCode();
-                                        }
-                                      },
-                                      style: ButtonStyle(
-                                        shape: MaterialStateProperty.all(
-                                          const RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.zero,
-                                          ),
-                                        ),
-                                      ),
-                                      child: Text(
-                                        '인증번호 받기',
-                                        style: TextStyle(
-                                          color: Colors.black.withOpacity(0.8),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              isVerificationVisible
-                                  ? SizedBox(
-                                      height: 45,
-                                      child: Row(
-                                        children: [
-                                          Expanded(
-                                            child: TextFormField(
-                                              keyboardType: TextInputType.text,
-                                              decoration: const InputDecoration(
-                                                border: OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.only(
-                                                    topLeft:
-                                                        Radius.circular(12),
-                                                    bottomLeft:
-                                                        Radius.circular(12),
-                                                  ),
-                                                ),
-                                                hintText: '인증번호 입력',
-                                                focusedBorder:
-                                                    OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.only(
-                                                    topLeft:
-                                                        Radius.circular(12),
-                                                    bottomLeft:
-                                                        Radius.circular(12),
-                                                  ),
-                                                  borderSide: BorderSide(
-                                                    color: Colors.blueAccent,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          ElevatedButton(
-                                            onPressed: () {
-                                              print('인증버튼');
-                                              // setState(() {
-                                              //   isVerificationVisible = true;
-                                              // });
-                                            },
-                                            style: ButtonStyle(
-                                              shape: MaterialStateProperty.all(
-                                                const RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.only(
-                                                    bottomRight:
-                                                        Radius.circular(12),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            child: Text(
-                                              '인증',
-                                              style: TextStyle(
-                                                color: Colors.black
-                                                    .withOpacity(0.8),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    )
-                                  : Container(),
-                              const SizedBox(
-                                height: 50,
-                              ),
-                              //아이디 이메일 비밀번호 Form
-                            ],
+                      ),
+                      const SizedBox(
+                        height: 50,
+                      ),
+                      const RegisterTextField(
+                        labelText: '아이디',
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      SizedBox(
+                        height: 70,
+                        child: TextFormField(
+                          enabled: widget.flag ? true : false,
+                          controller: _emailTextEditController,
+                          maxLength: 21,
+                          keyboardType: TextInputType.emailAddress,
+                          decoration: const InputDecoration(
+                            counterText: '',
+                            labelText: '이메일',
+                            helperText: '',
+                          ),
+                          validator: (String? value) {
+                            if (value?.isEmpty ?? true) {
+                              return '이메일을 입력해주세요!';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      const RegisterTextField(
+                        labelText: '비밀번호',
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      const RegisterTextField(
+                        labelText: '비밀번호 확인',
+                      ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.2,
+                      ),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            if (_idFormKey.currentState?.validate() ?? false) {
+                              print('회원가입버튼');
+                            }
+                            // FlutterLocalNotification.showNotification();
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blueAccent,
+                          ),
+                          child: const Text(
+                            '회원가입',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w900,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    Form(
-                      key: _idFormKey,
-                      child: Theme(
-                        data: ThemeData(
-                          primaryColor: Colors.grey,
-                          inputDecorationTheme: InputDecorationTheme(
-                            labelStyle: TextStyle(
-                                color: Colors.black.withOpacity(0.8),
-                                fontSize: 15),
-                            border: const OutlineInputBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(12),
-                              ),
-                            ),
-                            focusedBorder: const OutlineInputBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(12),
-                              ),
-                              borderSide: BorderSide(
-                                color: Colors.blueAccent,
-                              ),
-                            ),
-                          ),
-                        ),
-                        child: SizedBox(
-                          width: 400,
-                          child: Column(
-                            children: [
-                              SizedBox(
-                                height: 70,
-                                child: TextFormField(
-                                  focusNode: _focusNode,
-                                  keyboardType: TextInputType.text,
-                                  decoration: const InputDecoration(
-                                    hintText: '아이디',
-                                    helperText: '',
-                                  ),
-                                  validator: (String? value) {
-                                    if (value?.isEmpty ?? true) {
-                                      setState(() {
-                                        helper = true;
-                                      });
-                                      _focusNode.requestFocus();
-                                      print(helper);
-                                      return '아이디를 입력해주세요!';
-                                    }
-                                    return null;
-                                  },
-                                ),
-                              ),
-                              SizedBox(
-                                height: 70,
-                                child: TextFormField(
-                                  enabled: widget.flag ? true : false,
-                                  controller: _emailTextEditController,
-                                  keyboardType: TextInputType.text,
-                                  decoration: const InputDecoration(
-                                    hintText: '이메일',
-                                    helperText: '',
-                                  ),
-                                  // validator: (String? value) {
-                                  //   if (value?.isEmpty ?? true) {
-                                  //     return '이메일을 입력해주세요!';
-                                  //   }
-                                  //   return null;
-                                  // },
-                                  validator: validateEmail,
-                                ),
-                              ),
-                              SizedBox(
-                                height: 70,
-                                child: TextFormField(
-                                  controller: _passwordTextEditController,
-                                  obscureText: true,
-                                  keyboardType: TextInputType.text,
-                                  decoration: const InputDecoration(
-                                    hintText: '비밀번호',
-                                    helperText: '',
-                                  ),
-                                  validator: (String? value) {
-                                    if (value?.isEmpty ?? true) {
-                                      return '비밀번호를 입력해주세요!';
-                                    }
-                                    return null;
-                                  },
-                                ),
-                              ),
-                              SizedBox(
-                                height: 70,
-                                child: TextFormField(
-                                  controller: _checkPasswordTextEditController,
-                                  obscureText: true,
-                                  keyboardType: TextInputType.text,
-                                  decoration: const InputDecoration(
-                                    hintText: '비밀번호 확인',
-                                    helperText: '',
-                                  ),
-                                  focusNode: FocusNode(
-                                    onKeyEvent: (node, event) {
-                                      print('hi');
-                                      return KeyEventResult.ignored;
-                                    },
-                                  ),
-                                ),
-                              ),
-                              helper
-                                  ? const SizedBox(
-                                      child: Text('data'),
-                                    )
-                                  : Container(),
-                              SizedBox(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.2,
-                              ),
-                              SizedBox(
-                                width: double.infinity,
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    if (_idFormKey.currentState?.validate() ??
-                                        false) {
-                                      print('회원가입버튼');
-                                    }
-                                    // FlutterLocalNotification.showNotification();
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.blueAccent,
-                                  ),
-                                  child: const Text(
-                                    '회원가입',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w900,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),

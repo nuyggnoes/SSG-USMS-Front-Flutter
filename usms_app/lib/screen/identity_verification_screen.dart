@@ -262,6 +262,7 @@ class _VerificationScreenState extends State<VerificationScreen>
   void _showDialog(String title, String message, int code) {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(title),
