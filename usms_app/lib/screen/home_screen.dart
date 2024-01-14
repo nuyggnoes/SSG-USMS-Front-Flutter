@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -18,7 +19,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final storage = const FlutterSecureStorage();
-  late String name = '';
+  late String? name = '';
   //로그인 한 userDTO
   dynamic user;
 
@@ -29,12 +30,36 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> getUserInfoFromStorage() async {
-    final jsonString = await storage.read(key: 'login');
-    final Map<String, dynamic> storageInfo = json.decode(jsonString!);
-    print('[STORAGE INFORMATION] $storageInfo');
-    setState(() {
-      name = storageInfo['username'];
-    });
+    final username = await storage.read(key: 'cookie');
+    Response response;
+    var baseoptions = BaseOptions(
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+      },
+      baseUrl: "http://10.0.2.2:3003",
+    );
+    Dio dio = Dio(baseoptions);
+
+    var param = {
+      'username': username,
+    };
+    print(param);
+    try {
+      response = await dio.get('/login', data: param);
+      if (response.statusCode == 200) {
+        print('====================response 200=====================');
+        print('[RES BODY] : ${response.data}');
+
+        // await storage.write(key: 'userInfo', value: userModel);
+      }
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 400) {
+        print("[ERROR] : [$e]");
+        // 400 에러의 body
+        print('[ERR Body] : ${e.response?.data}');
+      }
+    }
+    name = username;
   }
 
   logoutAction() async {

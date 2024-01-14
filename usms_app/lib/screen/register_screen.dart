@@ -1,5 +1,13 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:usms_app/models/user_model.dart';
+
+import 'package:usms_app/screen/home_screen.dart';
+
+import 'package:usms_app/widget/show_dialog.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({
@@ -30,6 +38,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
       TextEditingController();
   final _passwordTextEditController = TextEditingController();
   final _checkPasswordTextEditController = TextEditingController();
+
+  final storage = const FlutterSecureStorage();
 
   String? validateEmail(String? value) {
     const pattern = r"(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'"
@@ -64,8 +74,55 @@ class _RegisterScreenState extends State<RegisterScreen> {
     super.dispose();
   }
 
+  _pagePopAction() {
+    Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+  }
+
   requestRegister(User user) async {
     print(user.toJson());
+    Response response;
+    var jwtToken = await storage.read(key: 'Authorization');
+    var baseoptions = BaseOptions(
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+        'Authorization': 'Bearer $jwtToken',
+      },
+      baseUrl: "http://10.0.2.2:3003",
+    );
+    Dio dio = Dio(baseoptions);
+    // try {
+    //   response = await dio.post('/api/identification', data: user.toJson());
+
+    //   if (response.statusCode == 200) {
+    //     // 회원가입 성공시
+    //     // 1. 로그인 화면으로
+    //     _pagePopAction();
+    //     // 2. 메인화면으로
+    //   }
+    // } on DioException catch (e) {
+    //   if (e.response?.statusCode == 400) {
+    //     print("[ERROR] : [$e]");
+    //     // 400 에러의 body
+    //     print('[ERR Body] : ${e.response?.data}');
+
+    //     var errorCode = e.response?.data['code'];
+    //     // _showDialog('인증번호 발송 실패', e.response!.data['message'], 0);
+    //     if (mounted) {
+    //       CustomDialog.showPopDialog(
+    //           context, '회원가입 실패', e.response!.data['message'], null);
+    //     }
+    //     return false;
+    //   } else if (e.response?.statusCode == null) {
+    //     print('여기다!');
+    //     if (mounted) {
+    //       CustomDialog.showPopDialog(
+    //           context, '서버 오류', '서버에 문제가 발생했습니다. 나중에 다시 시도해 주세요.', null);
+    //     }
+    //   }
+    // } on SocketException catch (e) {
+    //   print('[ERR] : ${e.message}');
+    // }
+    _pagePopAction();
   }
 
   bool helper = false;

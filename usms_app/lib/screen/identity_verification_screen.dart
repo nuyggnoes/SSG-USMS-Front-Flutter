@@ -6,6 +6,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 //screen
 import 'package:usms_app/screen/register_screen.dart';
+import 'package:usms_app/widget/show_dialog.dart';
 
 class VerificationScreen extends StatefulWidget {
   const VerificationScreen({super.key});
@@ -176,10 +177,11 @@ class _VerificationScreenState extends State<VerificationScreen>
     //   if (response.statusCode == 200) {
     //     print('====================response 200=====================');
     //     // header에 있는 임시 key값 추출 후 인증번호를 보낼 때 header에 포함시킴
-    //     var authenticationKey = response.headers["x-authenticate-key"];
+    //     Map<String, List<String>> headers = response.headers.map;
+    //     String authenticationKey = headers['x-authentication-key']?.first ?? '';
     //     await storage.write(
     //         key: 'x-authentication-key', value: authenticationKey.toString());
-    //     _showDialog('', response.data['message']); // 인증 번호 발송 성공 dialog
+    //     _showDialog('', response.data['message'], 0); // 인증 번호 발송 성공 dialog
     //     return true;
     //   }
     // } on DioException catch (e) {
@@ -194,7 +196,7 @@ class _VerificationScreenState extends State<VerificationScreen>
     //       // 코드 번호 상관없이 Body의 message를 dialog에 띄우는거면 한 줄로 처리해도 되지 않을까
     //       case 605:
     //         // 존재하지 않는 요청 code인 경우
-    //         _showDialog('인증번호 발송 실패', e.response!.data['message']);
+    //         _showDialog('인증번호 발송 실패', e.response!.data['message'], 0);
     //         break;
     //       case 606:
     //         // 요청 code에 부적절한 value 양식일 경우
@@ -210,7 +212,10 @@ class _VerificationScreenState extends State<VerificationScreen>
     // } on SocketException catch (e) {
     //   print("[ERROR] : [$e]");
     // }
-    _showDialog('', '인증 번호 발송 성공', 0); // 나중에 삭제
+    // _showDialog('', '인증 번호 발송 성공', 0); // 나중에 삭제
+    if (mounted) {
+      CustomDialog.showPopDialog(context, '', '인증 번호 발송 성공', null);
+    }
     return true; // 나중에 false로 수정
   }
 
@@ -230,33 +235,26 @@ class _VerificationScreenState extends State<VerificationScreen>
     var param = {
       'identificaitonCode': code,
     };
-    // try {
-    //   response = await dio.get('/api/identification', data: param);
-    //   if (response.statusCode == 200) {
-    //     print('====================response 200=====================');
-    //     var jwtToken = response.headers["Authorization"];
-    //     await storage.write(
-    //         key: 'Authorization', value: jwtToken.toString()); // 수정 예정
-    //     _showDialog('', response.data['message'], 1); // 인증 성공 dialog
-    //   }
-    // } on DioException catch (e) {
-    //   if (e.response?.statusCode == 400) {
-    //     print("[ERROR] : [$e]");
-    //     // 400 에러의 body
-    //     print('[ERR Body] : ${e.response?.data}');
-    //     _showDialog('', e.response?.data['message'], 0);
-    //   }
-    // } on SocketException catch (e) {
-    //   print("[ERROR] : [$e]");
-    // }
+    try {
+      response = await dio.get('/api/identification', data: param);
+      if (response.statusCode == 200) {
+        print('====================response 200=====================');
+        String jwtToken = response.headers['Authorization']?.first ?? '';
+        await storage.write(key: 'Authorization', value: jwtToken);
+        _showDialog('', response.data['message'], 1); // 인증 성공 dialog
+      }
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 400) {
+        print("[ERROR] : [$e]");
+        // 400 에러의 body
+        print('[ERR Body] : ${e.response?.data}');
+        _showDialog('', e.response?.data['message'], 0);
+      }
+    } on SocketException catch (e) {
+      print("[ERROR] : [$e]");
+    }
     _showDialog('', '인증 성공', 1); // 나중에 삭제
   }
-
-  // 200 : ok
-  // 605 : 존재하지 않는 본인 인증 방식입니다. (code가 0(email) 또는 1(phone)이 아닌 경우)
-  // 606 : 선택한 본인 인증 방식에 부적절한 양식입니다. (요청 code에 대해 부적잘한 value 양식인 경우)
-  // 607 : 존재하지 않는 값(메일 또는 전화번호)입니다. (value 가 DB에 저장되지 않은 경우)
-  // 701 : 알림 전송 중 예외가 발생했습니다. 다시 시도해 주세요. (인증 번호 발송 중 예외가 발생한 경우 / BAD GATEWAY)
 
   void _showDialog(String title, String message, int code) {
     showDialog(
