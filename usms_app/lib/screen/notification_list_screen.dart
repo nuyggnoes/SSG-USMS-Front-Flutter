@@ -1,6 +1,9 @@
 import 'package:date_field/date_field.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:usms_app/models/word_model.dart';
+import 'package:usms_app/service/word_json.dart';
+import 'package:usms_app/widget/word_widget.dart';
 
 class NotificationListScreen extends StatefulWidget {
   static const route = 'notification-list-screen';
@@ -13,6 +16,7 @@ class NotificationListScreen extends StatefulWidget {
 class _NotificationListScreenState extends State<NotificationListScreen>
     with TickerProviderStateMixin {
   late final TabController _tabController;
+  final Future<List<WordModel>> words = WordJson.getWords();
 
   DateTime? _startDate;
   DateTime? _endDate;
@@ -109,7 +113,7 @@ class _NotificationListScreenState extends State<NotificationListScreen>
                         BorderSide(color: Colors.grey),
                       ),
                       fixedSize: MaterialStateProperty.all(
-                        const Size(80, 60), // 높이와 너비를 조절할 수 있습니다.
+                        const Size(80, 60),
                       ),
                       shape: MaterialStateProperty.all(
                         const RoundedRectangleBorder(
@@ -132,8 +136,43 @@ class _NotificationListScreenState extends State<NotificationListScreen>
               child: TabBarView(
                 controller: _tabController,
                 children: <Widget>[
+                  FutureBuilder(
+                    future: words,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return Column(
+                          children: [
+                            Expanded(
+                              child: (ListView.separated(
+                                shrinkWrap: true,
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 10, horizontal: 60),
+                                itemCount: snapshot.data!.length,
+                                itemBuilder: (context, index) {
+                                  var word = snapshot.data![index];
+                                  return Word(
+                                    eng: word.eng,
+                                    kor: word.kor,
+                                    id: word.id,
+                                    day: word.day,
+                                    isDone: word.isDone,
+                                  );
+                                },
+                                separatorBuilder: (context, index) =>
+                                    const SizedBox(
+                                  height: 20,
+                                ),
+                              )),
+                            ),
+                          ],
+                        );
+                      }
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    },
+                  ),
                   makeListView(20),
-                  makeListView(30),
                 ],
               ),
             ),
