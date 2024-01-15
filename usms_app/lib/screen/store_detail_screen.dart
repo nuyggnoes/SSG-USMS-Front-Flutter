@@ -1,5 +1,10 @@
 import 'package:chewie/chewie.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:usms_app/screen/cctv_detail_screen.dart';
+import 'package:usms_app/screen/notification_list_screen.dart';
+import 'package:usms_app/screen/statistic_screen.dart';
 import 'package:video_player/video_player.dart';
 
 class StoreDetail extends StatefulWidget {
@@ -11,40 +16,40 @@ class StoreDetail extends StatefulWidget {
 }
 
 class _StoreDetailState extends State<StoreDetail> {
-  late VideoPlayerController _videoController;
-  late ChewieController _chewieController;
+  // late VideoPlayerController _videoController;
+  // late ChewieController _chewieController;
 
   @override
   void initState() {
     super.initState();
-    setVideoPlayer();
+    // setVideoPlayer();
   }
 
-  setVideoPlayer() async {
-    String urlString = 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8';
-    Uri uri = Uri.parse(urlString);
-    // _videoController = VideoPlayerController.networkUrl(uri)
-    //   ..initialize().then((_) {
-    //     setState(() {
-    //       _videoController.play();
-    //     });
-    //   });
-    _videoController = VideoPlayerController.networkUrl(uri);
-    await _videoController.initialize();
+  // setVideoPlayer() async {
+  //   String urlString = 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8';
+  //   Uri uri = Uri.parse(urlString);
+  //   // _videoController = VideoPlayerController.networkUrl(uri)
+  //   //   ..initialize().then((_) {
+  //   //     setState(() {
+  //   //       _videoController.play();
+  //   //     });
+  //   //   });
+  //   _videoController = VideoPlayerController.networkUrl(uri);
+  //   await _videoController.initialize();
 
-    setState(() {
-      _chewieController = ChewieController(
-        videoPlayerController: _videoController,
-        autoPlay: true,
-        aspectRatio: 16 / 9,
-      );
-    });
-  }
+  //   setState(() {
+  //     _chewieController = ChewieController(
+  //       videoPlayerController: _videoController,
+  //       autoPlay: true,
+  //       aspectRatio: 16 / 9,
+  //     );
+  //   });
+  // }
 
   @override
   void dispose() {
-    _videoController.dispose();
-    _chewieController.dispose();
+    // _videoController.dispose();
+    // _chewieController.dispose();
     super.dispose();
   }
 
@@ -55,7 +60,7 @@ class _StoreDetailState extends State<StoreDetail> {
       theme: ThemeData(
         textTheme: const TextTheme(
           bodyMedium: TextStyle(
-            fontSize: 20,
+            fontSize: 18,
           ),
         ),
       ),
@@ -86,7 +91,7 @@ class _StoreDetailState extends State<StoreDetail> {
                       decoration: BoxDecoration(
                         color: Colors.amber.shade100,
                       ),
-                      width: 450,
+                      // width: 450,
                       height: 250,
                       // child: _videoController.value.isInitialized
                       //     ? AspectRatio(
@@ -96,11 +101,11 @@ class _StoreDetailState extends State<StoreDetail> {
                       //     : const Center(
                       //         child: CircularProgressIndicator(),
                       //       ),
-                      child: _videoController.value.isInitialized
-                          ? Chewie(controller: _chewieController)
-                          : const Center(
-                              child: CircularProgressIndicator(),
-                            ),
+                      // child: _videoController.value.isInitialized
+                      //     ? Chewie(controller: _chewieController)
+                      //     : const Center(
+                      //         child: CircularProgressIndicator(),
+                      //       ),
                     ),
                     const SizedBox(
                       height: 30,
@@ -131,32 +136,77 @@ class _StoreDetailState extends State<StoreDetail> {
                         ),
                       ],
                     ),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.amber.shade400,
-                      ),
-                      width: 450,
-                      height: 250,
+                    const SizedBox(
+                      height: 20,
                     ),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.amber.shade500,
-                      ),
-                      width: 450,
-                      height: 250,
+                    CustomBoxButton(
+                      buttonText: 'CCTV 현황',
+                      routeName: CCTVScreen.route,
+                      parentContext: context,
                     ),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.amber.shade600,
-                      ),
-                      width: 450,
-                      height: 250,
+                    CustomBoxButton(
+                      buttonText: '지난 알림 목록',
+                      routeName: NotificationListScreen.route,
+                      parentContext: context,
+                    ),
+                    CustomBoxButton(
+                      buttonText: '통계 지표',
+                      routeName: StatisticScreen.route,
+                      parentContext: context,
                     ),
                   ],
                 ),
               ),
             ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class CustomBoxButton extends StatelessWidget {
+  final buttonText;
+  final routeName;
+  final BuildContext parentContext;
+  const CustomBoxButton({
+    super.key,
+    required this.buttonText,
+    required this.routeName,
+    required this.parentContext,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        print('hi');
+        Navigator.pushNamed(parentContext, routeName);
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+          vertical: 10,
+          horizontal: 10,
+        ),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border(
+            bottom: BorderSide(
+              color: Colors.grey.shade400,
+              width: 2,
+            ),
+          ),
+        ),
+        height: 70,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text('$buttonText'),
+            Icon(
+              Icons.arrow_forward_ios_rounded,
+              color: Colors.grey.shade400,
+            ),
+          ],
         ),
       ),
     );

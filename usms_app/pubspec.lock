@@ -113,6 +113,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.6"
+  date_field:
+    dependency: "direct main"
+    description:
+      name: date_field
+      sha256: ae5c3b27051af048e92d5052c646e7450c00b6d5b75e11759e04a7ee0cb3c732
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.0.1"
   daum_postcode_search:
     dependency: "direct main"
     description:
@@ -254,6 +262,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_datetime_picker:
+    dependency: "direct main"
+    description:
+      name: flutter_datetime_picker
+      sha256: "8e695c63c769350e541951227c2775190ec73ceda774a315b1dc9a99d5facfe5"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.5.1"
   flutter_inappwebview:
     dependency: "direct main"
     description:
@@ -821,6 +837,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
+  syncfusion_flutter_charts:
+    dependency: "direct main"
+    description:
+      name: syncfusion_flutter_charts
+      sha256: "02c11d461f4177c60a4cdd501594bb6678f46bee8754f678c7e41c2109f935e7"
+      url: "https://pub.dev"
+    source: hosted
+    version: "24.1.45+2"
+  syncfusion_flutter_core:
+    dependency: transitive
+    description:
+      name: syncfusion_flutter_core
+      sha256: "4afb43254d436e1d41a2ee2761908650ce3ad3453f5bebd283dfe3185d5026a2"
+      url: "https://pub.dev"
+    source: hosted
+    version: "24.1.45"
   table_calendar:
     dependency: "direct main"
     description:

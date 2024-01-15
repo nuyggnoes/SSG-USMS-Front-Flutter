@@ -333,12 +333,12 @@ class _LoginState extends State<Login> {
                         TextButton(
                           onPressed: () {
                             print('비밀번호 찾기');
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //     builder: (context) => const VideoScreen(),
-                            //   ),
-                            // );
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const HomeScreen(),
+                              ),
+                            );
                           },
                           child: const Text(
                             '비밀번호 찾기',
