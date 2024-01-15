@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:usms_app/models/user_model.dart';
+import 'package:usms_app/screen/register_screen.dart';
 
 import 'package:usms_app/screen/register_store_screen.dart';
 import 'package:usms_app/screen/secondary_password_screen.dart';
@@ -58,8 +61,8 @@ class _HomeScreenState extends State<HomeScreen> {
           email = user.email;
           state = user.security_state;
         });
+        await storage.write(key: 'userInfo', value: jsonEncode(response.data));
         print('유저 보안 레벨 : $state');
-        // await storage.write(key: 'userInfo', value: response.data);
       }
     } on DioException catch (e) {
       if (e.response?.statusCode == 400) {
@@ -193,6 +196,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 onTap: () {
                   print('Edit User Info Clicked');
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const RegisterScreen(
+                        data: 'data',
+                        flag: null,
+                        routeCode: 2,
+                      ),
+                    ),
+                  );
                 },
                 trailing: const Icon(
                   Icons.add,

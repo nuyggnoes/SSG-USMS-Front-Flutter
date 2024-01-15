@@ -8,6 +8,12 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:usms_app/screen/register_screen.dart';
 import 'package:usms_app/widget/show_dialog.dart';
 
+/* 
+  - 아이디 찾기
+  - 비밀번호 찾기(수정) ?
+  - 회원가입
+  - 회원정보 수정 ?
+ */
 class VerificationScreen extends StatefulWidget {
   const VerificationScreen({super.key});
   static const route = '/identity-verification';
@@ -96,7 +102,7 @@ class _VerificationScreenState extends State<VerificationScreen>
                   height: 400,
                   margin: const EdgeInsets.only(left: 16.0, right: 16.0),
                   child: TabBarView(
-                    // physics: const NeverScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     controller: _tabController,
                     children: <Widget>[
                       Container(
@@ -290,6 +296,7 @@ class _VerificationScreenState extends State<VerificationScreen>
             builder: (context) => RegisterScreen(
               data: _authenticationMethod,
               flag: methodState,
+              routeCode: 1,
             ),
           ),
         );
@@ -317,6 +324,7 @@ class _VerificationScreenState extends State<VerificationScreen>
               children: [
                 Expanded(
                   child: TextFormField(
+                    maxLength: 25,
                     keyboardType: type,
                     decoration: InputDecoration(
                       counterText: '',
@@ -327,6 +335,9 @@ class _VerificationScreenState extends State<VerificationScreen>
                         ),
                       ),
                       labelText: labelText,
+                      floatingLabelStyle: const TextStyle(
+                        color: Colors.blueAccent,
+                      ),
                       helperText: '',
                       focusedBorder: const OutlineInputBorder(
                         borderRadius: BorderRadius.only(

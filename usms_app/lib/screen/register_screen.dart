@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -14,10 +14,12 @@ class RegisterScreen extends StatefulWidget {
     super.key,
     required this.data,
     required this.flag,
+    required this.routeCode,
   });
   static const route = 'register-user';
   final String data;
-  final bool flag;
+  final bool? flag;
+  final int routeCode;
 
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
@@ -56,11 +58,32 @@ class _RegisterScreenState extends State<RegisterScreen> {
         : null;
   }
 
+  getUserInfo() async {
+    FlutterSecureStorage storage = const FlutterSecureStorage();
+    final jsonString = await storage.read(key: 'userInfo');
+    if (jsonString != null) {
+      // 역직렬화
+      final Map<String, dynamic> userMap = jsonDecode(jsonString);
+
+      // 사용자 정보로 변환
+      User user = User.fromMap(userMap);
+      // 이제 user를 사용할 수 있음
+      _nameController.text = user.person_name;
+      _phoneTextEditController.text = user.phone_number;
+      _usernameController.text = user.username;
+      _emailTextEditController.text = user.email;
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-    _phoneTextEditController.text = widget.flag ? widget.data : '';
-    _emailTextEditController.text = widget.flag ? '' : widget.data;
+    if (widget.routeCode == 1) {
+      _phoneTextEditController.text = widget.flag! ? widget.data : '';
+      _emailTextEditController.text = widget.flag! ? '' : widget.data;
+    } else if (widget.routeCode == 2 && widget.flag == null) {
+      getUserInfo();
+    }
   }
 
   @override
@@ -157,6 +180,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
         },
         child: Scaffold(
           appBar: AppBar(
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back_ios_new_rounded),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
             elevation: 2,
             title: const Text("회원가입"),
           ),
@@ -197,7 +226,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         SizedBox(
                           height: 70,
                           child: TextFormField(
-                            enabled: widget.flag ? false : true,
+                            enabled:
+                                widget.flag == false || widget.flag == null,
                             controller: _phoneTextEditController,
                             maxLength: 11,
                             keyboardType: TextInputType.number,
@@ -245,7 +275,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         SizedBox(
                           height: 70,
                           child: TextFormField(
-                            enabled: widget.flag ? true : false,
+                            enabled: widget.flag == true || widget.flag == null,
                             controller: _emailTextEditController,
                             maxLength: 21,
                             keyboardType: TextInputType.emailAddress,

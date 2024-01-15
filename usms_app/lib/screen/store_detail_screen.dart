@@ -29,48 +29,30 @@ class _StoreDetailState extends State<StoreDetail> {
 
   setVideoPlayer() async {
     String urlString =
-        'https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8';
-    // String urlString2 = 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8';
+        'https://usms.serveftp.com/video/hls/replay/test2/test2-1704442722.m3u8';
     Uri uri = Uri.parse(urlString);
-    // Uri uri2 = Uri.parse(urlString2);
-    // _videoController = VideoPlayerController.networkUrl(uri)
-    //   ..initialize().then((_) {
-    //     setState(() {
-    //       _videoController.play();
-    //     });
-    //   });
+
     _videoController = VideoPlayerController.networkUrl(uri);
-    // _controller = VideoPlayerController.networkUrl(uri2);
 
     await _videoController.initialize();
-    // await _controller.initialize();
     setState(() {
       _chewieController = ChewieController(
         videoPlayerController: _videoController,
         autoPlay: true,
         aspectRatio: 16 / 9,
       );
-      // _chewieController2 = ChewieController(
-      //   videoPlayerController: _controller,
-      //   autoPlay: false,
-      //   aspectRatio: 16 / 9,
-      // );
     });
     // _initializeVideoController();
   }
 
-  void _initializeVideoController() async {
-    // await _videoController.initialize();
-    // await _controller.initialize();
-    setState(() {});
-  }
+  // void _initializeVideoController() async {
+  //   setState(() {});
+  // }
 
   @override
   void dispose() {
     _videoController.dispose();
     _chewieController.dispose();
-    // _controller.dispose();
-    // _chewieController2.dispose();
     super.dispose();
   }
 
