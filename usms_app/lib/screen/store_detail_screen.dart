@@ -1,3 +1,4 @@
+import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
@@ -10,19 +11,41 @@ class StoreDetail extends StatefulWidget {
 }
 
 class _StoreDetailState extends State<StoreDetail> {
-  late VideoPlayerController _controller;
+  late VideoPlayerController _videoController;
+  late ChewieController _chewieController;
 
   @override
   void initState() {
     super.initState();
+    setVideoPlayer();
+  }
+
+  setVideoPlayer() async {
     String urlString = 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8';
     Uri uri = Uri.parse(urlString);
-    _controller = VideoPlayerController.networkUrl(uri)
-      ..initialize().then((_) {
-        setState(() {
-          _controller.play();
-        });
-      });
+    // _videoController = VideoPlayerController.networkUrl(uri)
+    //   ..initialize().then((_) {
+    //     setState(() {
+    //       _videoController.play();
+    //     });
+    //   });
+    _videoController = VideoPlayerController.networkUrl(uri);
+    await _videoController.initialize();
+
+    setState(() {
+      _chewieController = ChewieController(
+        videoPlayerController: _videoController,
+        autoPlay: true,
+        aspectRatio: 16 / 9,
+      );
+    });
+  }
+
+  @override
+  void dispose() {
+    _videoController.dispose();
+    _chewieController.dispose();
+    super.dispose();
   }
 
   @override
@@ -65,14 +88,17 @@ class _StoreDetailState extends State<StoreDetail> {
                       ),
                       width: 450,
                       height: 250,
-                      child: _controller.value.isInitialized
-                          ? AspectRatio(
-                              aspectRatio: _controller.value.aspectRatio,
-                              child: VideoPlayer(_controller),
-                            )
-                          : const SizedBox(
-                              width: 100,
-                              height: 100,
+                      // child: _videoController.value.isInitialized
+                      //     ? AspectRatio(
+                      //         aspectRatio: _videoController.value.aspectRatio,
+                      //         child: VideoPlayer(_videoController),
+                      //       )
+                      //     : const Center(
+                      //         child: CircularProgressIndicator(),
+                      //       ),
+                      child: _videoController.value.isInitialized
+                          ? Chewie(controller: _chewieController)
+                          : const Center(
                               child: CircularProgressIndicator(),
                             ),
                     ),

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:usms_app/models/user_model.dart';
 
 import 'package:usms_app/screen/register_store_screen.dart';
 import 'package:usms_app/screen/secondary_password_screen.dart';
@@ -20,8 +21,9 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final storage = const FlutterSecureStorage();
   late String? name = '';
+  late String? email = '';
   //로그인 한 userDTO
-  dynamic user;
+  late User user;
 
   @override
   void initState() {
@@ -31,6 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> getUserInfoFromStorage() async {
     final username = await storage.read(key: 'cookie');
+    print('username = $username');
     Response response;
     var baseoptions = BaseOptions(
       headers: {
@@ -47,10 +50,15 @@ class _HomeScreenState extends State<HomeScreen> {
     try {
       response = await dio.get('/login', data: param);
       if (response.statusCode == 200) {
-        print('====================response 200=====================');
+        print('====================userInfo 200=====================');
         print('[RES BODY] : ${response.data}');
+        user = User.fromMap(response.data);
+        setState(() {
+          name = user.person_name;
+          email = user.email;
+        });
 
-        // await storage.write(key: 'userInfo', value: userModel);
+        // await storage.write(key: 'userInfo', value: response.data);
       }
     } on DioException catch (e) {
       if (e.response?.statusCode == 400) {
@@ -59,7 +67,6 @@ class _HomeScreenState extends State<HomeScreen> {
         print('[ERR Body] : ${e.response?.data}');
       }
     }
-    name = username;
   }
 
   logoutAction() async {
@@ -117,7 +124,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
                 accountEmail: Text(
-                  '$name@example.com',
+                  '$email',
                   style: const TextStyle(
                     color: Colors.white,
                   ),

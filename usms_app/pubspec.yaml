@@ -45,6 +45,7 @@ dependencies:
 
   video_player_web_hls: ^1.1.0
   video_player: ^2.2.19
+  chewie: ^1.7.4
 
   daum_postcode_search: ^0.0.2
   flutter_inappwebview: ^5.7.2+3

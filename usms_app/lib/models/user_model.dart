@@ -33,4 +33,13 @@ class User {
         'security_state': security_state,
         'is_lock': is_lock,
       };
+  factory User.fromMap(Map<String, dynamic> map) {
+    return User(
+      username: map['username'],
+      password: map['password'],
+      person_name: map['person_name'],
+      email: map['email'],
+      phone_number: map['phone_number'],
+    );
+  }
 }
