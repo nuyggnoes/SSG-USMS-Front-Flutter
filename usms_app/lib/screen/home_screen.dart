@@ -22,6 +22,8 @@ class _HomeScreenState extends State<HomeScreen> {
   final storage = const FlutterSecureStorage();
   late String? name = '';
   late String? email = '';
+  int state = 0;
+  Color securityColor = Colors.red.shade400;
   //로그인 한 userDTO
   late User user;
 
@@ -56,8 +58,9 @@ class _HomeScreenState extends State<HomeScreen> {
         setState(() {
           name = user.person_name;
           email = user.email;
+          state = user.security_state;
         });
-
+        print('유저 보안 레벨 : $state');
         // await storage.write(key: 'userInfo', value: response.data);
       }
     } on DioException catch (e) {
@@ -69,9 +72,22 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  Color setSecurityColor() {
+    setState(() {
+      if (state == 0) {
+        securityColor = Colors.red.shade400;
+      } else if (state == 1) {
+        securityColor = Colors.amber;
+      } else {
+        securityColor = Colors.green;
+      }
+    });
+    return securityColor;
+  }
+
   logoutAction() async {
     await storage.delete(key: 'auto_login');
-    await storage.delete(key: 'login');
+    await storage.delete(key: 'cookie');
     _pagePopAction();
   }
 
@@ -116,9 +132,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     const SizedBox(
                       width: 55,
                     ),
-                    const Icon(
+                    Icon(
                       Icons.gpp_bad_outlined,
-                      color: Colors.green,
+                      color: setSecurityColor(),
                       size: 70,
                     ),
                   ],

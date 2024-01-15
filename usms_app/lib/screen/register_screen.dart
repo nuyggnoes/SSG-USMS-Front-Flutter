@@ -334,6 +334,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   email: _emailTextEditController.text,
                                   person_name: _nameController.text,
                                   phone_number: _phoneTextEditController.text,
+                                  security_state: 0,
+                                  is_lock: false,
                                 );
                                 requestRegister(user);
                               }

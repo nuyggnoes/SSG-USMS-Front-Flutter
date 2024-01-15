@@ -16,40 +16,40 @@ class StoreDetail extends StatefulWidget {
 }
 
 class _StoreDetailState extends State<StoreDetail> {
-  // late VideoPlayerController _videoController;
-  // late ChewieController _chewieController;
+  late VideoPlayerController _videoController;
+  late ChewieController _chewieController;
 
   @override
   void initState() {
     super.initState();
-    // setVideoPlayer();
+    setVideoPlayer();
   }
 
-  // setVideoPlayer() async {
-  //   String urlString = 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8';
-  //   Uri uri = Uri.parse(urlString);
-  //   // _videoController = VideoPlayerController.networkUrl(uri)
-  //   //   ..initialize().then((_) {
-  //   //     setState(() {
-  //   //       _videoController.play();
-  //   //     });
-  //   //   });
-  //   _videoController = VideoPlayerController.networkUrl(uri);
-  //   await _videoController.initialize();
+  setVideoPlayer() async {
+    String urlString = 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8';
+    Uri uri = Uri.parse(urlString);
+    // _videoController = VideoPlayerController.networkUrl(uri)
+    //   ..initialize().then((_) {
+    //     setState(() {
+    //       _videoController.play();
+    //     });
+    //   });
+    _videoController = VideoPlayerController.networkUrl(uri);
+    await _videoController.initialize();
 
-  //   setState(() {
-  //     _chewieController = ChewieController(
-  //       videoPlayerController: _videoController,
-  //       autoPlay: true,
-  //       aspectRatio: 16 / 9,
-  //     );
-  //   });
-  // }
+    setState(() {
+      _chewieController = ChewieController(
+        videoPlayerController: _videoController,
+        autoPlay: true,
+        aspectRatio: 16 / 9,
+      );
+    });
+  }
 
   @override
   void dispose() {
-    // _videoController.dispose();
-    // _chewieController.dispose();
+    _videoController.dispose();
+    _chewieController.dispose();
     super.dispose();
   }
 
@@ -101,11 +101,11 @@ class _StoreDetailState extends State<StoreDetail> {
                       //     : const Center(
                       //         child: CircularProgressIndicator(),
                       //       ),
-                      // child: _videoController.value.isInitialized
-                      //     ? Chewie(controller: _chewieController)
-                      //     : const Center(
-                      //         child: CircularProgressIndicator(),
-                      //       ),
+                      child: _videoController.value.isInitialized
+                          ? Chewie(controller: _chewieController)
+                          : const Center(
+                              child: CircularProgressIndicator(),
+                            ),
                     ),
                     const SizedBox(
                       height: 30,
@@ -117,22 +117,25 @@ class _StoreDetailState extends State<StoreDetail> {
                           decoration: BoxDecoration(
                             color: Colors.amber.shade200,
                           ),
-                          width: 145,
-                          height: 96,
+                          width: 190,
+                          height: 107,
+                          child: _videoController.value.isInitialized
+                              ? Chewie(controller: _chewieController)
+                              : const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
                         ),
                         Container(
                           decoration: BoxDecoration(
                             color: Colors.amber.shade200,
                           ),
-                          width: 145,
-                          height: 96,
-                        ),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.amber.shade200,
-                          ),
-                          width: 145,
-                          height: 96,
+                          width: 190,
+                          height: 107,
+                          child: _videoController.value.isInitialized
+                              ? Chewie(controller: _chewieController)
+                              : const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
                         ),
                       ],
                     ),

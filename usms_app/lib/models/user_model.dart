@@ -4,8 +4,10 @@ class User {
   final String person_name;
   final String email;
   final String phone_number;
-  int security_state = 0;
-  bool is_lock = false;
+  // int security_state = 0;
+  // bool is_lock = false;
+  final int security_state;
+  final bool is_lock;
 
   User({
     required this.username,
@@ -13,6 +15,8 @@ class User {
     required this.person_name,
     required this.email,
     required this.phone_number,
+    required this.security_state,
+    required this.is_lock,
   });
 
   User.fromJson(Map<String, dynamic> json)
@@ -40,6 +44,8 @@ class User {
       person_name: map['person_name'],
       email: map['email'],
       phone_number: map['phone_number'],
+      security_state: map['security_state'],
+      is_lock: map['is_lock'],
     );
   }
 }
