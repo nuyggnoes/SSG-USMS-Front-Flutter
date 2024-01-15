@@ -134,6 +134,7 @@ class _NotificationListScreenState extends State<NotificationListScreen>
             ),
             Expanded(
               child: TabBarView(
+                physics: const NeverScrollableScrollPhysics(),
                 controller: _tabController,
                 children: <Widget>[
                   FutureBuilder(

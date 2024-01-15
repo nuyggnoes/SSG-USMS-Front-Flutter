@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -23,7 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
   late String? name = '';
   late String? email = '';
   int state = 0;
-  Color securityColor = Colors.red.shade400;
+  late Icon securityIcon;
   //로그인 한 userDTO
   late User user;
 
@@ -72,17 +70,29 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  Color setSecurityColor() {
+  Icon getSecurityLevel() {
     setState(() {
       if (state == 0) {
-        securityColor = Colors.red.shade400;
+        securityIcon = Icon(
+          Icons.gpp_bad_outlined,
+          color: Colors.red.shade400,
+          size: 70,
+        );
       } else if (state == 1) {
-        securityColor = Colors.amber;
+        securityIcon = const Icon(
+          Icons.health_and_safety_outlined,
+          color: Colors.amber,
+          size: 70,
+        );
       } else {
-        securityColor = Colors.green;
+        securityIcon = const Icon(
+          Icons.verified_user_outlined,
+          color: Colors.green,
+          size: 70,
+        );
       }
     });
-    return securityColor;
+    return securityIcon;
   }
 
   logoutAction() async {
@@ -132,11 +142,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     const SizedBox(
                       width: 55,
                     ),
-                    Icon(
-                      Icons.gpp_bad_outlined,
-                      color: setSecurityColor(),
-                      size: 70,
-                    ),
+                    // Icon(
+                    //   Icons.gpp_bad_outlined,
+                    //   color: getSecurityLevel(),
+                    //   size: 70,
+                    // ),
+                    getSecurityLevel(),
                   ],
                 ),
                 accountEmail: Text(

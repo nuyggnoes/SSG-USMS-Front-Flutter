@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:usms_app/models/word_model.dart';
+import 'package:usms_app/service/word_json.dart';
 
 class StatisticScreen extends StatefulWidget {
   static const route = 'statistic-screen';
@@ -16,7 +18,15 @@ class _StatisticScreenState extends State<StatisticScreen> {
     _SalesData('행동3', 3),
     _SalesData('행동4', 4),
   ];
+  Future<List<WordModel>>? words;
   int? tappedIndex = -1;
+
+  @override
+  void initState() {
+    super.initState();
+    words = WordJson.getWords();
+  }
+
   @override
   Widget build(BuildContext context) {
     int totalSales =
@@ -40,30 +50,73 @@ class _StatisticScreenState extends State<StatisticScreen> {
               child: Text('이상감지 현황'),
             ),
           ),
-          Stack(
-            alignment: Alignment.center,
-            children: [
-              SfCircularChart(
-                legend: const Legend(
-                  isVisible: true,
-                ),
-                series: <DoughnutSeries<_SalesData, String>>[
-                  DoughnutSeries<_SalesData, String>(
-                    dataSource: data,
-                    xValueMapper: (_SalesData sales, _) => sales.year,
-                    yValueMapper: (_SalesData sales, _) => sales.sales,
-                    dataLabelMapper: (_SalesData sales, _) =>
-                        '${sales.year}: ${sales.sales}',
-                    enableTooltip: true,
-                    dataLabelSettings: const DataLabelSettings(isVisible: true),
-                    explode: true,
-                  ),
-                ],
-              ),
-              Container(
-                child: Text('$totalSales'),
-              ),
-            ],
+          // Stack(
+          //   alignment: Alignment.center,
+          //   children: [
+          //     SfCircularChart(
+          //       legend: const Legend(
+          //         isVisible: true,
+          //       ),
+          //       series: <DoughnutSeries<_SalesData, String>>[
+          //         DoughnutSeries<_SalesData, String>(
+          //           dataSource: data,
+          //           xValueMapper: (_SalesData sales, _) => sales.year,
+          //           yValueMapper: (_SalesData sales, _) => sales.sales,
+          //           dataLabelMapper: (_SalesData sales, _) =>
+          //               '${sales.year}: ${sales.sales}',
+          //           enableTooltip: true,
+          //           dataLabelSettings: const DataLabelSettings(isVisible: true),
+          //           explode: true,
+          //         ),
+          //       ],
+          //     ),
+          //     Container(
+          //       child: Text('$totalSales'),
+          //     ),
+          //   ],
+          // ),
+          Expanded(
+            child: FutureBuilder(
+              future: words,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else {
+                  final Map<int, int> wordCountByDay = {};
+                  for (var word in snapshot.data!) {
+                    final day = word.day;
+                    wordCountByDay[day] = (wordCountByDay[day] ?? 0) + 1;
+                  }
+                  return SfCircularChart(
+                    legend: const Legend(isVisible: true),
+                    series: <DoughnutSeries<MapEntry<int, int>, String>>[
+                      DoughnutSeries<MapEntry<int, int>, String>(
+                        dataSource: wordCountByDay.entries.toList(),
+                        xValueMapper: (entry, _) => entry.key.toString(),
+                        yValueMapper: (entry, _) => entry.value,
+                        dataLabelMapper: (entry, _) =>
+                            '${entry.key}일차 단어 : ${entry.value}개',
+                        enableTooltip: true,
+                        dataLabelSettings:
+                            const DataLabelSettings(isVisible: true),
+                        explode: true,
+                        // pointColorMapper: (WordModel word, _) =>
+                        //     word.isHighlighted
+                        //         ? Colors.blue // Highlighted color
+                        //         : Colors.green, // Default color
+                        // // Implement onTap callback if needed
+                        // selectionSettings: SelectionSettings(
+                        //   enable: true,
+                        //   unselectedColor: Colors.green.withOpacity(0.6),
+                        // ),
+                      ),
+                    ],
+                  );
+                }
+              },
+            ),
           ),
         ],
       ),

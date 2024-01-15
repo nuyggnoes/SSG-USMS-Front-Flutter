@@ -17,7 +17,9 @@ class StoreDetail extends StatefulWidget {
 
 class _StoreDetailState extends State<StoreDetail> {
   late VideoPlayerController _videoController;
+  // late VideoPlayerController _controller;
   late ChewieController _chewieController;
+  // late ChewieController _chewieController2;
 
   @override
   void initState() {
@@ -26,8 +28,11 @@ class _StoreDetailState extends State<StoreDetail> {
   }
 
   setVideoPlayer() async {
-    String urlString = 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8';
+    String urlString =
+        'https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8';
+    // String urlString2 = 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8';
     Uri uri = Uri.parse(urlString);
+    // Uri uri2 = Uri.parse(urlString2);
     // _videoController = VideoPlayerController.networkUrl(uri)
     //   ..initialize().then((_) {
     //     setState(() {
@@ -35,21 +40,37 @@ class _StoreDetailState extends State<StoreDetail> {
     //     });
     //   });
     _videoController = VideoPlayerController.networkUrl(uri);
-    await _videoController.initialize();
+    // _controller = VideoPlayerController.networkUrl(uri2);
 
+    await _videoController.initialize();
+    // await _controller.initialize();
     setState(() {
       _chewieController = ChewieController(
         videoPlayerController: _videoController,
         autoPlay: true,
         aspectRatio: 16 / 9,
       );
+      // _chewieController2 = ChewieController(
+      //   videoPlayerController: _controller,
+      //   autoPlay: false,
+      //   aspectRatio: 16 / 9,
+      // );
     });
+    // _initializeVideoController();
+  }
+
+  void _initializeVideoController() async {
+    // await _videoController.initialize();
+    // await _controller.initialize();
+    setState(() {});
   }
 
   @override
   void dispose() {
     _videoController.dispose();
     _chewieController.dispose();
+    // _controller.dispose();
+    // _chewieController2.dispose();
     super.dispose();
   }
 
@@ -89,7 +110,7 @@ class _StoreDetailState extends State<StoreDetail> {
                   children: [
                     Container(
                       decoration: BoxDecoration(
-                        color: Colors.amber.shade100,
+                        color: Colors.grey.shade200,
                       ),
                       // width: 450,
                       height: 250,
@@ -115,27 +136,27 @@ class _StoreDetailState extends State<StoreDetail> {
                       children: [
                         Container(
                           decoration: BoxDecoration(
-                            color: Colors.amber.shade200,
+                            color: Colors.grey.shade200,
                           ),
                           width: 190,
                           height: 107,
-                          child: _videoController.value.isInitialized
-                              ? Chewie(controller: _chewieController)
-                              : const Center(
-                                  child: CircularProgressIndicator(),
-                                ),
+                          // child: _controller.value.isInitialized
+                          //     ? Chewie(controller: _chewieController2)
+                          //     : const Center(
+                          //         child: CircularProgressIndicator(),
+                          //       ),
                         ),
                         Container(
                           decoration: BoxDecoration(
-                            color: Colors.amber.shade200,
+                            color: Colors.grey.shade200,
                           ),
                           width: 190,
                           height: 107,
-                          child: _videoController.value.isInitialized
-                              ? Chewie(controller: _chewieController)
-                              : const Center(
-                                  child: CircularProgressIndicator(),
-                                ),
+                          // child: _videoController.value.isInitialized
+                          //     ? Chewie(controller: _chewieController)
+                          //     : const Center(
+                          //         child: CircularProgressIndicator(),
+                          //       ),
                         ),
                       ],
                     ),
@@ -172,6 +193,7 @@ class CustomBoxButton extends StatelessWidget {
   final buttonText;
   final routeName;
   final BuildContext parentContext;
+
   const CustomBoxButton({
     super.key,
     required this.buttonText,

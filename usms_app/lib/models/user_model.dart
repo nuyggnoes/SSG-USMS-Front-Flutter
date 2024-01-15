@@ -4,8 +4,6 @@ class User {
   final String person_name;
   final String email;
   final String phone_number;
-  // int security_state = 0;
-  // bool is_lock = false;
   final int security_state;
   final bool is_lock;
 
@@ -38,6 +36,7 @@ class User {
         'is_lock': is_lock,
       };
   factory User.fromMap(Map<String, dynamic> map) {
+    print("이 값이 도대체 뭐길래 ? ? ? ? ${map['is_lock']}");
     return User(
       username: map['username'],
       password: map['password'],
@@ -45,7 +44,7 @@ class User {
       email: map['email'],
       phone_number: map['phone_number'],
       security_state: map['security_state'],
-      is_lock: map['is_lock'],
+      is_lock: map['_lock'], // 고쳐
     );
   }
 }
