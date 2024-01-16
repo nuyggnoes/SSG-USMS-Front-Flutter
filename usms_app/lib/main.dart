@@ -22,6 +22,7 @@ import 'package:usms_app/screen/secondary_password_screen.dart';
 import 'package:usms_app/screen/set_security_level_screen.dart';
 import 'package:usms_app/screen/statistic_screen.dart';
 import 'package:usms_app/screen/store_detail_screen.dart';
+import 'package:usms_app/service/routes.dart';
 
 // route
 final navigatorKey = GlobalKey<NavigatorState>();
@@ -60,22 +61,24 @@ class MyApp extends StatelessWidget {
         ),
       ),
       navigatorKey: navigatorKey,
-      home: const Login(),
-      routes: {
-        NotificationScreen.route: (context) => const NotificationScreen(),
-        HomeScreen.route: (context) => const HomeScreen(),
-        // RegisterScreen.route: (context) => const RegisterScreen(),
-        RegisterStore.route: (context) => const RegisterStore(),
-        SecurityLevel.route: (context) => const SecurityLevel(),
-        StoreDetail.route: (context) => const StoreDetail(),
-        SecondaryPasswordScreen.route: (context) =>
-            const SecondaryPasswordScreen(),
-        VerificationScreen.route: (context) => const VerificationScreen(),
-        CCTVScreen.route: (context) => const CCTVScreen(),
-        NotificationListScreen.route: (context) =>
-            const NotificationListScreen(),
-        StatisticScreen.route: (context) => const StatisticScreen(),
-      },
+      // home: const Login(),
+      // routes: {
+      //   NotificationScreen.route: (context) => const NotificationScreen(),
+      //   HomeScreen.route: (context) => const HomeScreen(),
+      //   // RegisterScreen.route: (context) => const RegisterScreen(),
+      //   RegisterStore.route: (context) => const RegisterStore(),
+      //   SecurityLevel.route: (context) => const SecurityLevel(),
+      //   StoreDetail.route: (context) => const StoreDetail(),
+      //   SecondaryPasswordScreen.route: (context) =>
+      //       const SecondaryPasswordScreen(),
+      //   VerificationScreen.route: (context) => const VerificationScreen(),
+      //   CCTVScreen.route: (context) => const CCTVScreen(),
+      //   NotificationListScreen.route: (context) =>
+      //       const NotificationListScreen(),
+      //   StatisticScreen.route: (context) => const StatisticScreen(),
+      // },
+      initialRoute: Routes.login,
+      routes: Routes.routes,
     );
   }
 }

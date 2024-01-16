@@ -6,6 +6,7 @@ import 'dart:io';
 
 import 'package:usms_app/screen/home_screen.dart';
 import 'package:usms_app/screen/identity_verification_screen.dart';
+import 'package:usms_app/service/routes.dart';
 
 import 'package:usms_app/widget/my_checkbox.dart';
 
@@ -40,7 +41,7 @@ class _LoginState extends State<Login> {
 
     if (userInfo != null) {
       print("자동로그인!");
-      Navigator.pushNamed(context, HomeScreen.route);
+      Navigator.pushNamed(context, Routes.home);
     } else {
       print('로그인이 필요합니다');
     }
@@ -82,7 +83,7 @@ class _LoginState extends State<Login> {
             value: username,
           );
         }
-        Navigator.pushNamed(context, HomeScreen.route);
+        successLogin();
       }
     } on DioException catch (e) {
       if (e.response?.statusCode == 400) {
@@ -102,6 +103,10 @@ class _LoginState extends State<Login> {
         _showErrorDialog('알 수 없는 오류가 발생했습니다.');
       });
     }
+  }
+
+  successLogin() {
+    Navigator.pushNamed(context, Routes.home);
   }
 
   void _showErrorDialog(String message) {
@@ -317,7 +322,7 @@ class _LoginState extends State<Login> {
                           onPressed: () {
                             print('아이디 찾기');
                             Navigator.pushNamed(
-                                context, VerificationScreen.route);
+                                context, Routes.identityVerification);
                           },
                           child: const Text(
                             '아이디 찾기 ',
@@ -333,12 +338,12 @@ class _LoginState extends State<Login> {
                         TextButton(
                           onPressed: () {
                             print('비밀번호 찾기');
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const HomeScreen(),
-                              ),
-                            );
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //     builder: (context) => const HomeScreen(),
+                            //   ),
+                            // );
                           },
                           child: const Text(
                             '비밀번호 찾기',
@@ -361,7 +366,7 @@ class _LoginState extends State<Login> {
                             //   ),
                             // );
                             Navigator.pushNamed(
-                                context, VerificationScreen.route);
+                                context, Routes.identityVerification);
                           },
                           child: const Text(
                             '회원가입',

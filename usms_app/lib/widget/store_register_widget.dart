@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:usms_app/screen/register_store_screen.dart';
+import 'package:usms_app/service/routes.dart';
 
 class RegisterStoreWidget extends StatelessWidget {
   const RegisterStoreWidget({
@@ -93,7 +94,7 @@ class RegisterStoreWidget extends StatelessWidget {
                                 onPressed: () {
                                   print('추가하기');
                                   Navigator.pushNamed(
-                                      context, RegisterStore.route);
+                                      context, Routes.registerStore);
                                 },
                                 child: const Text(
                                   '추가',

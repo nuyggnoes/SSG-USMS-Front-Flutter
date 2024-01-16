@@ -76,7 +76,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           opacityAnimation: _opacityAnimation),
       const NotificationListScreen(),
       const StatisticScreen(),
-      MyPageScreen(),
+      MyPageScreen(
+        context: super.context,
+      ),
     ];
 
     // 페이지가 나타날 때 애니메이션 실행

@@ -191,7 +191,8 @@ class _RegisterStoreState extends State<RegisterStore> {
                               Radius.circular(12),
                             ),
                           ),
-                          hintText: '사업자 등록 번호를 입력해주세요.',
+                          // hintText: '사업자 등록 번호를 입력해주세요.',
+                          labelText: '사업자 등록 번호를 입력해주세요.',
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.all(
                               Radius.circular(12),
