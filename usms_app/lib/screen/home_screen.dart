@@ -28,6 +28,8 @@ class _HomeScreenState extends State<HomeScreen> {
   //로그인 한 userDTO
   late User user;
 
+  //애니메이션
+
   @override
   void initState() {
     super.initState();
@@ -115,7 +117,8 @@ class _HomeScreenState extends State<HomeScreen> {
         primaryColor: Colors.blue[200],
         textTheme: const TextTheme(
           bodyMedium: TextStyle(
-            fontSize: 24,
+            fontSize: 16,
+            color: Colors.white,
           ),
         ),
       ),
@@ -261,55 +264,88 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         body: Center(
-          child: GestureDetector(
-            onTap: () {
-              Navigator.pushNamed(context, RegisterStore.route);
-            },
-            child: Column(
-              children: [
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.7,
-                  height: MediaQuery.of(context).size.height * 0.2,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.black87,
+          child: Column(
+            children: [
+              Container(
+                width: MediaQuery.of(context).size.width * 0.8,
+                height: 500,
+                decoration: BoxDecoration(
+                  color: const Color.fromARGB(255, 170, 214, 211),
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: Column(
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.all(20),
+                      child: Row(
+                        children: [
+                          Text(
+                            '서비스 ',
+                            style: TextStyle(
+                              fontSize: 30,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                          Text(
+                            '시작하기',
+                            style: TextStyle(
+                              fontSize: 30,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                    color: Colors.grey[200],
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: const Center(
-                      child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.add_outlined,
-                        size: 80,
-                        color: Colors.grey,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Image.asset(
+                        'assets/main_img.png',
+                        width: double.infinity,
                       ),
-                      Text(
-                        '매장을 추가해주세요',
-                        style: TextStyle(
-                          fontSize: 16,
-                        ),
-                      ),
-                    ],
-                  )),
+                    ),
+                    Expanded(
+                      child: Container(
+                          width: double.infinity,
+                          decoration: const BoxDecoration(
+                            color: Color.fromARGB(255, 130, 186, 182),
+                            borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(14),
+                              bottomRight: Radius.circular(14),
+                            ),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(12),
+                            child: Row(
+                              children: [
+                                const Expanded(
+                                  flex: 7,
+                                  child: Text(
+                                    '서비스를 이용하기 위해 매장을 추가해주세요.',
+                                    softWrap: true,
+                                  ),
+                                ),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    print('추가하기');
+                                    Navigator.pushNamed(
+                                        context, RegisterStore.route);
+                                  },
+                                  child: const Text(
+                                    '추가',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )),
+                    )
+                  ],
                 ),
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.8,
-                  height: MediaQuery.of(context).size.height * 0.4,
-                  decoration: BoxDecoration(
-                    color: Colors.teal[100],
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                  child: const Column(
-                    children: [
-                      Text('서비스 시작하기'),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
