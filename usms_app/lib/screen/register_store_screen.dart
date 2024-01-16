@@ -97,6 +97,7 @@ class _RegisterStoreState extends State<RegisterStore> {
             ),
             title: const Text('매장 등록'),
             elevation: 10,
+            centerTitle: true,
           ),
           body: SingleChildScrollView(
             child: Padding(

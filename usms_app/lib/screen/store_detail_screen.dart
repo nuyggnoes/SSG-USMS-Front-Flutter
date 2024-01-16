@@ -1,7 +1,5 @@
 import 'package:chewie/chewie.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:usms_app/screen/cctv_detail_screen.dart';
 import 'package:usms_app/screen/notification_list_screen.dart';
 import 'package:usms_app/screen/statistic_screen.dart';
@@ -28,12 +26,12 @@ class _StoreDetailState extends State<StoreDetail> {
   }
 
   setVideoPlayer() async {
-    String urlString =
-        'https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8';
+    // String urlString =
+    // 'https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8';
     // String urlString =
     // 'https://usms.serveftp.com/video/hls/replay/test2/test2-1704442722.m3u8';
-    // String urlString =
-    // 'https://usms.serveftp.com/video/hls/live/test2/index.m3u8';
+    String urlString =
+        'https://usms.serveftp.com/video/hls/live/test2/index.m3u8';
     Uri uri = Uri.parse(urlString);
 
     _videoController = VideoPlayerController.networkUrl(uri);
@@ -153,17 +151,19 @@ class _StoreDetailState extends State<StoreDetail> {
                       buttonText: 'CCTV 현황',
                       routeName: CCTVScreen.route,
                       parentContext: context,
+                      videoPlayerController: _videoController,
+                      chewieController: _chewieController,
                     ),
-                    CustomBoxButton(
-                      buttonText: '지난 알림 목록',
-                      routeName: NotificationListScreen.route,
-                      parentContext: context,
-                    ),
-                    CustomBoxButton(
-                      buttonText: '통계 지표',
-                      routeName: StatisticScreen.route,
-                      parentContext: context,
-                    ),
+                    // CustomBoxButton(
+                    //   buttonText: '지난 알림 목록',
+                    //   routeName: NotificationListScreen.route,
+                    //   parentContext: context,
+                    // ),
+                    // CustomBoxButton(
+                    //   buttonText: '통계 지표',
+                    //   routeName: StatisticScreen.route,
+                    //   parentContext: context,
+                    // ),
                   ],
                 ),
               ),
@@ -179,12 +179,16 @@ class CustomBoxButton extends StatelessWidget {
   final buttonText;
   final routeName;
   final BuildContext parentContext;
+  final VideoPlayerController videoPlayerController;
+  final ChewieController chewieController;
 
   const CustomBoxButton({
     super.key,
     required this.buttonText,
     required this.routeName,
     required this.parentContext,
+    required this.videoPlayerController,
+    required this.chewieController,
   });
 
   @override
