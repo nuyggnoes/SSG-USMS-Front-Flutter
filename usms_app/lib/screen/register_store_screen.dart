@@ -12,9 +12,12 @@ class RegisterStore extends StatefulWidget {
 }
 
 class _RegisterStoreState extends State<RegisterStore> {
+  final _storeNameController = TextEditingController();
+  final _storeNumController = TextEditingController();
   final _addressTextController = TextEditingController();
+  final _detailAddressController = TextEditingController();
 
-  late var formData;
+  final formData = FormData();
   final List<Map<String, String>> fileList = [];
 
   var filePaths = [];
@@ -30,9 +33,8 @@ class _RegisterStoreState extends State<RegisterStore> {
       filePaths = result.paths; //파일들의 경로 리스트
 
       // 파일 경로를 통해 formData 생성
-      var dio = Dio();
 
-      formData = FormData();
+      // formData = FormData();
       setState(() {
         for (var i = 0; i < filePaths.length; i++) {
           var file = MultipartFile.fromFileSync(filePaths[i]!);
@@ -47,9 +49,14 @@ class _RegisterStoreState extends State<RegisterStore> {
           formData.files.add(MapEntry('key', file));
         }
       });
+      formData.fields.addAll([
+        MapEntry('storeName', _storeNameController.text),
+        MapEntry('businessLicenseCode', _storeNumController.text),
+        MapEntry('storeAddress',
+            '${_addressTextController.text} ${_detailAddressController.text}'),
+      ]);
 
       // 업로드 요청
-      // final response = await dio.post('/upload', data: formData);
     } else {
       // 아무런 파일도 선택되지 않음.
     }
@@ -78,6 +85,43 @@ class _RegisterStoreState extends State<RegisterStore> {
         },
       );
     }
+  }
+
+  requestStore() async {
+    print('업체명 : ${_storeNameController.text}');
+    print('사업자 등록 번호 : ${_storeNumController.text}');
+    print('업체 주소 : ${_addressTextController.text}');
+    print('상세 주소 : ${_detailAddressController.text}');
+    Response response;
+    var baseoptions = BaseOptions(
+      headers: {"Content-Type": "multipart/form-data;"},
+      baseUrl: "https://usms.serveftp.com",
+    );
+
+    Dio dio = Dio(baseoptions);
+    try {
+      // 업로드 요청
+      final response = await dio.post('/api/users/1/stores', data: formData);
+      if (response.statusCode == 200) {
+        print('====================response 200=====================');
+      }
+      // 여기에서 응답 처리 로직 추가
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 400) {
+        print("[Error] : [$e]");
+      }
+    } catch (e) {
+      print("[Server ERR] : $e");
+    }
+  }
+
+  @override
+  void dispose() {
+    _storeNameController.dispose();
+    _storeNumController.dispose();
+    _addressTextController.dispose();
+    _detailAddressController.dispose();
+    super.dispose();
   }
 
   @override
@@ -110,6 +154,7 @@ class _RegisterStoreState extends State<RegisterStore> {
                     width: MediaQuery.of(context).size.width * 0.65,
                     child: SizedBox(
                       child: TextFormField(
+                        controller: _storeNameController,
                         keyboardType: TextInputType.text,
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(
@@ -138,6 +183,7 @@ class _RegisterStoreState extends State<RegisterStore> {
                     width: MediaQuery.of(context).size.width * 0.65,
                     child: SizedBox(
                       child: TextFormField(
+                        controller: _storeNumController,
                         keyboardType: TextInputType.text,
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(
@@ -228,6 +274,7 @@ class _RegisterStoreState extends State<RegisterStore> {
                           height: MediaQuery.of(context).size.height * 0.06,
                           width: MediaQuery.of(context).size.width * 0.65,
                           child: TextFormField(
+                            controller: _detailAddressController,
                             keyboardType: TextInputType.text,
                             decoration: const InputDecoration(
                               border: OutlineInputBorder(
@@ -270,7 +317,7 @@ class _RegisterStoreState extends State<RegisterStore> {
                           width: MediaQuery.of(context).size.width * 0.7,
                           child: ElevatedButton(
                             onPressed: () {
-                              print('매장 등록');
+                              requestStore();
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.blueAccent,

@@ -76,7 +76,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           opacityAnimation: _opacityAnimation),
       const NotificationListScreen(),
       const StatisticScreen(),
-      const MyPageScreen(),
+      MyPageScreen(),
     ];
 
     // 페이지가 나타날 때 애니메이션 실행
@@ -174,6 +174,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(),
       bottomNavigationBar: Container(
         decoration: const BoxDecoration(
           border: Border(
@@ -204,7 +205,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           iconSize: 37,
           onTap: _onItemTapped,
           showSelectedLabels: false,
-          showUnselectedLabels: false, //(1)
+          showUnselectedLabels: false,
           type: BottomNavigationBarType.fixed,
         ),
       ),

@@ -25,31 +25,28 @@ class _StoreDetailState extends State<StoreDetail> {
     setVideoPlayer();
   }
 
-  setVideoPlayer() async {
-    // String urlString =
-    // 'https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8';
+  Future<void> setVideoPlayer() async {
+    String urlString =
+        'https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8';
     // String urlString =
     // 'https://usms.serveftp.com/video/hls/replay/test2/test2-1704442722.m3u8';
-    String urlString =
-        'https://usms.serveftp.com/video/hls/live/test2/index.m3u8';
+    // String urlString =
+    // 'https://usms.serveftp.com/video/hls/live/test2/index.m3u8';
     Uri uri = Uri.parse(urlString);
 
     _videoController = VideoPlayerController.networkUrl(uri);
 
     await _videoController.initialize();
-    setState(() {
-      _chewieController = ChewieController(
-        videoPlayerController: _videoController,
-        autoPlay: true,
-        aspectRatio: 16 / 9,
-      );
-    });
-    // _initializeVideoController();
-  }
 
-  // void _initializeVideoController() async {
-  //   setState(() {});
-  // }
+    _chewieController = ChewieController(
+      videoPlayerController: _videoController,
+      autoPlay: true,
+      aspectRatio: 16 / 9,
+    );
+    if (mounted) {
+      setState(() {});
+    }
+  }
 
   @override
   void dispose() {
@@ -60,6 +57,11 @@ class _StoreDetailState extends State<StoreDetail> {
 
   @override
   Widget build(BuildContext context) {
+    if (!_videoController.value.isInitialized) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    } else {}
     return MaterialApp(
       title: 'Store Detail',
       theme: ThemeData(
@@ -124,11 +126,11 @@ class _StoreDetailState extends State<StoreDetail> {
                           ),
                           width: 190,
                           height: 107,
-                          child: _videoController.value.isInitialized
-                              ? Chewie(controller: _chewieController)
-                              : const Center(
-                                  child: CircularProgressIndicator(),
-                                ),
+                          // child: _videoController.value.isInitialized
+                          //     ? Chewie(controller: _chewieController)
+                          //     : const Center(
+                          //         child: CircularProgressIndicator(),
+                          //       ),
                         ),
                         Container(
                           decoration: BoxDecoration(
@@ -136,11 +138,11 @@ class _StoreDetailState extends State<StoreDetail> {
                           ),
                           width: 190,
                           height: 107,
-                          child: _videoController.value.isInitialized
-                              ? Chewie(controller: _chewieController)
-                              : const Center(
-                                  child: CircularProgressIndicator(),
-                                ),
+                          // child: _videoController.value.isInitialized
+                          //     ? Chewie(controller: _chewieController)
+                          //     : const Center(
+                          //         child: CircularProgressIndicator(),
+                          //       ),
                         ),
                       ],
                     ),
