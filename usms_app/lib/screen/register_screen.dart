@@ -250,6 +250,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         SizedBox(
                           height: 70,
                           child: TextFormField(
+                            enabled: widget.flag ?? false,
                             controller: _usernameController,
                             maxLength: 20,
                             keyboardType: TextInputType.text,

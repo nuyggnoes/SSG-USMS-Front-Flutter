@@ -265,33 +265,50 @@ class _HomeScreenState extends State<HomeScreen> {
             onTap: () {
               Navigator.pushNamed(context, RegisterStore.route);
             },
-            child: Container(
-              width: MediaQuery.of(context).size.width * 0.7,
-              height: MediaQuery.of(context).size.height * 0.2,
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.black87,
-                ),
-                color: Colors.grey[200],
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: const Center(
-                  child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.add_outlined,
-                    size: 80,
-                    color: Colors.grey,
-                  ),
-                  Text(
-                    '매장을 추가해주세요',
-                    style: TextStyle(
-                      fontSize: 16,
+            child: Column(
+              children: [
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.7,
+                  height: MediaQuery.of(context).size.height * 0.2,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.black87,
                     ),
+                    color: Colors.grey[200],
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                ],
-              )),
+                  child: const Center(
+                      child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.add_outlined,
+                        size: 80,
+                        color: Colors.grey,
+                      ),
+                      Text(
+                        '매장을 추가해주세요',
+                        style: TextStyle(
+                          fontSize: 16,
+                        ),
+                      ),
+                    ],
+                  )),
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  height: MediaQuery.of(context).size.height * 0.4,
+                  decoration: BoxDecoration(
+                    color: Colors.teal[100],
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  child: const Column(
+                    children: [
+                      Text('서비스 시작하기'),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
         ),
