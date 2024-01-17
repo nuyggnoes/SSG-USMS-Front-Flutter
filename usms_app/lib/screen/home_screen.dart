@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:usms_app/main.dart';
 import 'package:usms_app/models/user_model.dart';
+import 'package:usms_app/screen/main_screen.dart';
 import 'package:usms_app/screen/notification_list_screen.dart';
 import 'package:usms_app/screen/register_screen.dart';
 
@@ -34,9 +35,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   late User user;
 
-  late AnimationController _animationController;
-  late Animation<Offset> _offsetAnimation;
-  late Animation<double> _opacityAnimation;
+  // late AnimationController _animationController;
+  // late Animation<Offset> _offsetAnimation;
+  // late Animation<double> _opacityAnimation;
 
   late List<Widget> widgetOptions;
 
@@ -45,33 +46,34 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     super.initState();
     getUserInfoFromStorage();
 
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1000),
-    );
+    // _animationController = AnimationController(
+    //   vsync: this,
+    //   duration: const Duration(milliseconds: 1000),
+    // );
 
-    _offsetAnimation = Tween<Offset>(
-      begin: const Offset(0.0, 1.0),
-      end: Offset.zero,
-    ).animate(
-      CurvedAnimation(
-        parent: _animationController,
-        curve: Curves.easeInOut,
-      ),
-    );
-    _opacityAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeInOut,
-    ));
+    // _offsetAnimation = Tween<Offset>(
+    //   begin: const Offset(0.0, 1.0),
+    //   end: Offset.zero,
+    // ).animate(
+    //   CurvedAnimation(
+    //     parent: _animationController,
+    //     curve: Curves.easeInOut,
+    //   ),
+    // );
+    // _opacityAnimation = Tween<double>(
+    //   begin: 0.0,
+    //   end: 1.0,
+    // ).animate(CurvedAnimation(
+    //   parent: _animationController,
+    //   curve: Curves.easeInOut,
+    // ));
 
     widgetOptions = <Widget>[
-      RegisterStoreWidget(
-          animationController: _animationController,
-          offsetAnimation: _offsetAnimation,
-          opacityAnimation: _opacityAnimation),
+      // RegisterStoreWidget(
+      //     animationController: _animationController,
+      //     offsetAnimation: _offsetAnimation,
+      //     opacityAnimation: _opacityAnimation),
+      const MainScreen(),
       const NotificationListScreen(),
       const StatisticScreen(),
       MyPageScreen(
@@ -79,12 +81,12 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       ),
     ];
 
-    _animationController.forward();
+    // _animationController.forward();
   }
 
   @override
   void dispose() {
-    _animationController.dispose();
+    // _animationController.dispose();
     super.dispose();
   }
 
@@ -173,40 +175,33 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(),
-      bottomNavigationBar: Container(
-        decoration: const BoxDecoration(
-          border: Border(
-            top: BorderSide(width: 2, color: Colors.grey),
+      appBar: AppBar(),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home_outlined),
+            label: '홈',
           ),
-        ),
-        child: BottomNavigationBar(
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home_outlined),
-              label: '홈',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.notifications_sharp),
-              label: '알림',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.bar_chart_rounded),
-              label: '통계',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              label: '내 정보',
-            ),
-          ],
-          currentIndex: selectedIndex,
-          selectedItemColor: Colors.blue[400],
-          iconSize: 37,
-          onTap: _onItemTapped,
-          showSelectedLabels: false,
-          showUnselectedLabels: false,
-          type: BottomNavigationBarType.fixed,
-        ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.notifications_sharp),
+            label: '알림',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.bar_chart_rounded),
+            label: '통계',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: '내 정보',
+          ),
+        ],
+        currentIndex: selectedIndex,
+        selectedItemColor: Colors.blue[400],
+        iconSize: 37,
+        onTap: _onItemTapped,
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        type: BottomNavigationBarType.fixed,
       ),
       body: SafeArea(
         child: widgetOptions.elementAt(selectedIndex),
