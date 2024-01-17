@@ -75,8 +75,8 @@
 
 import 'package:flutter/material.dart';
 
-class RegisterStoreTextField extends StatelessWidget {
-  const RegisterStoreTextField({
+class CustomTextFormField extends StatelessWidget {
+  const CustomTextFormField({
     super.key,
     required this.textController,
     required this.textType,

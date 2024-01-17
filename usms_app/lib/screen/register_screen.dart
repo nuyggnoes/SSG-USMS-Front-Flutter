@@ -20,16 +20,17 @@ class RegisterScreen extends StatefulWidget {
   static const route = 'register-user';
   final String data;
   final bool? flag;
-  final int routeCode;
+  final bool routeCode;
 
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
+  late String buttonName;
+
   late User user;
   final _formKey = GlobalKey<FormState>();
-
   bool isVerificationVisible = false;
   bool isPasswordValid = false;
 
@@ -79,11 +80,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   void initState() {
     super.initState();
-    if (widget.routeCode == 1) {
+    if (widget.routeCode == true && widget.flag != null) {
       _phoneTextEditController.text = widget.flag! ? widget.data : '';
       _emailTextEditController.text = widget.flag! ? '' : widget.data;
-    } else if (widget.routeCode == 2 && widget.flag == null) {
+      buttonName = '회원가입';
+    } else if (widget.routeCode == false && widget.flag == null) {
       getUserInfo();
+      buttonName = '수정';
     }
   }
 
@@ -188,7 +191,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               },
             ),
             elevation: 2,
-            title: const Text("회원가입"),
+            title: widget.routeCode ? const Text("회원가입") : const Text("회원정보수정"),
           ),
           body: SingleChildScrollView(
             child: Padding(
@@ -221,7 +224,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         //     },
                         //   ),
                         // ),
-                        RegisterStoreTextField(
+                        CustomTextFormField(
                           labelText: '이름',
                           textController: _nameController,
                           textType: TextInputType.text,
@@ -256,8 +259,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         //     },
                         //   ),
                         // ),
-                        RegisterStoreTextField(
+                        CustomTextFormField(
                           labelText: '휴대폰 번호',
+                          isEnabled:
+                              widget.flag == false || widget.flag == null,
                           counterText: '',
                           maxLength: 11,
                           textController: _phoneTextEditController,
@@ -295,7 +300,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         //     },
                         //   ),
                         // ),
-                        RegisterStoreTextField(
+                        CustomTextFormField(
                           labelText: '아이디',
                           maxLength: 20,
                           isEnabled: widget.flag ?? false,
@@ -335,7 +340,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         //     },
                         //   ),
                         // ),
-                        RegisterStoreTextField(
+                        CustomTextFormField(
                           labelText: '이메일',
                           isEnabled: widget.flag == true || widget.flag == null,
                           counterText: '',
@@ -371,7 +376,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         //     },
                         //   ),
                         // ),
-                        RegisterStoreTextField(
+                        CustomTextFormField(
                           labelText: '비밀번호',
                           maxLength: 30,
                           counterText: '',
@@ -419,7 +424,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         //     },
                         //   ),
                         // ),
-                        RegisterStoreTextField(
+                        CustomTextFormField(
                           labelText: '비밀번호 확인',
                           maxLength: 30,
                           counterText: '',
@@ -470,9 +475,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.blueAccent,
                             ),
-                            child: const Text(
-                              '회원가입',
-                              style: TextStyle(
+                            child: Text(
+                              buttonName,
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.w900,
                               ),

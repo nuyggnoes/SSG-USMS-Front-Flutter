@@ -22,7 +22,7 @@ class Routes {
       login: (context) => const Login(),
       identityVerification: (context) => const VerificationScreen(),
       registerUser: (context) =>
-          const RegisterScreen(data: '', flag: null, routeCode: 2),
+          const RegisterScreen(data: '', flag: null, routeCode: false),
       home: (context) => const HomeScreen(),
       securitySetting: (context) => const SecurityLevel(),
       registerStore: (context) => const RegisterStore(),

@@ -182,7 +182,7 @@ class _RegisterStoreState extends State<RegisterStore> {
                     children: [
                       Column(
                         children: [
-                          RegisterStoreTextField(
+                          CustomTextFormField(
                             textController: _storeNameController,
                             labelText: '업체명을 입력해주세요.',
                             textType: TextInputType.text,
@@ -204,7 +204,7 @@ class _RegisterStoreState extends State<RegisterStore> {
                             children: [
                               Expanded(
                                 flex: 3,
-                                child: RegisterStoreTextField(
+                                child: CustomTextFormField(
                                   maxLength: 3,
                                   onChange: (value) {
                                     if (value.length == 3) {
@@ -236,7 +236,7 @@ class _RegisterStoreState extends State<RegisterStore> {
                               ),
                               Expanded(
                                 flex: 2,
-                                child: RegisterStoreTextField(
+                                child: CustomTextFormField(
                                   onChange: (value) {
                                     if (value.length == 2) {
                                       _focusNode2.requestFocus();
@@ -269,7 +269,7 @@ class _RegisterStoreState extends State<RegisterStore> {
                               ),
                               Expanded(
                                 flex: 5,
-                                child: RegisterStoreTextField(
+                                child: CustomTextFormField(
                                   focusNode: _focusNode2,
                                   maxLength: 5,
                                   textController: _storeNumController3,
@@ -298,7 +298,7 @@ class _RegisterStoreState extends State<RegisterStore> {
                                 child: Stack(
                                   alignment: Alignment.topRight,
                                   children: [
-                                    RegisterStoreTextField(
+                                    CustomTextFormField(
                                       labelText: '업체 주소를 입력해주세요.',
                                       textController: _addressTextController,
                                       textType: TextInputType.text,
@@ -337,7 +337,7 @@ class _RegisterStoreState extends State<RegisterStore> {
                           const SizedBox(
                             height: 10,
                           ),
-                          RegisterStoreTextField(
+                          CustomTextFormField(
                             labelText: '상세 주소를 입력해주세요.',
                             textController: _detailAddressController,
                             textType: TextInputType.text,
@@ -430,8 +430,8 @@ class _RegisterStoreState extends State<RegisterStore> {
   }
 }
 
-// class RegisterStoreTextField extends StatelessWidget {
-//   const RegisterStoreTextField({
+// class CustomTextFormField extends StatelessWidget {
+//   const CustomTextFormField({
 //     super.key,
 //     required this.textController,
 //     required this.textType,

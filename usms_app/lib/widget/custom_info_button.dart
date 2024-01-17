@@ -7,6 +7,7 @@ class CustomInfoButton extends StatelessWidget {
     required this.parentContext,
     required this.route,
     required this.icon,
+    this.routeCode,
   });
   // ignore: prefer_typing_uninitialized_variables
   final buttonText;
@@ -14,6 +15,7 @@ class CustomInfoButton extends StatelessWidget {
   // ignore: prefer_typing_uninitialized_variables
   final route;
   final icon;
+  final bool? routeCode;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +23,11 @@ class CustomInfoButton extends StatelessWidget {
       onTap: () {
         // print('hi');
         print('$route');
-        Navigator.pushNamed(context, route);
+        Navigator.pushNamed(
+          context,
+          route,
+          arguments: routeCode,
+        );
       },
       child: Container(
         padding: const EdgeInsets.symmetric(

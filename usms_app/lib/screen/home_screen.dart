@@ -289,7 +289,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     builder: (context) => const RegisterScreen(
                       data: 'data',
                       flag: null,
-                      routeCode: 2,
+                      routeCode: false,
                     ),
                   ),
                 );

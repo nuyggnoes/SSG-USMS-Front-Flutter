@@ -296,7 +296,7 @@ class _VerificationScreenState extends State<VerificationScreen>
             builder: (context) => RegisterScreen(
               data: _authenticationMethod,
               flag: methodState,
-              routeCode: 1,
+              routeCode: true,
             ),
           ),
         );
@@ -345,6 +345,7 @@ class _VerificationScreenState extends State<VerificationScreen>
                           bottomLeft: Radius.circular(12),
                         ),
                         borderSide: BorderSide(
+                          width: 2,
                           color: Colors.blueAccent,
                         ),
                       ),
@@ -364,11 +365,6 @@ class _VerificationScreenState extends State<VerificationScreen>
                   onPressed: () async {
                     if (formKey.currentState?.validate() ?? false) {
                       formKey.currentState!.save();
-                      // g.Get.snackbar(
-                      //   '인증번호 발송',
-                      //   '인증번호가 발송되었습니다.',
-                      //   backgroundColor: Colors.white,
-                      // );
                       if (await getVerificationNumber(
                           code, _authenticationMethod)) {
                         // _showDialog('', '인증번호가 전송되었습니다.');
@@ -384,6 +380,11 @@ class _VerificationScreenState extends State<VerificationScreen>
                       const RoundedRectangleBorder(
                         borderRadius: BorderRadius.zero,
                       ),
+                    ),
+                    fixedSize:
+                        const MaterialStatePropertyAll(Size.fromHeight(44)),
+                    side: MaterialStateProperty.all(
+                      const BorderSide(color: Colors.grey),
                     ),
                   ),
                   child: Text(
@@ -424,6 +425,7 @@ class _VerificationScreenState extends State<VerificationScreen>
                                 bottomLeft: Radius.circular(12),
                               ),
                               borderSide: BorderSide(
+                                width: 2,
                                 color: Colors.blueAccent,
                               ),
                             ),
@@ -449,10 +451,13 @@ class _VerificationScreenState extends State<VerificationScreen>
                         style: ButtonStyle(
                           shape: MaterialStateProperty.all(
                             const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.only(
-                                bottomRight: Radius.circular(12),
-                              ),
+                              borderRadius: BorderRadius.zero,
                             ),
+                          ),
+                          fixedSize: const MaterialStatePropertyAll(
+                              Size.fromHeight(44)),
+                          side: MaterialStateProperty.all(
+                            const BorderSide(color: Colors.grey),
                           ),
                         ),
                         child: Text(

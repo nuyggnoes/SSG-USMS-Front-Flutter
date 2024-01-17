@@ -1,12 +1,9 @@
+import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:usms_app/service/routes.dart';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:dio/dio.dart';
-import 'dart:io';
-
-import 'package:usms_app/screen/home_screen.dart';
-import 'package:usms_app/screen/identity_verification_screen.dart';
-import 'package:usms_app/service/routes.dart';
 
 import 'package:usms_app/widget/my_checkbox.dart';
 
@@ -30,18 +27,20 @@ class _LoginState extends State<Login> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _asyncMethod();
+      _checkAutoLogin();
     });
   }
 
-  _asyncMethod() async {
+  _checkAutoLogin() async {
     // read 함수로 key값에 맞는 정보를 불러오고 데이터타입은 String 타입
     // 데이터가 없을때는 null을 반환
     userInfo = await storage.read(key: 'auto_login');
 
     if (userInfo != null) {
       print("자동로그인!");
-      Navigator.pushNamed(context, Routes.home);
+      if (mounted) {
+        Navigator.pushNamed(context, Routes.home);
+      }
     } else {
       print('로그인이 필요합니다');
     }
@@ -156,6 +155,7 @@ class _LoginState extends State<Login> {
               Radius.circular(12),
             ),
             borderSide: BorderSide(
+              width: 2,
               color: Colors.blueAccent,
             ),
           ),
