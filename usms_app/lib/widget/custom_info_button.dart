@@ -21,7 +21,7 @@ class CustomInfoButton extends StatelessWidget {
       onTap: () {
         // print('hi');
         print('$route');
-        // Navigator.pushNamed(parentContext, route);
+        Navigator.pushNamed(context, route);
       },
       child: Container(
         padding: const EdgeInsets.symmetric(

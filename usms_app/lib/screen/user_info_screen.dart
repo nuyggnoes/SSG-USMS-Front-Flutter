@@ -231,7 +231,7 @@ class _MyPageScreenState extends State<MyPageScreen> {
                         CustomInfoButton(
                           buttonText: '회원정보 수정',
                           parentContext: widget.context,
-                          route: RegisterScreen.route,
+                          route: Routes.registerUser,
                           icon: Icons.manage_accounts,
                         ),
                         CustomInfoButton(

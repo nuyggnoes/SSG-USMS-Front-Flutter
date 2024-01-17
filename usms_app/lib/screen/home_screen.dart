@@ -14,6 +14,7 @@ import 'package:usms_app/screen/set_security_level_screen.dart';
 import 'package:usms_app/screen/statistic_screen.dart';
 import 'package:usms_app/screen/store_detail_screen.dart';
 import 'package:usms_app/screen/user_info_screen.dart';
+import 'package:usms_app/service/routes.dart';
 import 'package:usms_app/widget/store_register_widget.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -30,10 +31,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   late String? email = '';
   int state = 0;
   late Icon securityIcon;
-  //로그인 한 userDTO
+
   late User user;
 
-  //애니메이션
   late AnimationController _animationController;
   late Animation<Offset> _offsetAnimation;
   late Animation<double> _opacityAnimation;
@@ -45,13 +45,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     super.initState();
     getUserInfoFromStorage();
 
-    // 애니메이션 컨트롤러 초기화
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1000),
     );
 
-    // Offset 애니메이션 설정
     _offsetAnimation = Tween<Offset>(
       begin: const Offset(0.0, 1.0),
       end: Offset.zero,
@@ -81,7 +79,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       ),
     ];
 
-    // 페이지가 나타날 때 애니메이션 실행
     _animationController.forward();
   }
 
@@ -176,7 +173,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      // appBar: AppBar(),
       bottomNavigationBar: Container(
         decoration: const BoxDecoration(
           border: Border(
@@ -329,7 +326,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 ),
               ),
               onTap: () {
-                Navigator.pushNamed(context, StoreDetail.route);
+                Navigator.pushNamed(context, Routes.storeDetail);
               },
             ),
             ListTile(

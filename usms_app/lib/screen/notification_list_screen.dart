@@ -49,135 +49,136 @@ class _NotificationListScreenState extends State<NotificationListScreen>
     return Scaffold(
       appBar: AppBar(
         title: const Text('지난 알림 목록'),
-        centerTitle: true,
-        elevation: 10,
+        leading: const Icon(Icons.notifications),
       ),
-      body: Center(
-        child: Column(
-          children: [
-            TabBar(
-              indicatorColor: Colors.blueAccent,
-              controller: _tabController,
-              labelColor: Colors.black54,
-              unselectedLabelColor: Colors.black54,
-              tabs: const <Widget>[
-                Tab(
-                  text: "개인 알림 기록",
-                ),
-                Tab(
-                  text: "업주 긴급 알림",
-                ),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.all(15),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: DateTimeFormField(
-                      mode: DateTimeFieldPickerMode.date,
-                      dateFormat: DateFormat.yMd(),
-                      decoration: const InputDecoration(
-                        labelText: '날짜를 선택해주세요.',
+      body: SafeArea(
+        child: Center(
+          child: Column(
+            children: [
+              TabBar(
+                indicatorColor: Colors.blueAccent,
+                controller: _tabController,
+                labelColor: Colors.black54,
+                unselectedLabelColor: Colors.black54,
+                tabs: const <Widget>[
+                  Tab(
+                    text: "개인 알림 기록",
+                  ),
+                  Tab(
+                    text: "업주 긴급 알림",
+                  ),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.all(15),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: DateTimeFormField(
+                        mode: DateTimeFieldPickerMode.date,
+                        dateFormat: DateFormat.yMd(),
+                        decoration: const InputDecoration(
+                          labelText: '날짜를 선택해주세요.',
+                        ),
+                        firstDate: DateTime.utc(2022),
+                        lastDate: DateTime.now(),
+                        onChanged: (DateTime? value) {
+                          setState(() {
+                            _startDate = value;
+                          });
+                        },
                       ),
-                      firstDate: DateTime.utc(2022),
-                      lastDate: DateTime.now(),
-                      onChanged: (DateTime? value) {
-                        setState(() {
-                          _startDate = value;
-                        });
-                      },
                     ),
-                  ),
-                  const SizedBox(
-                    width: 20,
-                    child: Text('~'),
-                  ),
-                  Expanded(
-                    child: DateTimeFormField(
-                      mode: DateTimeFieldPickerMode.date,
-                      dateFormat: DateFormat.yMd(),
-                      decoration: const InputDecoration(
-                        labelText: '날짜를 선택해주세요.',
-                      ),
-                      firstDate: DateTime.utc(2022),
-                      lastDate: DateTime.now(),
-                      onChanged: (DateTime? value) {
-                        _endDate = value;
-                      },
+                    const SizedBox(
+                      width: 20,
+                      child: Text('~'),
                     ),
-                  ),
-                  ElevatedButton(
-                    style: ButtonStyle(
-                      side: const MaterialStatePropertyAll(
-                        BorderSide(color: Colors.grey),
+                    Expanded(
+                      child: DateTimeFormField(
+                        mode: DateTimeFieldPickerMode.date,
+                        dateFormat: DateFormat.yMd(),
+                        decoration: const InputDecoration(
+                          labelText: '날짜를 선택해주세요.',
+                        ),
+                        firstDate: DateTime.utc(2022),
+                        lastDate: DateTime.now(),
+                        onChanged: (DateTime? value) {
+                          _endDate = value;
+                        },
                       ),
-                      fixedSize: MaterialStateProperty.all(
-                        const Size(80, 60),
-                      ),
-                      shape: MaterialStateProperty.all(
-                        const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.zero,
+                    ),
+                    ElevatedButton(
+                      style: ButtonStyle(
+                        side: const MaterialStatePropertyAll(
+                          BorderSide(color: Colors.grey),
+                        ),
+                        fixedSize: MaterialStateProperty.all(
+                          const Size(80, 60),
+                        ),
+                        shape: MaterialStateProperty.all(
+                          const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.zero,
+                          ),
                         ),
                       ),
+                      onPressed: () {
+                        print('[SELECT DATE] : $_startDate ~ $_endDate');
+                      },
+                      child: const Text(
+                        '조회',
+                        style: TextStyle(color: Colors.black),
+                      ),
                     ),
-                    onPressed: () {
-                      print('[SELECT DATE] : $_startDate ~ $_endDate');
-                    },
-                    child: const Text(
-                      '조회',
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            Expanded(
-              child: TabBarView(
-                physics: const NeverScrollableScrollPhysics(),
-                controller: _tabController,
-                children: <Widget>[
-                  FutureBuilder(
-                    future: words,
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        return Column(
-                          children: [
-                            Expanded(
-                              child: (ListView.separated(
-                                shrinkWrap: true,
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 10, horizontal: 60),
-                                itemCount: snapshot.data!.length,
-                                itemBuilder: (context, index) {
-                                  var word = snapshot.data![index];
-                                  return Word(
-                                    eng: word.eng,
-                                    kor: word.kor,
-                                    id: word.id,
-                                    day: word.day,
-                                    isDone: word.isDone,
-                                  );
-                                },
-                                separatorBuilder: (context, index) =>
-                                    const SizedBox(
-                                  height: 20,
-                                ),
-                              )),
-                            ),
-                          ],
+              Expanded(
+                child: TabBarView(
+                  physics: const NeverScrollableScrollPhysics(),
+                  controller: _tabController,
+                  children: <Widget>[
+                    FutureBuilder(
+                      future: words,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return Column(
+                            children: [
+                              Expanded(
+                                child: (ListView.separated(
+                                  shrinkWrap: true,
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 10, horizontal: 60),
+                                  itemCount: snapshot.data!.length,
+                                  itemBuilder: (context, index) {
+                                    var word = snapshot.data![index];
+                                    return Word(
+                                      eng: word.eng,
+                                      kor: word.kor,
+                                      id: word.id,
+                                      day: word.day,
+                                      isDone: word.isDone,
+                                    );
+                                  },
+                                  separatorBuilder: (context, index) =>
+                                      const SizedBox(
+                                    height: 20,
+                                  ),
+                                )),
+                              ),
+                            ],
+                          );
+                        }
+                        return const Center(
+                          child: CircularProgressIndicator(),
                         );
-                      }
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    },
-                  ),
-                  makeListView(20),
-                ],
+                      },
+                    ),
+                    makeListView(20),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
