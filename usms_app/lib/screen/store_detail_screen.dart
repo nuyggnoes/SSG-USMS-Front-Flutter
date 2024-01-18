@@ -1,6 +1,7 @@
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:usms_app/screen/cctv_detail_screen.dart';
+import 'package:usms_app/screen/no_cctv_screen.dart';
 
 import 'package:usms_app/screen/notification_list_screen.dart';
 import 'package:usms_app/screen/statistic_screen.dart';
@@ -87,7 +88,6 @@ class _StoreDetailState extends State<StoreDetail> {
               Navigator.pop(context);
             },
           ),
-          toolbarHeight: 100,
           centerTitle: true,
           title: const Text('특정 매장 이름'),
         ),
@@ -177,92 +177,93 @@ class _StoreDetailState extends State<StoreDetail> {
                       // ),
                     ],
                   )
-                : SingleChildScrollView(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Image.asset(
-                          'assets/cctv_img.png',
-                          // width: double.infinity,
-                          scale: 5,
-                        ),
-                        const Column(
-                          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              '현재 매장에 등록된 CCTV가 존재하지 않습니다.',
-                              style: TextStyle(fontWeight: FontWeight.w800),
-                              softWrap: true,
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              'CCTV를 등록하여 서비스를 이용해보세요.',
-                              style: TextStyle(
-                                fontSize: 15,
-                              ),
-                            ),
-                            SizedBox(
-                              height: 30,
-                            ),
-                          ],
-                        ),
-                        // ElevatedButton(
-                        //   onPressed: () {
-                        //     showDialog(
-                        //       barrierDismissible: false,
-                        //       context: context,
-                        //       builder: (context) {
-                        //         return AlertDialog(
-                        //           title: const Text('CCTV 별칭 설정'),
-                        //           content: TextFormField(
-                        //             decoration: const InputDecoration(
-                        //                 labelText: 'CCTV 별칭'),
-                        //           ),
-                        //           actions: [
-                        //             TextButton(
-                        //               onPressed: () {
-                        //                 Navigator.of(context).pop();
-                        //               },
-                        //               child: const Text('확인'),
-                        //             ),
-                        //           ],
-                        //         );
-                        //       },
-                        //     );
-                        //   },
-                        //   style: ElevatedButton.styleFrom(
-                        //     backgroundColor: Colors.blueAccent,
-                        //   ),
-                        //   child: const Text(
-                        //     'CCTV 추가하기',
-                        //     style: TextStyle(
-                        //       color: Colors.white,
-                        //       fontWeight: FontWeight.w900,
-                        //     ),
-                        //   ),
-                        // ),
-                        ExpansionTile(
-                          title: const Text('CCTV 추가하기'),
-                          children: <Widget>[
-                            SizedBox(
-                              width: double.infinity,
-                              height: 230,
-                              child: AdSlider(),
-                            ),
-                            TextFormField(
-                              decoration:
-                                  const InputDecoration(labelText: 'CCTV 별칭'),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 100,
-                        ),
-                      ],
-                    ),
-                  ),
+                // : SingleChildScrollView(
+                //     child: Column(
+                //       mainAxisAlignment: MainAxisAlignment.spaceAround,
+                //       children: [
+                //         Image.asset(
+                //           'assets/cctv_img.png',
+                //           // width: double.infinity,
+                //           scale: 5,
+                //         ),
+                //         const Column(
+                //           // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //           children: [
+                //             Text(
+                //               '현재 매장에 등록된 CCTV가 존재하지 않습니다.',
+                //               style: TextStyle(fontWeight: FontWeight.w800),
+                //               softWrap: true,
+                //             ),
+                //             SizedBox(
+                //               height: 10,
+                //             ),
+                //             Text(
+                //               'CCTV를 등록하여 서비스를 이용해보세요.',
+                //               style: TextStyle(
+                //                 fontSize: 15,
+                //               ),
+                //             ),
+                //             SizedBox(
+                //               height: 30,
+                //             ),
+                //           ],
+                //         ),
+                //         // ElevatedButton(
+                //         //   onPressed: () {
+                //         //     showDialog(
+                //         //       barrierDismissible: false,
+                //         //       context: context,
+                //         //       builder: (context) {
+                //         //         return AlertDialog(
+                //         //           title: const Text('CCTV 별칭 설정'),
+                //         //           content: TextFormField(
+                //         //             decoration: const InputDecoration(
+                //         //                 labelText: 'CCTV 별칭'),
+                //         //           ),
+                //         //           actions: [
+                //         //             TextButton(
+                //         //               onPressed: () {
+                //         //                 Navigator.of(context).pop();
+                //         //               },
+                //         //               child: const Text('확인'),
+                //         //             ),
+                //         //           ],
+                //         //         );
+                //         //       },
+                //         //     );
+                //         //   },
+                //         //   style: ElevatedButton.styleFrom(
+                //         //     backgroundColor: Colors.blueAccent,
+                //         //   ),
+                //         //   child: const Text(
+                //         //     'CCTV 추가하기',
+                //         //     style: TextStyle(
+                //         //       color: Colors.white,
+                //         //       fontWeight: FontWeight.w900,
+                //         //     ),
+                //         //   ),
+                //         // ),
+                //         ExpansionTile(
+                //           title: const Text('CCTV 추가하기'),
+                //           children: <Widget>[
+                //             SizedBox(
+                //               width: double.infinity,
+                //               height: 230,
+                //               child: AdSlider(),
+                //             ),
+                //             TextFormField(
+                //               decoration:
+                //                   const InputDecoration(labelText: 'CCTV 별칭'),
+                //             ),
+                //           ],
+                //         ),
+                //         const SizedBox(
+                //           height: 200,
+                //         ),
+                //       ],
+                //     ),
+                //   ),
+                : const NoCCTV(),
           ),
         ),
       ),
