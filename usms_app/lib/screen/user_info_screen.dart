@@ -3,12 +3,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:usms_app/models/user_model.dart';
-import 'package:usms_app/screen/register_screen.dart';
-import 'package:usms_app/screen/security_test.dart';
-import 'package:usms_app/screen/set_security_level_screen.dart';
-import 'package:usms_app/screen/store_detail_screen.dart';
 import 'package:usms_app/service/routes.dart';
-import 'package:usms_app/service/test_register.dart';
+import 'package:usms_app/widget/cctv_name.dart';
 import 'package:usms_app/widget/custom_info_button.dart';
 
 class MyPageScreen extends StatefulWidget {
@@ -174,7 +170,7 @@ class _MyPageScreenState extends State<MyPageScreen> {
                       borderRadius: const BorderRadius.all(
                         Radius.circular(14),
                       ),
-                      color: Colors.blue[100],
+                      color: Colors.grey[200],
                     ),
                     width: double.infinity,
                     height: 130,

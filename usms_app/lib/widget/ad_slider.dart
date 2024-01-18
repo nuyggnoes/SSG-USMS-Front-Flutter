@@ -13,26 +13,36 @@ class AdSlider extends StatelessWidget {
     return PageView.builder(
       itemCount: ads.length,
       itemBuilder: (context, index) {
-        return Padding(
+        return Container(
           padding: const EdgeInsets.all(16),
-          child: Container(
-            color: Colors.amber[100], // 각 페이지의 배경색을 설정할 수 있습니다.
-            child: Column(
-              children: [
-                Expanded(
-                  child: Text(
-                    ads[index],
-                    style: const TextStyle(fontSize: 24, color: Colors.black),
-                  ),
-                ),
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
-                  width: double.infinity,
-                  child: Text('${index + 1}/${ads.length}'),
-                ),
-              ],
+          // color: Colors.amber,
+          decoration: const BoxDecoration(
+            border: Border(
+                bottom: BorderSide(color: Colors.black),
+                right: BorderSide(color: Colors.black)),
+            borderRadius: BorderRadius.all(
+              Radius.circular(15),
             ),
+          ),
+          child: Column(
+            children: [
+              Text(
+                ads[index],
+                style: const TextStyle(fontSize: 24, color: Colors.black),
+              ),
+              const Expanded(
+                child: Icon(
+                  Icons.currency_exchange,
+                  size: 80,
+                ),
+              ),
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
+                width: double.infinity,
+                child: Text('${index + 1}/${ads.length}'),
+              ),
+            ],
           ),
         );
       },

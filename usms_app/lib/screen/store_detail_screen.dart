@@ -11,7 +11,6 @@ import 'package:video_player/video_player.dart';
 
 class StoreDetail extends StatefulWidget {
   const StoreDetail({super.key});
-  static const route = 'store-detail';
 
   @override
   State<StoreDetail> createState() => _StoreDetailState();
@@ -82,7 +81,6 @@ class _StoreDetailState extends State<StoreDetail> {
       ),
       home: Scaffold(
         appBar: AppBar(
-          elevation: 10,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back_ios_new_rounded),
             onPressed: () {
@@ -91,7 +89,7 @@ class _StoreDetailState extends State<StoreDetail> {
           ),
           toolbarHeight: 100,
           centerTitle: true,
-          title: const Text('매장 현황'),
+          title: const Text('특정 매장 이름'),
         ),
         body: Center(
           child: Padding(
@@ -179,7 +177,7 @@ class _StoreDetailState extends State<StoreDetail> {
                       // ),
                     ],
                   )
-                : Center(
+                : SingleChildScrollView(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
@@ -188,56 +186,80 @@ class _StoreDetailState extends State<StoreDetail> {
                           // width: double.infinity,
                           scale: 5,
                         ),
-                        Expanded(
-                          child: Column(
-                            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text(
-                                '현재 매장에 등록된 CCTV가 존재하지 않습니다.',
-                                style: TextStyle(fontWeight: FontWeight.w800),
-                                softWrap: true,
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              const Text(
-                                'CCTV를 등록하여 서비스를 이용해보세요.',
-                                style: TextStyle(
-                                  fontSize: 15,
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 30,
-                              ),
-                              Container(
-                                width: double.infinity,
-                                height: 240,
-                                decoration: BoxDecoration(
-                                  color: Colors.amber[200],
-                                  borderRadius: const BorderRadius.all(
-                                    Radius.circular(12),
-                                  ),
-                                ),
-                                child: AdSlider(),
-                              ),
-                            ],
-                          ),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            print('register cctv');
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blueAccent,
-                          ),
-                          child: const Text(
-                            'CCTV 추가하기',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w900,
+                        const Column(
+                          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              '현재 매장에 등록된 CCTV가 존재하지 않습니다.',
+                              style: TextStyle(fontWeight: FontWeight.w800),
+                              softWrap: true,
                             ),
-                          ),
-                        )
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              'CCTV를 등록하여 서비스를 이용해보세요.',
+                              style: TextStyle(
+                                fontSize: 15,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 30,
+                            ),
+                          ],
+                        ),
+                        // ElevatedButton(
+                        //   onPressed: () {
+                        //     showDialog(
+                        //       barrierDismissible: false,
+                        //       context: context,
+                        //       builder: (context) {
+                        //         return AlertDialog(
+                        //           title: const Text('CCTV 별칭 설정'),
+                        //           content: TextFormField(
+                        //             decoration: const InputDecoration(
+                        //                 labelText: 'CCTV 별칭'),
+                        //           ),
+                        //           actions: [
+                        //             TextButton(
+                        //               onPressed: () {
+                        //                 Navigator.of(context).pop();
+                        //               },
+                        //               child: const Text('확인'),
+                        //             ),
+                        //           ],
+                        //         );
+                        //       },
+                        //     );
+                        //   },
+                        //   style: ElevatedButton.styleFrom(
+                        //     backgroundColor: Colors.blueAccent,
+                        //   ),
+                        //   child: const Text(
+                        //     'CCTV 추가하기',
+                        //     style: TextStyle(
+                        //       color: Colors.white,
+                        //       fontWeight: FontWeight.w900,
+                        //     ),
+                        //   ),
+                        // ),
+                        ExpansionTile(
+                          title: const Text('CCTV 추가하기'),
+                          children: <Widget>[
+                            SizedBox(
+                              width: double.infinity,
+                              height: 230,
+                              child: AdSlider(),
+                            ),
+                            TextFormField(
+                              decoration:
+                                  const InputDecoration(labelText: 'CCTV 별칭'),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 100,
+                        ),
                       ],
                     ),
                   ),

@@ -2,26 +2,13 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/date_symbol_data_local.dart';
+
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 // api
 import 'package:usms_app/api/firebase_api.dart';
-import 'package:usms_app/screen/cctv_detail_screen.dart';
-
-// screen
-import 'package:usms_app/screen/home_screen.dart';
-import 'package:usms_app/screen/identity_verification_screen.dart';
-import 'package:usms_app/screen/login_screen.dart';
-import 'package:usms_app/screen/notification_list_screen.dart';
-import 'package:usms_app/screen/notification_screen.dart';
-import 'package:usms_app/screen/register_screen.dart';
-import 'package:usms_app/screen/register_store_screen.dart';
-import 'package:usms_app/screen/secondary_password_screen.dart';
-import 'package:usms_app/screen/set_security_level_screen.dart';
-import 'package:usms_app/screen/statistic_screen.dart';
-import 'package:usms_app/screen/store_detail_screen.dart';
 import 'package:usms_app/service/routes.dart';
 
 // route
