@@ -75,16 +75,16 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                     // 반려, 승인요청, 승인상태에 따라 다른페이지로 route
                     Column(
                       children: [
-                        CurrencyCard(
-                          name: 'GS25 무인매장점',
-                          code: 0, // store_state : 승인(1) / 승인요청중(2) / 반려(0)
-                          amount: '',
-                          icon: Icons.store_mall_directory_rounded,
-                          selectedCardColors: Colors.blue.shade200,
-                          animationController: _animationController,
-                          opacityAnimation: _opacityAnimation,
-                          onTapAction: () {},
-                        ),
+                        // CurrencyCard(
+                        //   name: 'GS25 무인매장점',
+                        //   code: 0, // store_state : 승인(1) / 승인요청중(2) / 반려(0)
+                        //   amount: '',
+                        //   icon: Icons.store_mall_directory_rounded,
+                        //   selectedCardColors: Colors.blue.shade200,
+                        //   animationController: _animationController,
+                        //   opacityAnimation: _opacityAnimation,
+                        //   onTapAction: () {},
+                        // ),
                         const SizedBox(
                           height: 20,
                         ),
@@ -104,11 +104,11 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                           height: 20,
                         ),
                         CurrencyCard(
-                          name: 'GS25 무인매장점3',
+                          name: '신세계I&C 부산캠퍼스',
                           code: 2,
                           amount: '',
-                          icon: Icons.apartment,
-                          selectedCardColors: Colors.blue.shade400,
+                          icon: Icons.filter_vintage_outlined,
+                          selectedCardColors: Colors.red.shade400,
                           animationController: _animationController,
                           opacityAnimation: _opacityAnimation,
                           onTapAction: () {
