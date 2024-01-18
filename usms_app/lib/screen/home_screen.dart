@@ -30,49 +30,20 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   final storage = const FlutterSecureStorage();
   late String? name = '';
   late String? email = '';
+  late int? uid;
   int state = 0;
   late Icon securityIcon;
 
   late User user;
-
-  // late AnimationController _animationController;
-  // late Animation<Offset> _offsetAnimation;
-  // late Animation<double> _opacityAnimation;
-
   late List<Widget> widgetOptions;
 
   @override
   void initState() {
     super.initState();
-    getUserInfoFromStorage();
-
-    // _animationController = AnimationController(
-    //   vsync: this,
-    //   duration: const Duration(milliseconds: 1000),
-    // );
-
-    // _offsetAnimation = Tween<Offset>(
-    //   begin: const Offset(0.0, 1.0),
-    //   end: Offset.zero,
-    // ).animate(
-    //   CurvedAnimation(
-    //     parent: _animationController,
-    //     curve: Curves.easeInOut,
-    //   ),
-    // );
-    // _opacityAnimation = Tween<double>(
-    //   begin: 0.0,
-    //   end: 1.0,
-    // ).animate(CurvedAnimation(
-    //   parent: _animationController,
-    //   curve: Curves.easeInOut,
-    // ));
+    getUserInfo();
+    // getUserStores();
 
     widgetOptions = <Widget>[
-      // RegisterStoreWidget(
-      //     animationController: _animationController,
-      //     offsetAnimation: _offsetAnimation,
-      //     opacityAnimation: _opacityAnimation),
       const MainScreen(),
       const NotificationListScreen(),
       const StatisticScreen(),
@@ -80,17 +51,66 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         context: super.context,
       ),
     ];
-
-    // _animationController.forward();
   }
 
-  @override
-  void dispose() {
-    // _animationController.dispose();
-    super.dispose();
+  Future<void> getUserStores() async {
+    final jSessionId = await storage.read(key: 'cookie');
+    Response response;
+    var baseoptions = BaseOptions(
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+        'cookie': '$jSessionId',
+      },
+      baseUrl: "http://10.0.2.2:3003",
+    );
+    Dio dio = Dio(baseoptions);
+
+    var param = {
+      'offset': 0,
+      'size': 10,
+    };
+
+    try {
+      response = await dio.get('/api/users/$uid/stores', data: param);
+      if (response.statusCode == 200) {
+        print('====================userInfo 200=====================');
+
+        print('[RES BODY] : ${response.data}');
+        // user = User.fromMap(response.data);
+        // uid = user.uid;
+        // storeDTO response
+        /* status 400 BAD REQUEST
+          body : {
+              "code" : 608,  // offset값이 잘못
+              "message" : "허용되지 않은 offset 값입니다."
+          }
+
+          // 허용되지 않은 size으로 요청할 경우
+          status 400 BAD REQUEST
+          body : {
+              "code" : 609 // size값이 잘못됨
+              "message": "허용되지않은 size값입니다."
+          } 
+        */
+
+        setState(() {
+          name = user.person_name;
+          email = user.email;
+          state = user.security_state;
+        });
+        await storage.write(key: 'userInfo', value: jsonEncode(response.data));
+        print('유저 보안 레벨 : $state');
+      }
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 400) {
+        print("[ERROR] : [$e]");
+        // 400 에러의 body
+        print('[ERR Body] : ${e.response?.data}');
+      }
+    }
   }
 
-  Future<void> getUserInfoFromStorage() async {
+  Future<void> getUserInfo() async {
     final username = await storage.read(key: 'cookie');
     print('username = $username');
     Response response;
@@ -110,8 +130,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       response = await dio.get('/login', data: param);
       if (response.statusCode == 200) {
         print('====================userInfo 200=====================');
+        print('전역변수 : ${MyApp.url}');
         print('[RES BODY] : ${response.data}');
         user = User.fromMap(response.data);
+        uid = user.uid;
+
         setState(() {
           name = user.person_name;
           email = user.email;

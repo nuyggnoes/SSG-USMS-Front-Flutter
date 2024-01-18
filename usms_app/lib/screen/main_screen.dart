@@ -73,46 +73,49 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                     // FutreBuilder 사용, 카드 색 랜덤
                     // onTap callback함수 사용해서
                     // 반려, 승인요청, 승인상태에 따라 다른페이지로 route
-                    CurrencyCard(
-                      name: 'GS25 무인매장점',
-                      code: 0, // store_state : 승인(1) / 승인요청중(2) / 반려(0)
-                      amount: '',
-                      icon: Icons.store_mall_directory_rounded,
-                      selectedCardColors: Colors.blue.shade200,
-                      animationController: _animationController,
-                      opacityAnimation: _opacityAnimation,
-                      onTapAction: () {},
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-
-                    CurrencyCard(
-                      name: 'GS25 무인매장점2',
-                      code: 1,
-                      amount: '',
-                      icon: Icons.store_mall_directory_rounded,
-                      selectedCardColors: Colors.blue.shade300,
-                      animationController: _animationController,
-                      opacityAnimation: _opacityAnimation,
-                      onTapAction: () {
-                        Navigator.pushNamed(context, Routes.storeDetail);
-                      },
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    CurrencyCard(
-                      name: 'GS25 무인매장점3',
-                      code: 2,
-                      amount: '',
-                      icon: Icons.store_mall_directory_rounded,
-                      selectedCardColors: Colors.blue.shade400,
-                      animationController: _animationController,
-                      opacityAnimation: _opacityAnimation,
-                      onTapAction: () {
-                        Navigator.pushNamed(context, Routes.cctvReplay);
-                      },
+                    Column(
+                      children: [
+                        CurrencyCard(
+                          name: 'GS25 무인매장점',
+                          code: 0, // store_state : 승인(1) / 승인요청중(2) / 반려(0)
+                          amount: '',
+                          icon: Icons.store_mall_directory_rounded,
+                          selectedCardColors: Colors.blue.shade200,
+                          animationController: _animationController,
+                          opacityAnimation: _opacityAnimation,
+                          onTapAction: () {},
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        CurrencyCard(
+                          name: 'GS25 무인매장점2',
+                          code: 1,
+                          amount: '',
+                          icon: Icons.storefront,
+                          selectedCardColors: Colors.blue.shade300,
+                          animationController: _animationController,
+                          opacityAnimation: _opacityAnimation,
+                          onTapAction: () {
+                            Navigator.pushNamed(context, Routes.storeDetail);
+                          },
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        CurrencyCard(
+                          name: 'GS25 무인매장점3',
+                          code: 2,
+                          amount: '',
+                          icon: Icons.apartment,
+                          selectedCardColors: Colors.blue.shade400,
+                          animationController: _animationController,
+                          opacityAnimation: _opacityAnimation,
+                          onTapAction: () {
+                            Navigator.pushNamed(context, Routes.cctvReplay);
+                          },
+                        ),
+                      ],
                     ),
                     const SizedBox(
                       height: 100,

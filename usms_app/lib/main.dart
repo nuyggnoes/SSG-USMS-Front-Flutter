@@ -50,6 +50,8 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
+  static const url = 'https://usms.serveftp.com';
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

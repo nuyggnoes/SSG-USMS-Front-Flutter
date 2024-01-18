@@ -6,6 +6,7 @@ class User {
   final String phone_number;
   final int security_state;
   final bool is_lock;
+  int? uid;
 
   User({
     required this.username,
@@ -15,6 +16,7 @@ class User {
     required this.phone_number,
     required this.security_state,
     required this.is_lock,
+    this.uid,
   });
 
   User.fromJson(Map<String, dynamic> json)
@@ -36,8 +38,9 @@ class User {
         'is_lock': is_lock,
       };
   factory User.fromMap(Map<String, dynamic> map) {
-    print("이 값이 도대체 뭐길래 ? ? ? ? ${map['is_lock']}");
+    // print("이 값이 도대체 뭐길래 ? ? ? ? ${map['is_lock']}");
     return User(
+      uid: map['uid'],
       username: map['username'],
       password: map['password'],
       person_name: map['person_name'],

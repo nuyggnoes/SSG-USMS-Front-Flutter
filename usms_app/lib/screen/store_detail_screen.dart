@@ -1,8 +1,12 @@
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:usms_app/screen/cctv_detail_screen.dart';
+
 import 'package:usms_app/screen/notification_list_screen.dart';
 import 'package:usms_app/screen/statistic_screen.dart';
+
+import 'package:usms_app/service/routes.dart';
+import 'package:usms_app/widget/ad_slider.dart';
 import 'package:video_player/video_player.dart';
 
 class StoreDetail extends StatefulWidget {
@@ -19,9 +23,14 @@ class _StoreDetailState extends State<StoreDetail> {
   late ChewieController _chewieController;
   // late ChewieController _chewieController2;
 
+  // 페이지 상태 변화 변수(cctv 존재유무)
+  final bool isCCTVExist = false;
+
   @override
   void initState() {
     super.initState();
+    // 특정 회원의 특정 매장 정보를 가져온 후
+    // 특정 매장에 cctv 정보가 없으면 페이지 상태 변화
     setVideoPlayer();
   }
 
@@ -36,17 +45,16 @@ class _StoreDetailState extends State<StoreDetail> {
 
     _videoController = VideoPlayerController.networkUrl(uri);
 
-    _chewieController = ChewieController(
-      videoPlayerController: _videoController,
-      autoPlay: true,
-      aspectRatio: 16 / 9,
-    );
-
-    await _videoController.initialize();
-
-    if (mounted) {
-      setState(() {});
+    if (!_videoController.value.isInitialized) {
+      await _videoController.initialize();
+      _chewieController = ChewieController(
+        videoPlayerController: _videoController,
+        autoPlay: true,
+        aspectRatio: 16 / 9,
+      );
     }
+
+    setState(() {});
   }
 
   @override
@@ -85,92 +93,154 @@ class _StoreDetailState extends State<StoreDetail> {
           centerTitle: true,
           title: const Text('매장 현황'),
         ),
-        body: SingleChildScrollView(
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                vertical: 40,
-                horizontal: 20,
-              ),
-              child: SizedBox(
-                child: Column(
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade200,
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              vertical: 40,
+              horizontal: 20,
+            ),
+            child: isCCTVExist
+                ? Column(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade200,
+                        ),
+                        // width: 450,
+                        height: 250,
+                        // child: _videoController.value.isInitialized
+                        //     ? AspectRatio(
+                        //         aspectRatio: _videoController.value.aspectRatio,
+                        //         child: VideoPlayer(_videoController),
+                        //       )
+                        //     : const Center(
+                        //         child: CircularProgressIndicator(),
+                        //       ),
+                        child: _videoController.value.isInitialized
+                            ? Chewie(controller: _chewieController)
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
                       ),
-                      // width: 450,
-                      height: 250,
-                      // child: _videoController.value.isInitialized
-                      //     ? AspectRatio(
-                      //         aspectRatio: _videoController.value.aspectRatio,
-                      //         child: VideoPlayer(_videoController),
-                      //       )
-                      //     : const Center(
-                      //         child: CircularProgressIndicator(),
-                      //       ),
-                      child: _videoController.value.isInitialized
-                          ? Chewie(controller: _chewieController)
-                          : const Center(
-                              child: CircularProgressIndicator(),
+                      const SizedBox(
+                        height: 30,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade200,
                             ),
-                    ),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    Row(
+                            width: 190,
+                            height: 107,
+                            // child: _videoController.value.isInitialized
+                            //     ? Chewie(controller: _chewieController)
+                            //     : const Center(
+                            //         child: CircularProgressIndicator(),
+                            //       ),
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade200,
+                            ),
+                            width: 190,
+                            height: 107,
+                            // child: _videoController.value.isInitialized
+                            //     ? Chewie(controller: _chewieController)
+                            //     : const Center(
+                            //         child: CircularProgressIndicator(),
+                            //       ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+
+                      CustomBoxButton(
+                        buttonText: 'CCTV 현황',
+                        route: MaterialPageRoute(
+                          builder: (context) => const CCTVScreen(),
+                        ),
+                        parentContext: context,
+                        // videoPlayerController: _videoController,
+                        // chewieController: _chewieController,
+                      ),
+                      // CustomBoxButton(
+                      //   buttonText: '지난 알림 목록',
+                      //   routeName: NotificationListScreen.route,
+                      //   parentContext: context,
+                      // ),
+                      // CustomBoxButton(
+                      //   buttonText: '통계 지표',
+                      //   routeName: StatisticScreen.route,
+                      //   parentContext: context,
+                      // ),
+                    ],
+                  )
+                : Center(
+                    child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.grey.shade200,
-                          ),
-                          width: 190,
-                          height: 107,
-                          // child: _videoController.value.isInitialized
-                          //     ? Chewie(controller: _chewieController)
-                          //     : const Center(
-                          //         child: CircularProgressIndicator(),
-                          //       ),
+                        Image.asset(
+                          'assets/cctv_img.png',
+                          // width: double.infinity,
+                          scale: 5,
                         ),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.grey.shade200,
+                        Expanded(
+                          child: Column(
+                            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text(
+                                '현재 매장에 등록된 CCTV가 존재하지 않습니다.',
+                                style: TextStyle(fontWeight: FontWeight.w800),
+                                softWrap: true,
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              const Text(
+                                'CCTV를 등록하여 서비스를 이용해보세요.',
+                                style: TextStyle(
+                                  fontSize: 15,
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 30,
+                              ),
+                              Container(
+                                width: double.infinity,
+                                height: 240,
+                                decoration: BoxDecoration(
+                                  color: Colors.amber[200],
+                                  borderRadius: const BorderRadius.all(
+                                    Radius.circular(12),
+                                  ),
+                                ),
+                                child: AdSlider(),
+                              ),
+                            ],
                           ),
-                          width: 190,
-                          height: 107,
-                          // child: _videoController.value.isInitialized
-                          //     ? Chewie(controller: _chewieController)
-                          //     : const Center(
-                          //         child: CircularProgressIndicator(),
-                          //       ),
                         ),
+                        ElevatedButton(
+                          onPressed: () {
+                            print('register cctv');
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blueAccent,
+                          ),
+                          child: const Text(
+                            'CCTV 추가하기',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w900,
+                            ),
+                          ),
+                        )
                       ],
                     ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    CustomBoxButton(
-                      buttonText: 'CCTV 현황',
-                      routeName: CCTVScreen.route,
-                      parentContext: context,
-                      videoPlayerController: _videoController,
-                      chewieController: _chewieController,
-                    ),
-                    // CustomBoxButton(
-                    //   buttonText: '지난 알림 목록',
-                    //   routeName: NotificationListScreen.route,
-                    //   parentContext: context,
-                    // ),
-                    // CustomBoxButton(
-                    //   buttonText: '통계 지표',
-                    //   routeName: StatisticScreen.route,
-                    //   parentContext: context,
-                    // ),
-                  ],
-                ),
-              ),
-            ),
+                  ),
           ),
         ),
       ),
@@ -180,18 +250,18 @@ class _StoreDetailState extends State<StoreDetail> {
 
 class CustomBoxButton extends StatelessWidget {
   final buttonText;
-  final routeName;
+  final MaterialPageRoute route;
   final BuildContext parentContext;
-  final VideoPlayerController videoPlayerController;
-  final ChewieController chewieController;
+  // final VideoPlayerController videoPlayerController;
+  // final ChewieController chewieController;
 
   const CustomBoxButton({
     super.key,
     required this.buttonText,
-    required this.routeName,
+    required this.route,
     required this.parentContext,
-    required this.videoPlayerController,
-    required this.chewieController,
+    // required this.videoPlayerController,
+    // required this.chewieController,
   });
 
   @override
@@ -199,7 +269,8 @@ class CustomBoxButton extends StatelessWidget {
     return InkWell(
       onTap: () {
         print('hi');
-        Navigator.pushNamed(parentContext, routeName);
+
+        Navigator.push(context, route);
       },
       child: Container(
         padding: const EdgeInsets.symmetric(

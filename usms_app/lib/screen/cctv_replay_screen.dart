@@ -15,6 +15,12 @@ class _CalendarScreenState extends State<CCTVReplay> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('CCTV 다시보기'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_new_rounded),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: Column(
         children: [
