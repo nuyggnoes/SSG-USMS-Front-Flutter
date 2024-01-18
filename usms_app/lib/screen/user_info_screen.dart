@@ -243,7 +243,7 @@ class _MyPageScreenState extends State<MyPageScreen> {
                         CustomInfoButton(
                           buttonText: '결제정보',
                           parentContext: context,
-                          route: RegisterScreen.route,
+                          route: Routes.payInfo,
                           icon: Icons.credit_card,
                         ),
                       ],
