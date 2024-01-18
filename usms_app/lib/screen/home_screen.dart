@@ -175,7 +175,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
       bottomNavigationBar: BottomNavigationBar(
         items: const [
           BottomNavigationBarItem(
@@ -206,142 +205,142 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       body: SafeArea(
         child: widgetOptions.elementAt(selectedIndex),
       ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            UserAccountsDrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.blue[400],
-              ),
-              accountName: Row(
-                children: [
-                  Text(
-                    '$name님',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 40,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 55,
-                  ),
-                  // Icon(
-                  //   Icons.gpp_bad_outlined,
-                  //   color: getSecurityLevel(),
-                  //   size: 70,
-                  // ),
-                  getSecurityLevel(),
-                ],
-              ),
-              accountEmail: Text(
-                '$email',
-                style: const TextStyle(
-                  color: Colors.white,
-                ),
-              ),
-              // onDetailsPressed: () {
-              //   print('detail clicked');
-              // },
-            ),
-            ListTile(
-              leading: const Icon(
-                Icons.policy_outlined,
-                color: Colors.grey,
-              ),
-              title: const Text(
-                '보안레벨 설정',
-                style: TextStyle(
-                  color: Colors.grey,
-                ),
-              ),
-              onTap: () {
-                print('Security Level Clicked');
-                Navigator.pushNamed(context, SecurityLevel.route);
-              },
-              trailing: const Icon(
-                Icons.add,
-                color: Colors.grey,
-              ),
-            ),
-            ListTile(
-              leading: const Icon(
-                Icons.account_circle_outlined,
-                color: Colors.grey,
-              ),
-              title: const Text(
-                '회원정보 수정',
-                style: TextStyle(
-                  color: Colors.grey,
-                ),
-              ),
-              onTap: () {
-                print('Edit User Info Clicked');
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const RegisterScreen(
-                      data: 'data',
-                      flag: null,
-                      routeCode: false,
-                    ),
-                  ),
-                );
-              },
-              trailing: const Icon(
-                Icons.add,
-                color: Colors.grey,
-              ),
-            ),
-            ListTile(
-              leading: const Icon(
-                Icons.logout_rounded,
-                color: Colors.grey,
-              ),
-              title: const Text(
-                '로그아웃',
-                style: TextStyle(
-                  color: Colors.grey,
-                ),
-              ),
-              onTap: () {
-                logoutAction();
-              },
-            ),
-            ListTile(
-              leading: const Icon(
-                Icons.science_outlined,
-                color: Colors.grey,
-              ),
-              title: const Text(
-                '매장 상세 페이지',
-                style: TextStyle(
-                  color: Colors.grey,
-                ),
-              ),
-              onTap: () {
-                Navigator.pushNamed(context, Routes.storeDetail);
-              },
-            ),
-            ListTile(
-              leading: const Icon(
-                Icons.science_outlined,
-                color: Colors.grey,
-              ),
-              title: const Text(
-                '2차 비밀번호',
-                style: TextStyle(
-                  color: Colors.grey,
-                ),
-              ),
-              onTap: () {
-                Navigator.pushNamed(context, SecondaryPasswordScreen.route);
-              },
-            ),
-          ],
-        ),
-      ),
+      // drawer: Drawer(
+      //   child: ListView(
+      //     padding: EdgeInsets.zero,
+      //     children: [
+      //       UserAccountsDrawerHeader(
+      //         decoration: BoxDecoration(
+      //           color: Colors.blue[400],
+      //         ),
+      //         accountName: Row(
+      //           children: [
+      //             Text(
+      //               '$name님',
+      //               style: const TextStyle(
+      //                 color: Colors.white,
+      //                 fontSize: 40,
+      //                 fontWeight: FontWeight.w700,
+      //               ),
+      //             ),
+      //             const SizedBox(
+      //               width: 55,
+      //             ),
+      //             // Icon(
+      //             //   Icons.gpp_bad_outlined,
+      //             //   color: getSecurityLevel(),
+      //             //   size: 70,
+      //             // ),
+      //             getSecurityLevel(),
+      //           ],
+      //         ),
+      //         accountEmail: Text(
+      //           '$email',
+      //           style: const TextStyle(
+      //             color: Colors.white,
+      //           ),
+      //         ),
+      //         // onDetailsPressed: () {
+      //         //   print('detail clicked');
+      //         // },
+      //       ),
+      //       ListTile(
+      //         leading: const Icon(
+      //           Icons.policy_outlined,
+      //           color: Colors.grey,
+      //         ),
+      //         title: const Text(
+      //           '보안레벨 설정',
+      //           style: TextStyle(
+      //             color: Colors.grey,
+      //           ),
+      //         ),
+      //         onTap: () {
+      //           print('Security Level Clicked');
+      //           Navigator.pushNamed(context, SecurityLevel.route);
+      //         },
+      //         trailing: const Icon(
+      //           Icons.add,
+      //           color: Colors.grey,
+      //         ),
+      //       ),
+      //       ListTile(
+      //         leading: const Icon(
+      //           Icons.account_circle_outlined,
+      //           color: Colors.grey,
+      //         ),
+      //         title: const Text(
+      //           '회원정보 수정',
+      //           style: TextStyle(
+      //             color: Colors.grey,
+      //           ),
+      //         ),
+      //         onTap: () {
+      //           print('Edit User Info Clicked');
+      //           Navigator.push(
+      //             context,
+      //             MaterialPageRoute(
+      //               builder: (context) => const RegisterScreen(
+      //                 data: 'data',
+      //                 flag: null,
+      //                 routeCode: false,
+      //               ),
+      //             ),
+      //           );
+      //         },
+      //         trailing: const Icon(
+      //           Icons.add,
+      //           color: Colors.grey,
+      //         ),
+      //       ),
+      //       ListTile(
+      //         leading: const Icon(
+      //           Icons.logout_rounded,
+      //           color: Colors.grey,
+      //         ),
+      //         title: const Text(
+      //           '로그아웃',
+      //           style: TextStyle(
+      //             color: Colors.grey,
+      //           ),
+      //         ),
+      //         onTap: () {
+      //           logoutAction();
+      //         },
+      //       ),
+      //       ListTile(
+      //         leading: const Icon(
+      //           Icons.science_outlined,
+      //           color: Colors.grey,
+      //         ),
+      //         title: const Text(
+      //           '매장 상세 페이지',
+      //           style: TextStyle(
+      //             color: Colors.grey,
+      //           ),
+      //         ),
+      //         onTap: () {
+      //           Navigator.pushNamed(context, Routes.storeDetail);
+      //         },
+      //       ),
+      //       ListTile(
+      //         leading: const Icon(
+      //           Icons.science_outlined,
+      //           color: Colors.grey,
+      //         ),
+      //         title: const Text(
+      //           '2차 비밀번호',
+      //           style: TextStyle(
+      //             color: Colors.grey,
+      //           ),
+      //         ),
+      //         onTap: () {
+      //           Navigator.pushNamed(context, SecondaryPasswordScreen.route);
+      //         },
+      //       ),
+      //     ],
+      //   ),
+      // ),
       // body: RegisterStoreWidget(
       //     animationController: _animationController,
       //     offsetAnimation: _offsetAnimation,

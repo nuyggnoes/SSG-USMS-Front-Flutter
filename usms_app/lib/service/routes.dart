@@ -5,6 +5,7 @@ import 'package:usms_app/screen/login_screen.dart';
 import 'package:usms_app/screen/payment_information_screen.dart';
 import 'package:usms_app/screen/register_screen.dart';
 import 'package:usms_app/screen/register_store_screen.dart';
+import 'package:usms_app/screen/secondary_password_screen.dart';
 import 'package:usms_app/screen/set_security_level_screen.dart';
 import 'package:usms_app/screen/store_detail_screen.dart';
 
@@ -19,6 +20,7 @@ class Routes {
   static const String payInfo = '/pay-info';
 
   static const String securitySetting = '/security-setting';
+  static const String secondaryPassword = '/secondary-password';
 
   static Map<String, WidgetBuilder> get routes {
     return {
@@ -31,6 +33,7 @@ class Routes {
       registerStore: (context) => const RegisterStore(),
       storeDetail: (context) => const StoreDetail(),
       payInfo: (context) => const PayInfoScreen(),
+      secondaryPassword: (context) => const SecondaryPasswordScreen(),
     };
   }
 }

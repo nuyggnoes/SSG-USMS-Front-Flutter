@@ -183,6 +183,8 @@ class _RegisterStoreState extends State<RegisterStore> {
                       Column(
                         children: [
                           CustomTextFormField(
+                            maxLength: 42,
+                            counterText: '',
                             textController: _storeNameController,
                             labelText: '업체명을 입력해주세요.',
                             textType: TextInputType.text,

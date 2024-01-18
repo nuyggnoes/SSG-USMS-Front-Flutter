@@ -35,9 +35,13 @@ class _StatisticScreenState extends State<StatisticScreen> {
       appBar: AppBar(
         title: const Text('통계 지표'),
         centerTitle: true,
+        leading: const Icon(Icons.bar_chart_rounded),
       ),
       body: Column(
         children: [
+          const SizedBox(
+            height: 30,
+          ),
           Container(
             height: 55,
             decoration: BoxDecoration(

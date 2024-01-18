@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:usms_app/service/routes.dart';
 import 'package:usms_app/widget/store_register_widget.dart';
 import 'package:usms_app/widget/test_card.dart';
 
@@ -50,66 +51,77 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   late List<Widget> widgetOptions;
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: GestureDetector(
-        onTap: () {
-          FocusScope.of(context).unfocus();
-        },
-        child: SingleChildScrollView(
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 40,
-                vertical: 20,
-              ),
-              child: Column(
-                children: [
-                  // FutreBuilder 사용, 카드 색 랜덤
-                  // onTap callback함수 사용해서
-                  // 반려, 승인요청, 승인상태에 따라 다른페이지로 route
-                  CurrencyCard(
-                    name: 'GS25 무인매장점',
-                    code: 0, // store_state : 승인(1) / 승인요청중(2) / 반려(0)
-                    amount: '',
-                    icon: Icons.store_mall_directory_rounded,
-                    selectedCardColors: Colors.blue.shade200,
-                    animationController: _animationController,
-                    opacityAnimation: _opacityAnimation,
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Main'),
+        leading: const Icon(Icons.home),
+      ),
+      body: SafeArea(
+        child: GestureDetector(
+          onTap: () {
+            FocusScope.of(context).unfocus();
+          },
+          child: SingleChildScrollView(
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 40,
+                  vertical: 20,
+                ),
+                child: Column(
+                  children: [
+                    // FutreBuilder 사용, 카드 색 랜덤
+                    // onTap callback함수 사용해서
+                    // 반려, 승인요청, 승인상태에 따라 다른페이지로 route
+                    CurrencyCard(
+                      name: 'GS25 무인매장점',
+                      code: 0, // store_state : 승인(1) / 승인요청중(2) / 반려(0)
+                      amount: '',
+                      icon: Icons.store_mall_directory_rounded,
+                      selectedCardColors: Colors.blue.shade200,
+                      animationController: _animationController,
+                      opacityAnimation: _opacityAnimation,
+                      onTapAction: () {},
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
 
-                  CurrencyCard(
-                    name: 'GS25 무인매장점2',
-                    code: 1,
-                    amount: '',
-                    icon: Icons.store_mall_directory_rounded,
-                    selectedCardColors: Colors.blue.shade300,
-                    animationController: _animationController,
-                    opacityAnimation: _opacityAnimation,
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  CurrencyCard(
-                    name: 'GS25 무인매장점3',
-                    code: 2,
-                    amount: '',
-                    icon: Icons.store_mall_directory_rounded,
-                    selectedCardColors: Colors.blue.shade400,
-                    animationController: _animationController,
-                    opacityAnimation: _opacityAnimation,
-                  ),
-                  const SizedBox(
-                    height: 100,
-                  ),
-                  RegisterStoreWidget(
-                    animationController: _animationController,
-                    offsetAnimation: _offsetAnimation,
-                    opacityAnimation: _opacityAnimation,
-                  ),
-                ],
+                    CurrencyCard(
+                      name: 'GS25 무인매장점2',
+                      code: 1,
+                      amount: '',
+                      icon: Icons.store_mall_directory_rounded,
+                      selectedCardColors: Colors.blue.shade300,
+                      animationController: _animationController,
+                      opacityAnimation: _opacityAnimation,
+                      onTapAction: () {
+                        Navigator.pushNamed(context, Routes.storeDetail);
+                      },
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    CurrencyCard(
+                      name: 'GS25 무인매장점3',
+                      code: 2,
+                      amount: '',
+                      icon: Icons.store_mall_directory_rounded,
+                      selectedCardColors: Colors.blue.shade400,
+                      animationController: _animationController,
+                      opacityAnimation: _opacityAnimation,
+                      onTapAction: () {},
+                    ),
+                    const SizedBox(
+                      height: 100,
+                    ),
+                    RegisterStoreWidget(
+                      animationController: _animationController,
+                      offsetAnimation: _offsetAnimation,
+                      opacityAnimation: _opacityAnimation,
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

@@ -98,6 +98,10 @@ class _MyPageScreenState extends State<MyPageScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('마이페이지'),
+        leading: const Icon(Icons.person),
+      ),
       body: SingleChildScrollView(
         child: SafeArea(
           child: Center(
@@ -245,6 +249,12 @@ class _MyPageScreenState extends State<MyPageScreen> {
                           parentContext: context,
                           route: Routes.payInfo,
                           icon: Icons.credit_card,
+                        ),
+                        CustomInfoButton(
+                          buttonText: '2차 비밀번호',
+                          parentContext: context,
+                          route: Routes.secondaryPassword,
+                          icon: Icons.password_rounded,
                         ),
                       ],
                     ),
