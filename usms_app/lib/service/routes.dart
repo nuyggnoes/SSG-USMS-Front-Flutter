@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:usms_app/screen/cctv_detail_screen.dart';
+import 'package:usms_app/screen/cctv_replay_screen.dart';
 import 'package:usms_app/screen/home_screen.dart';
 import 'package:usms_app/screen/identity_verification_screen.dart';
 import 'package:usms_app/screen/login_screen.dart';
@@ -22,6 +24,9 @@ class Routes {
   static const String securitySetting = '/security-setting';
   static const String secondaryPassword = '/secondary-password';
 
+  static const String cctvDetail = '/cctv-detail';
+  static const String cctvReplay = '/cctv-replay';
+
   static Map<String, WidgetBuilder> get routes {
     return {
       login: (context) => const Login(),
@@ -34,6 +39,8 @@ class Routes {
       storeDetail: (context) => const StoreDetail(),
       payInfo: (context) => const PayInfoScreen(),
       secondaryPassword: (context) => const SecondaryPasswordScreen(),
+      cctvDetail: (context) => const CCTVScreen(),
+      cctvReplay: (context) => const CCTVReplay(),
     };
   }
 }

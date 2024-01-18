@@ -110,7 +110,9 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                       selectedCardColors: Colors.blue.shade400,
                       animationController: _animationController,
                       opacityAnimation: _opacityAnimation,
-                      onTapAction: () {},
+                      onTapAction: () {
+                        Navigator.pushNamed(context, Routes.cctvReplay);
+                      },
                     ),
                     const SizedBox(
                       height: 100,

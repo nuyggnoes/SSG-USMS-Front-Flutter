@@ -36,13 +36,14 @@ class _StoreDetailState extends State<StoreDetail> {
 
     _videoController = VideoPlayerController.networkUrl(uri);
 
-    await _videoController.initialize();
-
     _chewieController = ChewieController(
       videoPlayerController: _videoController,
       autoPlay: true,
       aspectRatio: 16 / 9,
     );
+
+    await _videoController.initialize();
+
     if (mounted) {
       setState(() {});
     }
@@ -57,11 +58,11 @@ class _StoreDetailState extends State<StoreDetail> {
 
   @override
   Widget build(BuildContext context) {
-    if (!_videoController.value.isInitialized) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
-    } else {}
+    // if (!_videoController.value.isInitialized) {
+    //   return const Scaffold(
+    //     body: Center(child: CircularProgressIndicator()),
+    //   );
+    // } else {}
     return MaterialApp(
       title: 'Store Detail',
       theme: ThemeData(

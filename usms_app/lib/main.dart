@@ -55,7 +55,22 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Push Notification',
       theme: ThemeData(
+        // Scheme
+        colorScheme: const ColorScheme(
+          background: Colors.white,
+          brightness: Brightness.light,
+          primary: Colors.blue,
+          onPrimary: Colors.black,
+          secondary: Colors.green,
+          onSecondary: Colors.amber,
+          error: Colors.grey,
+          onError: Colors.pink,
+          onBackground: Colors.teal,
+          surface: Colors.white,
+          onSurface: Colors.black,
+        ),
         primarySwatch: Colors.blue,
+        highlightColor: Colors.blue[200],
         textTheme: const TextTheme(
           bodyMedium: TextStyle(fontSize: 16),
         ),
