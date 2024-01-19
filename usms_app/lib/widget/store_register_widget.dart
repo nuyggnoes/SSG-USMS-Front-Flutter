@@ -81,11 +81,14 @@ class RegisterStoreWidget extends StatelessWidget {
                           children: [
                             const Expanded(
                               flex: 7,
-                              child: Text(
-                                '서비스를 이용하기 위해 매장을 추가해주세요.',
-                                softWrap: true,
-                                style: TextStyle(
-                                  color: Colors.white,
+                              child: Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Text(
+                                  '서비스를 이용하기 위해 매장을 추가해주세요.',
+                                  softWrap: true,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                  ),
                                 ),
                               ),
                             ),

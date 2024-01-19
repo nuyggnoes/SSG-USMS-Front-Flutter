@@ -252,6 +252,12 @@ class _MyPageScreenState extends State<MyPageScreen> {
                           route: Routes.secondaryPassword,
                           icon: Icons.password_rounded,
                         ),
+                        CustomInfoButton(
+                          buttonText: 'Hero Test',
+                          parentContext: context,
+                          route: Routes.heroTest,
+                          icon: Icons.science,
+                        ),
                       ],
                     ),
                   ),

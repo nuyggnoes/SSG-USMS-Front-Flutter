@@ -4,9 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
-import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-
 // api
 import 'package:usms_app/api/firebase_api.dart';
 import 'package:usms_app/service/routes.dart';
@@ -27,8 +24,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Firebase SDK 초기화단계 (App을 Firebase 서비스를 사용할 수 있는 상태로 설정)
-  // await Firebase.initializeApp();
-  // await FirebaseApi().initNotifications();
+  await Firebase.initializeApp();
+  await FirebaseApi().initNotifications();
 
   // initializeNotification();
   runApp(const MyApp());

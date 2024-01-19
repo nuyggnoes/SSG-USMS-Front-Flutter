@@ -10,6 +10,7 @@ import 'package:usms_app/screen/register_store_screen.dart';
 import 'package:usms_app/screen/secondary_password_screen.dart';
 import 'package:usms_app/screen/set_security_level_screen.dart';
 import 'package:usms_app/screen/store_detail_screen.dart';
+import 'package:usms_app/screen/test_screen.dart';
 
 class Routes {
   static const String login = '/';
@@ -27,6 +28,9 @@ class Routes {
   static const String cctvDetail = '/cctv-detail';
   static const String cctvReplay = '/cctv-replay';
 
+  // test
+  static const String heroTest = '/hero-test';
+
   static Map<String, WidgetBuilder> get routes {
     return {
       login: (context) => const Login(),
@@ -41,6 +45,7 @@ class Routes {
       secondaryPassword: (context) => const SecondaryPasswordScreen(),
       cctvDetail: (context) => const CCTVScreen(),
       cctvReplay: (context) => const CCTVReplay(),
+      heroTest: (contest) => const TestScreen(),
     };
   }
 }

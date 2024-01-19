@@ -20,18 +20,18 @@ class PayInfoScreen extends StatelessWidget {
               children: [
                 Container(
                   decoration: const BoxDecoration(color: Colors.grey),
-                  height: 400, // 아이폰 15pro width 400
-                  width: 400,
+                  height: 400, // 아이폰 15pro
+                  width: MediaQuery.of(context).size.width * 0.9,
                 ),
                 Container(
                   decoration: const BoxDecoration(color: Colors.amber),
                   height: 400,
-                  width: 400,
+                  width: MediaQuery.of(context).size.width * 0.9,
                 ),
                 Container(
                   decoration: const BoxDecoration(color: Colors.green),
                   height: 400,
-                  width: 400,
+                  width: MediaQuery.of(context).size.width * 0.9,
                 ),
               ],
             ),

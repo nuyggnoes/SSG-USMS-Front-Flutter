@@ -48,6 +48,57 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
     super.dispose();
   }
 
+  late RenderBox renderBox;
+
+  Offset _tapPosition = Offset.zero;
+  void _getTapPosition(TapDownDetails tapPosition) {
+    renderBox = context.findRenderObject() as RenderBox;
+    setState(() {
+      _tapPosition = renderBox.globalToLocal(tapPosition.globalPosition);
+    });
+  }
+
+  _showContextMenu(context) async {
+    final RenderObject? overlay =
+        Overlay.of(context).context.findRenderObject();
+    final result = await showMenu(
+      context: context,
+      position: RelativeRect.fromRect(
+        Rect.fromLTWH(_tapPosition.dx, _tapPosition.dy, 10, 10),
+        Rect.fromLTWH(0, 0, overlay!.paintBounds.size.width,
+            overlay.paintBounds.size.height),
+        // Rect.fromPoints(
+        //   renderBox.localToGlobal(_tapPosition),
+        //   renderBox.localToGlobal(_tapPosition),
+        // ).translate(0, 10),
+      ),
+      items: [
+        PopupMenuItem(
+          onTap: () {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: const Text('매장 삭제'),
+                  content: const Text('정말 삭제하시겠습니까?'),
+                  actions: <Widget>[
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text('확인'),
+                    ),
+                  ],
+                );
+              },
+            );
+          },
+          child: const Text('매장 삭제'),
+        ),
+      ],
+    );
+  }
+
   late List<Widget> widgetOptions;
   @override
   Widget build(BuildContext context) {
@@ -87,17 +138,25 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                       const SizedBox(
                         height: 20,
                       ),
-                      CurrencyCard(
-                        name: 'GS25 무인매장점2',
-                        code: 1,
-                        amount: '',
-                        icon: Icons.storefront,
-                        selectedCardColors: Colors.blue.shade300,
-                        animationController: _animationController,
-                        opacityAnimation: _opacityAnimation,
-                        onTapAction: () {
-                          Navigator.pushNamed(context, Routes.storeDetail);
+                      GestureDetector(
+                        onTapDown: (details) {
+                          _getTapPosition(details);
                         },
+                        onLongPress: () {
+                          _showContextMenu(context);
+                        },
+                        child: CurrencyCard(
+                          name: 'GS25 무인매장점2',
+                          code: 1,
+                          amount: '',
+                          icon: Icons.storefront,
+                          selectedCardColors: Colors.blue.shade300,
+                          animationController: _animationController,
+                          opacityAnimation: _opacityAnimation,
+                          onTapAction: () {
+                            Navigator.pushNamed(context, Routes.storeDetail);
+                          },
+                        ),
                       ),
                       const SizedBox(
                         height: 20,
