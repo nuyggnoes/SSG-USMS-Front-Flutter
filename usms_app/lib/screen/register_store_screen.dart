@@ -29,42 +29,69 @@ class _RegisterStoreState extends State<RegisterStore> {
   final List<Map<String, String>> fileList = [];
 
   var filePaths = [];
+  void _showDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('파일 용량 초과'),
+          content: const Text('첨부파일은 125MB가 최대입니다.'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('확인'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   Future<void> uploadFiles() async {
     // file picker를 통해 파일 여러개 선택
     FilePickerResult? result = await FilePicker.platform.pickFiles(
-      allowMultiple: true,
+      allowMultiple: false,
     );
 
     if (result != null) {
-      filePaths = result.paths; //파일들의 경로 리스트
+      PlatformFile pickedFile = result.files.first;
 
-      // 파일 경로를 통해 formData 생성
+      int maxSizeInBytes = 125 * 1024 * 1024; // 125MB
+      if (pickedFile.size > maxSizeInBytes) {
+        print('파일용량 초과');
+        _showDialog();
+      } else {
+        filePaths = result.paths; //파일들의 경로 리스트
 
-      // formData = FormData();
-      setState(() {
-        for (var i = 0; i < filePaths.length; i++) {
-          var file = MultipartFile.fromFileSync(filePaths[i]!);
-          fileList.add(
-            {
-              'file': '${file.filename}',
-              'file_size': '${file.length}',
-            },
-          );
-          print('파일 : ${file.filename}');
-          print('파일 크기 : ${file.length}');
-          formData.files.add(MapEntry('key', file));
-        }
-      });
-      // formData.fields.addAll([
-      //   MapEntry('storeName', _storeNameController.text),
-      //   MapEntry('businessLicenseCode',
-      //       '${_storeNumController1.text}-${_storeNumController2.text}-${_storeNumController3.text}'),
-      //   MapEntry('storeAddress',
-      //       '${_addressTextController.text} ${_detailAddressController.text}'),
-      // ]);
+        // 파일 경로를 통해 formData 생성
+        // formData = FormData();
+        setState(() {
+          for (var i = 0; i < filePaths.length; i++) {
+            var file = MultipartFile.fromFileSync(filePaths[i]!);
+            fileList.add(
+              {
+                'file': '${file.filename}',
+                'file_size': '${file.length}',
+              },
+            );
+            print('파일 : ${file.filename}');
+            print('파일 크기 : ${file.length}');
+            formData.files.add(MapEntry('key', file));
+          }
+        });
+        // formData.fields.addAll([
+        //   MapEntry('storeName', _storeNameController.text),
+        //   MapEntry('businessLicenseCode',
+        //       '${_storeNumController1.text}-${_storeNumController2.text}-${_storeNumController3.text}'),
+        //   MapEntry('storeAddress',
+        //       '${_addressTextController.text} ${_detailAddressController.text}'),
+        // ]);
 
-      // 업로드 요청
+        // 업로드 요청
+      }
     } else {
       // 아무런 파일도 선택되지 않음.
     }
@@ -87,11 +114,27 @@ class _RegisterStoreState extends State<RegisterStore> {
         itemBuilder: (context, index) {
           Map<String, String> map = fileList[index];
           return ListTile(
-            title: Text(
-              '${map['file']}',
-              style: const TextStyle(color: Colors.grey, fontSize: 13),
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  '${map['file']}',
+                  style: const TextStyle(color: Colors.grey, fontSize: 13),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
+                Text('${map['file_size']} bytes'),
+              ],
             ),
-            trailing: Text('${map['file_size']} bytes'),
+            trailing: IconButton(
+              icon: const Icon(Icons.close),
+              onPressed: () {
+                setState(() {
+                  filePaths.removeAt(index);
+                  fileList.removeAt(index);
+                });
+              },
+            ),
             onTap: () {
               print(index);
             },

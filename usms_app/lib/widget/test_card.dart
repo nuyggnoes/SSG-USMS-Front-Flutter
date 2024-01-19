@@ -61,53 +61,61 @@ class CurrencyCard extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          name,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 25,
-                            fontWeight: FontWeight.w600,
+                    Expanded(
+                      flex: 2,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            name,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
                           ),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          children: [
-                            Text(
-                              amount,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                amount,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                ),
                               ),
-                            ),
-                            const SizedBox(
-                              width: 5,
-                            ),
-                            Text(
-                              storeStateText,
-                              style: TextStyle(
-                                // color: Colors.white.withOpacity(0.8),
-                                color: stateTextColor,
-                                fontSize: 15,
-                                fontWeight: FontWeight.w700,
+                              const SizedBox(
+                                width: 5,
                               ),
-                            ),
-                          ],
-                        ),
-                      ],
+                              Text(
+                                storeStateText,
+                                style: TextStyle(
+                                  // color: Colors.white.withOpacity(0.8),
+                                  color: stateTextColor,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                    Transform.scale(
-                      scale: 2.2,
-                      child: Transform.translate(
-                        offset: const Offset(-7, 13),
-                        child: Icon(
-                          icon,
-                          color: Colors.white,
-                          size: 85,
+                    Expanded(
+                      flex: 1,
+                      child: Transform.scale(
+                        scale: 2,
+                        child: Transform.translate(
+                          offset: const Offset(1, 13),
+                          child: Icon(
+                            icon,
+                            color: Colors.white,
+                            size: 70,
+                          ),
                         ),
                       ),
                     ),

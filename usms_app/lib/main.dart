@@ -27,8 +27,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Firebase SDK 초기화단계 (App을 Firebase 서비스를 사용할 수 있는 상태로 설정)
-  await Firebase.initializeApp();
-  await FirebaseApi().initNotifications();
+  // await Firebase.initializeApp();
+  // await FirebaseApi().initNotifications();
 
   // initializeNotification();
   runApp(const MyApp());
