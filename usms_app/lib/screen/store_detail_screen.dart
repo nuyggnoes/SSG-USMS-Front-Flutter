@@ -7,7 +7,6 @@ import 'package:usms_app/screen/notification_list_screen.dart';
 import 'package:usms_app/screen/statistic_screen.dart';
 
 import 'package:usms_app/service/routes.dart';
-import 'package:usms_app/widget/ad_slider.dart';
 import 'package:video_player/video_player.dart';
 
 class StoreDetail extends StatefulWidget {
@@ -18,6 +17,10 @@ class StoreDetail extends StatefulWidget {
 }
 
 class _StoreDetailState extends State<StoreDetail> {
+  final List<String> urlStringList = [
+    'https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8',
+    'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
+  ];
   final List<VideoPlayerController> videoList = [];
   final List<ChewieController> chewieList = [];
   late VideoPlayerController _videoController;
@@ -37,8 +40,15 @@ class _StoreDetailState extends State<StoreDetail> {
   }
 
   Future<void> setVideoPlayer() async {
+    for (var i = 0; i < urlStringList.length; i++) {
+      videoList.add(
+        VideoPlayerController.networkUrl(Uri.parse(urlStringList[i])),
+      );
+    }
+    // String urlString =
+    // 'https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8';
     String urlString =
-        'https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8';
+        'https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8';
     String urlString1 = 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8';
     // String urlString =
     //     'https://usms.serveftp.com/video/hls/replay/test2/test2-1704442722.m3u8';
@@ -49,12 +59,36 @@ class _StoreDetailState extends State<StoreDetail> {
 
     _videoController = VideoPlayerController.networkUrl(uri);
     _controller = VideoPlayerController.networkUrl(uri1);
-
+    for (var i = 0; i < videoList.length; i++) {
+      if (!videoList[i].value.isInitialized) {
+        await videoList[i].initialize();
+        videoList[i].addListener(() {
+          print('비디오 플레이어 상태 확인 디버그 : ${videoList[i].value}');
+          if (videoList[i].value.isPlaying) {
+            print(
+                'hello video===============================================================');
+          }
+        });
+        var chewieController = ChewieController(
+          videoPlayerController: videoList[i],
+          autoPlay: false,
+          aspectRatio: 16 / 9,
+        );
+        chewieList.add(
+          // ChewieController(
+          //   videoPlayerController: videoList[i],
+          //   autoPlay: false,
+          //   aspectRatio: 16 / 9,
+          // ),
+          chewieController,
+        );
+      }
+    }
     if (!_videoController.value.isInitialized) {
       await _videoController.initialize();
       _chewieController = ChewieController(
         videoPlayerController: _videoController,
-        autoPlay: true,
+        autoPlay: false,
         aspectRatio: 16 / 9,
       );
     }
@@ -76,32 +110,31 @@ class _StoreDetailState extends State<StoreDetail> {
     _chewieController.dispose();
     _controller.dispose();
     _chewieController2.dispose();
+    for (var i = 0; i < chewieList.length; i++) {
+      videoList[i].dispose();
+      chewieList[i].dispose();
+    }
     super.dispose();
   }
 
-  Widget buildVideoContainer() {
-    return GestureDetector(
-      onTap: () {
-        print('video swap method');
-        swapVideos();
-      },
-      child: Container(
-        // height: 100,
-        width: 270,
-        decoration: BoxDecoration(
-          color: Colors.grey.shade200,
-        ),
-        // child: _videoController.value.isInitialized
-        //     ? Chewie(controller: _chewieController)
-        //     : const Center(
-        //         child: CircularProgressIndicator(),
-        //       ),
-        child: _controller.value.isInitialized
-            ? Chewie(controller: _chewieController2)
-            : const Center(
-                child: CircularProgressIndicator(),
-              ),
+  Widget buildVideoContainer(
+      {required ChewieController chewieController, required int idx}) {
+    return Container(
+      // height: 100,
+      width: 270,
+      decoration: BoxDecoration(
+        color: Colors.grey.shade200,
       ),
+      // child: _videoController.value.isInitialized
+      //     ? Chewie(controller: _chewieController)
+      //     : const Center(
+      //         child: CircularProgressIndicator(),
+      //       ),
+      child: videoList[idx].value.isInitialized
+          ? Chewie(controller: chewieController)
+          : const Center(
+              child: CircularProgressIndicator(),
+            ),
     );
   }
 
@@ -162,53 +195,90 @@ class _StoreDetailState extends State<StoreDetail> {
                           //     : const Center(
                           //         child: CircularProgressIndicator(),
                           //       ),
-                          child: _videoController.value.isInitialized
-                              ? Chewie(controller: _chewieController)
-                              : const Center(
-                                  child: CircularProgressIndicator(),
-                                ),
+                          // child: _videoController.value.isInitialized
+                          //     ? Chewie(controller: _chewieController)
+                          //     : const Center(
+                          //         child: CircularProgressIndicator(),
+                          //       ),
+                          child: const Center(child: Text('동영상이 존재하지 않습니다.')),
                         ),
                         const SizedBox(
                           height: 30,
                         ),
                         SizedBox(
-                          height: 130,
-                          child: ListView(
+                          height: 200,
+                          // child: ListView(
+                          //   scrollDirection: Axis.horizontal,
+                          //   children: [
+                          //     buildVideoContainer(),
+                          //     const SizedBox(
+                          //       width: 10,
+                          //     ),
+                          //     buildVideoContainer(),
+                          //     const SizedBox(
+                          //       width: 10,
+                          //     ),
+                          //   ],
+                          // ),
+                          child: ListView.builder(
                             scrollDirection: Axis.horizontal,
-                            children: [
-                              buildVideoContainer(),
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              buildVideoContainer(),
-                              const SizedBox(
-                                width: 10,
-                              ),
-                            ],
+                            itemCount: chewieList.length,
+                            itemBuilder: (context, index) {
+                              // return buildVideoContainer(
+                              //   idx: index,
+                              //   chewieController: chewieList[index],
+                              // );
+                              return ChewieListItem(
+                                chewieController: chewieList[index],
+                                index: index,
+                              );
+                            },
                           ),
                         ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            swapVideos();
-                          },
-                          child: const Text('test Button'),
-                        ),
-                        CustomBoxButton(
-                          buttonText: 'CCTV 현황',
-                          route: MaterialPageRoute(
-                            builder: (context) => const CCTVScreen(),
-                          ),
-                          parentContext: context,
-                        ),
+                        // const SizedBox(
+                        //   height: 20,
+                        // ),
+                        // ElevatedButton(
+                        //   onPressed: () {
+                        //     swapVideos();
+                        //   },
+                        //   child: const Text('test Button'),
+                        // ),
+                        // CustomBoxButton(
+                        //   buttonText: 'CCTV 현황',
+                        //   route: MaterialPageRoute(
+                        //     builder: (context) => const CCTVScreen(),
+                        //   ),
+                        //   parentContext: context,
+                        // ),
                       ],
                     )
                   : const NoCCTV(),
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class ChewieListItem extends StatelessWidget {
+  final ChewieController chewieController;
+  final int index;
+
+  const ChewieListItem({
+    super.key,
+    required this.chewieController,
+    required this.index,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: SizedBox(
+        height: 180,
+        width: 300,
+        child: Chewie(controller: chewieController),
       ),
     );
   }

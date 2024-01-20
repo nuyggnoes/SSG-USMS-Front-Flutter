@@ -29,6 +29,7 @@ class _RegisterStoreState extends State<RegisterStore> {
   final List<Map<String, String>> fileList = [];
 
   var filePaths = [];
+  var filePath;
   void _showDialog() {
     showDialog(
       context: context,
@@ -52,53 +53,78 @@ class _RegisterStoreState extends State<RegisterStore> {
 
   Future<void> uploadFiles() async {
     // file picker를 통해 파일 여러개 선택
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      allowMultiple: false,
-    );
+    FilePickerResult? result = await FilePicker.platform.pickFiles();
 
     if (result != null) {
-      PlatformFile pickedFile = result.files.first;
-
       int maxSizeInBytes = 125 * 1024 * 1024; // 125MB
-      if (pickedFile.size > maxSizeInBytes) {
+      if (result.files.single.size > maxSizeInBytes) {
         print('파일용량 초과');
         _showDialog();
       } else {
-        filePaths = result.paths; //파일들의 경로 리스트
+        filePath = result.files.single.path;
 
-        // 파일 경로를 통해 formData 생성
-        // formData = FormData();
+        var dio = Dio();
+        var file = await MultipartFile.fromFile(filePath!);
+
         setState(() {
-          for (var i = 0; i < filePaths.length; i++) {
-            var file = MultipartFile.fromFileSync(filePaths[i]!);
-            fileList.add(
-              {
-                'file': '${file.filename}',
-                'file_size': '${file.length}',
-              },
-            );
-            print('파일 : ${file.filename}');
-            print('파일 크기 : ${file.length}');
-            formData.files.add(MapEntry('key', file));
-          }
+          fileList.add({
+            'file': '${file.filename}',
+            'file_size': '${file.length}',
+          });
         });
-        // formData.fields.addAll([
-        //   MapEntry('storeName', _storeNameController.text),
-        //   MapEntry('businessLicenseCode',
-        //       '${_storeNumController1.text}-${_storeNumController2.text}-${_storeNumController3.text}'),
-        //   MapEntry('storeAddress',
-        //       '${_addressTextController.text} ${_detailAddressController.text}'),
-        // ]);
-
-        // 업로드 요청
+        formData.files.add(MapEntry('file', file));
+        formData.fields.addAll([
+          MapEntry('storeName', _storeNameController.text),
+          MapEntry('businessLicenseCode',
+              '${_storeNumController1.text}-${_storeNumController2.text}-${_storeNumController3.text}'),
+          MapEntry('storeAddress',
+              '${_addressTextController.text} ${_detailAddressController.text}'),
+        ]);
       }
-    } else {
-      // 아무런 파일도 선택되지 않음.
     }
+    // if (result != null) {
+    //   PlatformFile pickedFile = result.files.first;
+
+    //   int maxSizeInBytes = 125 * 1024 * 1024; // 125MB
+    //   if (pickedFile.size > maxSizeInBytes) {
+    //     print('파일용량 초과');
+    //     _showDialog();
+    //   } else {
+    //     filePaths = result.paths; //파일들의 경로 리스트
+
+    //     // 파일 경로를 통해 formData 생성
+    //     // formData = FormData();
+    //     setState(() {
+    //       for (var i = 0; i < filePaths.length; i++) {
+    //         var file = MultipartFile.fromFileSync(filePaths[i]!);
+    //         fileList.add(
+    //           {
+    //             'file': '${file.filename}',
+    //             'file_size': '${file.length}',
+    //           },
+    //         );
+    //         print('파일 : ${file.filename}');
+    //         print('파일 크기 : ${file.length}');
+    //         formData.files.add(MapEntry('key', file));
+    //       }
+    //     });
+    //     // formData.fields.addAll([
+    //     //   MapEntry('storeName', _storeNameController.text),
+    //     //   MapEntry('businessLicenseCode',
+    //     //       '${_storeNumController1.text}-${_storeNumController2.text}-${_storeNumController3.text}'),
+    //     //   MapEntry('storeAddress',
+    //     //       '${_addressTextController.text} ${_detailAddressController.text}'),
+    //     // ]);
+
+    //     // 업로드 요청
+    //   }
+    // } else {
+    //   // 아무런 파일도 선택되지 않음.
+    // }
   }
 
   Widget buildFileList() {
-    if (filePaths.isEmpty) {
+    if (filePath == null) {
       return Container(
         decoration: BoxDecoration(
           border: Border.all(
@@ -130,14 +156,12 @@ class _RegisterStoreState extends State<RegisterStore> {
               icon: const Icon(Icons.close),
               onPressed: () {
                 setState(() {
-                  filePaths.removeAt(index);
+                  filePath = null;
+                  // filePaths.removeAt(index);
                   fileList.removeAt(index);
                 });
               },
             ),
-            onTap: () {
-              print(index);
-            },
           );
         },
       );
@@ -357,8 +381,6 @@ class _RegisterStoreState extends State<RegisterStore> {
                                     ),
                                     IconButton(
                                       onPressed: () {
-                                        print('icon Clicked');
-                                        print('searchButton Clicked');
                                         Navigator.of(context).push(
                                           MaterialPageRoute(
                                             builder: (context) {
@@ -459,7 +481,7 @@ class _RegisterStoreState extends State<RegisterStore> {
           ),
           child: TextButton(
             onPressed: () {
-              uploadFiles();
+              fileList.isEmpty ? uploadFiles() : _showDialog();
             },
             child: const Text(
               '파일선택',
@@ -474,62 +496,3 @@ class _RegisterStoreState extends State<RegisterStore> {
     );
   }
 }
-
-// class CustomTextFormField extends StatelessWidget {
-//   const CustomTextFormField({
-//     super.key,
-//     required this.textController,
-//     required this.textType,
-//     required this.validator,
-//     this.labelText,
-//     this.maxLength,
-//     this.focusNode,
-//     this.onChange,
-//     this.enabled,
-//   });
-
-//   final TextEditingController textController;
-//   final TextInputType textType;
-//   final String? Function(String?) validator;
-//   final String? labelText;
-//   final int? maxLength;
-//   final FocusNode? focusNode;
-//   final bool? enabled;
-//   final void Function(String)? onChange;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return SizedBox(
-//       height: 70,
-//       child: TextFormField(
-//         enabled: enabled,
-//         onChanged: onChange,
-//         focusNode: focusNode,
-//         maxLength: maxLength,
-//         controller: textController,
-//         keyboardType: TextInputType.text,
-//         decoration: InputDecoration(
-//           border: const OutlineInputBorder(
-//             borderRadius: BorderRadius.all(
-//               Radius.circular(6),
-//             ),
-//           ),
-//           labelText: labelText,
-//           floatingLabelStyle: const TextStyle(
-//             color: Colors.blueAccent,
-//           ),
-//           helperText: '',
-//           focusedBorder: const OutlineInputBorder(
-//             borderRadius: BorderRadius.all(
-//               Radius.circular(12),
-//             ),
-//             borderSide: BorderSide(
-//               color: Colors.blueAccent,
-//             ),
-//           ),
-//         ),
-//         validator: validator,
-//       ),
-//     );
-//   }
-// }

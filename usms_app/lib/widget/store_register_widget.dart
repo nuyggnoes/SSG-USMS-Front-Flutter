@@ -27,7 +27,7 @@ class RegisterStoreWidget extends StatelessWidget {
             opacity: _opacityAnimation.value,
             child: Container(
               width: MediaQuery.of(context).size.width * 0.8,
-              height: 500,
+              height: 520,
               decoration: BoxDecoration(
                 // color: const Color.fromARGB(255, 170, 214, 211),
                 color: Colors.blue[300],
