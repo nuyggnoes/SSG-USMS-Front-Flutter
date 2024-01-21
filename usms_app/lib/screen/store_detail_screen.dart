@@ -1,6 +1,7 @@
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:usms_app/screen/cctv_detail_screen.dart';
+import 'package:usms_app/screen/cctv_replay_screen.dart';
 import 'package:usms_app/screen/no_cctv_screen.dart';
 
 import 'package:usms_app/screen/notification_list_screen.dart';
@@ -66,7 +67,7 @@ class _StoreDetailState extends State<StoreDetail> {
           print('비디오 플레이어 상태 확인 디버그 : ${videoList[i].value}');
           if (videoList[i].value.isPlaying) {
             print(
-                'hello video===============================================================');
+                'hello I am CCTV $i video===============================================================');
           }
         });
         var chewieController = ChewieController(
@@ -235,22 +236,16 @@ class _StoreDetailState extends State<StoreDetail> {
                             },
                           ),
                         ),
-                        // const SizedBox(
-                        //   height: 20,
-                        // ),
-                        // ElevatedButton(
-                        //   onPressed: () {
-                        //     swapVideos();
-                        //   },
-                        //   child: const Text('test Button'),
-                        // ),
-                        // CustomBoxButton(
-                        //   buttonText: 'CCTV 현황',
-                        //   route: MaterialPageRoute(
-                        //     builder: (context) => const CCTVScreen(),
-                        //   ),
-                        //   parentContext: context,
-                        // ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        CustomBoxButton(
+                          buttonText: 'CCTV 현황',
+                          route: MaterialPageRoute(
+                            builder: (context) => const CCTVScreen(),
+                          ),
+                          parentContext: context,
+                        ),
                       ],
                     )
                   : const NoCCTV(),
@@ -300,8 +295,6 @@ class CustomBoxButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        print('hi');
-
         Navigator.push(context, route);
       },
       child: Container(
