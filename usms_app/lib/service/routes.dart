@@ -10,6 +10,7 @@ import 'package:usms_app/screen/register_store_screen.dart';
 import 'package:usms_app/screen/secondary_password_screen.dart';
 import 'package:usms_app/screen/set_security_level_screen.dart';
 import 'package:usms_app/screen/store_detail_screen.dart';
+import 'package:usms_app/screen/store_detail_screen2.dart';
 import 'package:usms_app/screen/test_screen.dart';
 
 class Routes {
@@ -19,6 +20,7 @@ class Routes {
   static const String home = '/home';
   static const String registerStore = '/register-store';
   static const String storeDetail = '/store-detail';
+  static const String storeDetail2 = '/store-detail2';
 
   static const String payInfo = '/pay-info';
 
@@ -46,6 +48,7 @@ class Routes {
       cctvDetail: (context) => const CCTVScreen(),
       cctvReplay: (context) => const CCTVReplay(),
       heroTest: (contest) => const TestScreen(),
+      storeDetail2: (context) => const StoreDetail2()
     };
   }
 }

@@ -11,14 +11,14 @@ import 'package:usms_app/screen/statistic_screen.dart';
 import 'package:usms_app/service/routes.dart';
 import 'package:video_player/video_player.dart';
 
-class StoreDetail extends StatefulWidget {
-  const StoreDetail({super.key});
+class StoreDetail2 extends StatefulWidget {
+  const StoreDetail2({super.key});
 
   @override
-  State<StoreDetail> createState() => _StoreDetailState();
+  State<StoreDetail2> createState() => _StoreDetailState();
 }
 
-class _StoreDetailState extends State<StoreDetail> {
+class _StoreDetailState extends State<StoreDetail2> {
   final List<String> urlStringList = [
     'https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8',
     'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
@@ -218,47 +218,6 @@ class _StoreDetailState extends State<StoreDetail> {
                         const SizedBox(
                           height: 20,
                         ),
-                        SizedBox(
-                          height: 400,
-                          child: GridView.builder(
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              mainAxisSpacing: 10,
-                              crossAxisSpacing: 10,
-                              childAspectRatio: 16 / 9, //item 의 가로 1, 세로 2 의 비율
-                            ),
-                            itemCount: chewieList.length +
-                                (chewieList.length % 2 == 1 ? 1 : 0),
-                            itemBuilder: (context, index) {
-                              if (index < chewieList.length) {
-                                return ChewieListItem(
-                                  chewieController: chewieList[index],
-                                  index: index,
-                                );
-                              } else {
-                                return Container(
-                                  color: Colors.grey,
-                                  child: const Center(
-                                    child: Icon(
-                                      Icons.videocam_off,
-                                    ),
-                                  ),
-                                );
-                              }
-                            },
-                          ),
-                        ),
-                        Container(
-                          width: 300,
-                          height: 100,
-                          decoration: const BoxDecoration(color: Colors.amber),
-                          child: Center(
-                            child: Text(
-                              testText,
-                            ),
-                          ),
-                        )
 
                         // CustomBoxButton(
                         //   buttonText: 'CCTV 현황',

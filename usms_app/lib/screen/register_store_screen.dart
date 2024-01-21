@@ -30,14 +30,14 @@ class _RegisterStoreState extends State<RegisterStore> {
 
   var filePaths = [];
   var filePath;
-  void _showDialog() {
+  void _showDialog(String title, String description) {
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('파일 용량 초과'),
-          content: const Text('첨부파일은 125MB가 최대입니다.'),
+          title: Text(title),
+          content: Text(description),
           actions: <Widget>[
             TextButton(
               onPressed: () {
@@ -59,7 +59,7 @@ class _RegisterStoreState extends State<RegisterStore> {
       int maxSizeInBytes = 125 * 1024 * 1024; // 125MB
       if (result.files.single.size > maxSizeInBytes) {
         print('파일용량 초과');
-        _showDialog();
+        _showDialog('파일 용량 초과', '첨부파일의 최대 크기는 125MB입니다.');
       } else {
         filePath = result.files.single.path;
 
@@ -481,7 +481,9 @@ class _RegisterStoreState extends State<RegisterStore> {
           ),
           child: TextButton(
             onPressed: () {
-              fileList.isEmpty ? uploadFiles() : _showDialog();
+              fileList.isEmpty
+                  ? uploadFiles()
+                  : _showDialog('파일 첨부 오류', '첨부파일은 1개만 등록 가능합니다.');
             },
             child: const Text(
               '파일선택',

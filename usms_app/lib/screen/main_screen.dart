@@ -125,16 +125,18 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                   // 반려, 승인요청, 승인상태에 따라 다른페이지로 route
                   Column(
                     children: [
-                      // CurrencyCard(
-                      //   name: 'GS25 무인매장점',
-                      //   code: 0, // store_state : 승인(1) / 승인요청중(2) / 반려(0)
-                      //   amount: '',
-                      //   icon: Icons.store_mall_directory_rounded,
-                      //   selectedCardColors: Colors.blue.shade200,
-                      //   animationController: _animationController,
-                      //   opacityAnimation: _opacityAnimation,
-                      //   onTapAction: () {},
-                      // ),
+                      CurrencyCard(
+                        name: 'GS25 무인매장점',
+                        code: 0, // store_state : 승인(1) / 승인요청중(2) / 반려(0)
+                        amount: '',
+                        icon: Icons.store_mall_directory_rounded,
+                        selectedCardColors: Colors.blue.shade200,
+                        animationController: _animationController,
+                        opacityAnimation: _opacityAnimation,
+                        onTapAction: () {
+                          Navigator.pushNamed(context, Routes.storeDetail2);
+                        },
+                      ),
                       const SizedBox(
                         height: 20,
                       ),
