@@ -2,6 +2,7 @@ import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:usms_app/screen/cctv_detail_screen.dart';
 import 'package:usms_app/screen/cctv_replay_screen.dart';
+import 'package:usms_app/screen/hero_test_screen.dart';
 import 'package:usms_app/screen/no_cctv_screen.dart';
 
 import 'package:usms_app/screen/notification_list_screen.dart';
@@ -21,6 +22,7 @@ class _StoreDetailState extends State<StoreDetail> {
   final List<String> urlStringList = [
     'https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8',
     'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
+    'https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8',
   ];
   final List<VideoPlayerController> videoList = [];
   final List<ChewieController> chewieList = [];
@@ -64,8 +66,8 @@ class _StoreDetailState extends State<StoreDetail> {
       if (!videoList[i].value.isInitialized) {
         await videoList[i].initialize();
         videoList[i].addListener(() {
-          print('비디오 플레이어 상태 확인 디버그 : ${videoList[i].value}');
           if (videoList[i].value.isPlaying) {
+            print('비디오 플레이어 상태 확인 디버그 : ${videoList[i].value}');
             print(
                 'hello I am CCTV $i video===============================================================');
           }
@@ -182,32 +184,8 @@ class _StoreDetailState extends State<StoreDetail> {
               child: isCCTVExist
                   ? Column(
                       children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.grey.shade200,
-                          ),
-                          // width: 450,
-                          height: 250,
-                          // child: _videoController.value.isInitialized
-                          //     ? AspectRatio(
-                          //         aspectRatio: _videoController.value.aspectRatio,
-                          //         child: VideoPlayer(_videoController),
-                          //       )
-                          //     : const Center(
-                          //         child: CircularProgressIndicator(),
-                          //       ),
-                          // child: _videoController.value.isInitialized
-                          //     ? Chewie(controller: _chewieController)
-                          //     : const Center(
-                          //         child: CircularProgressIndicator(),
-                          //       ),
-                          child: const Center(child: Text('동영상이 존재하지 않습니다.')),
-                        ),
-                        const SizedBox(
-                          height: 30,
-                        ),
                         SizedBox(
-                          height: 200,
+                          height: 250,
                           // child: ListView(
                           //   scrollDirection: Axis.horizontal,
                           //   children: [
@@ -225,10 +203,6 @@ class _StoreDetailState extends State<StoreDetail> {
                             scrollDirection: Axis.horizontal,
                             itemCount: chewieList.length,
                             itemBuilder: (context, index) {
-                              // return buildVideoContainer(
-                              //   idx: index,
-                              //   chewieController: chewieList[index],
-                              // );
                               return ChewieListItem(
                                 chewieController: chewieList[index],
                                 index: index,
@@ -239,13 +213,48 @@ class _StoreDetailState extends State<StoreDetail> {
                         const SizedBox(
                           height: 20,
                         ),
-                        CustomBoxButton(
-                          buttonText: 'CCTV 현황',
-                          route: MaterialPageRoute(
-                            builder: (context) => const CCTVScreen(),
+                        SizedBox(
+                          height: 500,
+                          child: GridView.builder(
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              mainAxisSpacing: 10,
+                              crossAxisSpacing: 10,
+                              childAspectRatio: 16 / 9, //item 의 가로 1, 세로 2 의 비율
+                            ),
+                            itemCount: chewieList.length +
+                                (chewieList.length % 2 == 1 ? 1 : 0),
+                            itemBuilder: (context, index) {
+                              if (index < chewieList.length) {
+                                return ChewieListItem(
+                                  chewieController: chewieList[index],
+                                  index: index,
+                                );
+                              } else {
+                                return Container(
+                                  color: Colors.grey,
+                                  child: const Center(
+                                    child: Icon(
+                                      Icons.videocam_off,
+                                    ),
+                                  ),
+                                );
+                              }
+                            },
                           ),
-                          parentContext: context,
                         ),
+
+                        // const SizedBox(
+                        //   height: 20,
+                        // ),
+                        // CustomBoxButton(
+                        //   buttonText: 'CCTV 현황',
+                        //   route: MaterialPageRoute(
+                        //     builder: (context) => const CCTVScreen(),
+                        //   ),
+                        //   parentContext: context,
+                        // ),
                       ],
                     )
                   : const NoCCTV(),
@@ -269,12 +278,10 @@ class ChewieListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: SizedBox(
-        height: 180,
-        width: 300,
-        child: Chewie(controller: chewieController),
-      ),
+    return SizedBox(
+      height: 220,
+      width: 330,
+      child: Chewie(controller: chewieController),
     );
   }
 }
