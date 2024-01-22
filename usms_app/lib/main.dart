@@ -6,6 +6,8 @@ import 'package:intl/date_symbol_data_local.dart';
 
 // api
 import 'package:usms_app/api/firebase_api.dart';
+import 'package:usms_app/screen/cctv_replay_screen.dart';
+import 'package:usms_app/screen/hero_test_screen.dart';
 import 'package:usms_app/service/routes.dart';
 
 // route
@@ -62,23 +64,17 @@ class MyApp extends StatelessWidget {
         ),
       ),
       navigatorKey: navigatorKey,
-      // home: const Login(),
-      // routes: {
-      //   NotificationScreen.route: (context) => const NotificationScreen(),
-      //   HomeScreen.route: (context) => const HomeScreen(),
-      //   // RegisterScreen.route: (context) => const RegisterScreen(),
-      //   RegisterStore.route: (context) => const RegisterStore(),
-      //   SecurityLevel.route: (context) => const SecurityLevel(),
-      //   StoreDetail.route: (context) => const StoreDetail(),
-      //   SecondaryPasswordScreen.route: (context) =>
-      //       const SecondaryPasswordScreen(),
-      //   VerificationScreen.route: (context) => const VerificationScreen(),
-      //   CCTVScreen.route: (context) => const CCTVScreen(),
-      //   NotificationListScreen.route: (context) =>
-      //       const NotificationListScreen(),
-      //   StatisticScreen.route: (context) => const StatisticScreen(),
-      // },
       initialRoute: Routes.login,
+      onGenerateRoute: (settings) {
+        switch (settings.name) {
+          case Routes.cctvReplay:
+            return MaterialPageRoute(builder: (context) => const CCTVReplay());
+          default:
+            return MaterialPageRoute(
+              builder: (context) => const TestTest(),
+            );
+        }
+      },
       routes: Routes.routes,
     );
   }

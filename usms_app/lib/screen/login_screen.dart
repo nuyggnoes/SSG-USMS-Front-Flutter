@@ -72,6 +72,9 @@ class _LoginState extends State<Login> {
       response = await dio.post('/login', data: param);
       if (response.statusCode == 200) {
         print('====================response 200=====================');
+        String JSESSIONID = response.headers['cookie']?.first ?? '';
+        // jsessionid를 cookie:value로 저장
+
         // var val = jsonEncode(user.toJson());
         await storage.write(
           key: 'cookie',
@@ -89,18 +92,18 @@ class _LoginState extends State<Login> {
       if (e.response?.statusCode == 400) {
         print("[Error] : [$e]");
         Future.microtask(() {
-          _showErrorDialog('아이디와 비밀번호가 일치하지 않습니다.');
+          _showErrorDialog('아이디와 비밀번호가 일치하지 않습니다.', context);
         });
       }
     } on SocketException catch (e) {
       print("[Server ERR] : $e");
       Future.microtask(() {
-        _showErrorDialog('서버에 연결할 수 없습니다. 나중에 다시 시도해주세요.');
+        _showErrorDialog('서버에 연결할 수 없습니다. 나중에 다시 시도해주세요.', context);
       });
     } catch (e) {
       print("[Error] : [$e]");
       Future.microtask(() {
-        _showErrorDialog('알 수 없는 오류가 발생했습니다.');
+        _showErrorDialog('알 수 없는 오류가 발생했습니다.', context);
       });
     }
   }
@@ -109,7 +112,7 @@ class _LoginState extends State<Login> {
     Navigator.pushNamed(context, Routes.home);
   }
 
-  void _showErrorDialog(String message) {
+  void _showErrorDialog(String message, BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {

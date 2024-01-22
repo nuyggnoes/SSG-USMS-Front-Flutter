@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:kpostal/kpostal.dart';
+import 'package:usms_app/service/show_dialog.dart';
 import 'package:usms_app/widget/custom_textFormField.dart';
 
 class RegisterStore extends StatefulWidget {
@@ -30,36 +31,29 @@ class _RegisterStoreState extends State<RegisterStore> {
 
   var filePaths = [];
   var filePath;
-  void _showDialog(String title, String description) {
-    showDialog(
+
+  void callCustomDialog(String title, String message, Function onPressed) {
+    customShowDialog(
       context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(title),
-          content: Text(description),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('확인'),
-            ),
-          ],
-        );
-      },
+      title: title,
+      message: message,
+      onPressed: () => onPressed(),
     );
   }
 
   Future<void> uploadFiles() async {
-    // file picker를 통해 파일 여러개 선택
     FilePickerResult? result = await FilePicker.platform.pickFiles();
 
     if (result != null) {
       int maxSizeInBytes = 125 * 1024 * 1024; // 125MB
       if (result.files.single.size > maxSizeInBytes) {
-        print('파일용량 초과');
-        _showDialog('파일 용량 초과', '첨부파일의 최대 크기는 125MB입니다.');
+        callCustomDialog(
+          '파일 용량 초과',
+          '첨부파일의 최대 크기는 125MB 입니다.',
+          () {
+            Navigator.pop(context);
+          },
+        );
       } else {
         filePath = result.files.single.path;
 
@@ -483,7 +477,13 @@ class _RegisterStoreState extends State<RegisterStore> {
             onPressed: () {
               fileList.isEmpty
                   ? uploadFiles()
-                  : _showDialog('파일 첨부 오류', '첨부파일은 1개만 등록 가능합니다.');
+                  : customShowDialog(
+                      context: context,
+                      title: '파일 첨부 오류',
+                      message: '첨부파일은 1개만 등록 가능합니다.',
+                      onPressed: () {
+                        Navigator.pop(context);
+                      });
             },
             child: const Text(
               '파일선택',

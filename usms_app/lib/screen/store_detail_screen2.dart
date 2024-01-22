@@ -9,6 +9,8 @@ import 'package:usms_app/screen/notification_list_screen.dart';
 import 'package:usms_app/screen/statistic_screen.dart';
 
 import 'package:usms_app/service/routes.dart';
+import 'package:usms_app/widget/ad_slider.dart';
+import 'package:usms_app/widget/custom_textFormField.dart';
 import 'package:video_player/video_player.dart';
 
 class StoreDetail2 extends StatefulWidget {
@@ -30,6 +32,9 @@ class _StoreDetailState extends State<StoreDetail2> {
   late VideoPlayerController _controller;
   late ChewieController _chewieController;
   late ChewieController _chewieController2;
+
+  final _formKey = GlobalKey<FormState>();
+  final cctvNameController = TextEditingController();
 
   // 페이지 상태 변화 변수(cctv 존재유무)
   final bool isCCTVExist = true;
@@ -180,55 +185,113 @@ class _StoreDetailState extends State<StoreDetail2> {
             centerTitle: true,
             title: const Text('특정 매장 이름'),
           ),
-          body: Center(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                vertical: 40,
-                horizontal: 20,
-              ),
-              child: isCCTVExist
-                  ? Column(
-                      children: [
-                        SizedBox(
-                          height: 250,
-                          // child: ListView(
-                          //   scrollDirection: Axis.horizontal,
-                          //   children: [
-                          //     buildVideoContainer(),
-                          //     const SizedBox(
-                          //       width: 10,
-                          //     ),
-                          //     buildVideoContainer(),
-                          //     const SizedBox(
-                          //       width: 10,
-                          //     ),
-                          //   ],
-                          // ),
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: chewieList.length,
-                            itemBuilder: (context, index) {
-                              return ChewieListItem(
-                                chewieController: chewieList[index],
-                                index: index,
-                              );
-                            },
+          body: SingleChildScrollView(
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 40,
+                  horizontal: 20,
+                ),
+                child: isCCTVExist
+                    ? Column(
+                        children: [
+                          chewieList.isEmpty
+                              ? const SizedBox(
+                                  height: 620,
+                                  child: Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                )
+                              : SizedBox(
+                                  height: 620,
+                                  child: ListView.builder(
+                                    itemCount: chewieList.length,
+                                    itemBuilder: (context, index) {
+                                      return ChewieListItem(
+                                        chewieController: chewieList[index],
+                                        index: index,
+                                        routes: Routes.cctvReplay,
+                                      );
+                                    },
+                                  ),
+                                ),
+                          const SizedBox(
+                            height: 20,
                           ),
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-
-                        // CustomBoxButton(
-                        //   buttonText: 'CCTV 현황',
-                        //   route: MaterialPageRoute(
-                        //     builder: (context) => const CCTVScreen(),
-                        //   ),
-                        //   parentContext: context,
-                        // ),
-                      ],
-                    )
-                  : const NoCCTV(),
+                          ExpansionTile(
+                            title: const Text('CCTV 추가하기'),
+                            children: [
+                              SizedBox(
+                                width: double.infinity,
+                                height: 100,
+                                child: AdSlider(),
+                              ),
+                              Form(
+                                key: _formKey,
+                                child: Column(
+                                  children: [
+                                    CustomTextFormField(
+                                      textController: cctvNameController,
+                                      textType: TextInputType.text,
+                                      labelText: 'CCTV 별칭',
+                                      validator: (value) {
+                                        if (value!.isEmpty) {
+                                          return 'CCTV 별칭을 입력해주세요.';
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        if (_formKey.currentState?.validate() ??
+                                            false) {
+                                          print('빈칸 없음');
+                                        }
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.blueAccent,
+                                      ),
+                                      child: const Text(
+                                        'CCTV 추가하기',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w900,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 20,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.7,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                print('cctv 설치방법');
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.blueAccent,
+                              ),
+                              child: const Text(
+                                'CCTV 설치 및 연결 방법',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w900,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
+                    : const NoCCTV(),
+              ),
             ),
           ),
         ),
@@ -240,19 +303,62 @@ class _StoreDetailState extends State<StoreDetail2> {
 class ChewieListItem extends StatelessWidget {
   final ChewieController chewieController;
   final int index;
+  final String routes;
 
   const ChewieListItem({
     super.key,
     required this.chewieController,
     required this.index,
+    required this.routes,
   });
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 220,
-      width: 330,
-      child: Chewie(controller: chewieController),
+    return Card(
+      child: SizedBox(
+        height: 300,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            SizedBox(
+              height: 220,
+              width: double.infinity,
+              child: Chewie(controller: chewieController),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(12),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'CCTV 1',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const CCTVReplay()));
+                        },
+                        icon: const Icon(Icons.replay),
+                      ),
+                      IconButton(
+                        onPressed: () {},
+                        icon: const Icon(Icons.key),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
     );
   }
 }

@@ -5,18 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:usms_app/main.dart';
 import 'package:usms_app/models/user_model.dart';
+
+// screen
 import 'package:usms_app/screen/main_screen.dart';
 import 'package:usms_app/screen/notification_list_screen.dart';
-import 'package:usms_app/screen/register_screen.dart';
-
-import 'package:usms_app/screen/register_store_screen.dart';
-import 'package:usms_app/screen/secondary_password_screen.dart';
-import 'package:usms_app/screen/set_security_level_screen.dart';
 import 'package:usms_app/screen/statistic_screen.dart';
-import 'package:usms_app/screen/store_detail_screen.dart';
 import 'package:usms_app/screen/user_info_screen.dart';
-import 'package:usms_app/service/routes.dart';
-import 'package:usms_app/widget/store_register_widget.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -152,31 +146,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     }
   }
 
-  Icon getSecurityLevel() {
-    setState(() {
-      if (state == 0) {
-        securityIcon = Icon(
-          Icons.gpp_bad_outlined,
-          color: Colors.red.shade400,
-          size: 70,
-        );
-      } else if (state == 1) {
-        securityIcon = const Icon(
-          Icons.health_and_safety_outlined,
-          color: Colors.amber,
-          size: 70,
-        );
-      } else {
-        securityIcon = const Icon(
-          Icons.verified_user_outlined,
-          color: Colors.green,
-          size: 70,
-        );
-      }
-    });
-    return securityIcon;
-  }
-
   logoutAction() async {
     await storage.delete(key: 'auto_login');
     await storage.delete(key: 'cookie');
@@ -228,146 +197,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       body: SafeArea(
         child: widgetOptions.elementAt(selectedIndex),
       ),
-      // drawer: Drawer(
-      //   child: ListView(
-      //     padding: EdgeInsets.zero,
-      //     children: [
-      //       UserAccountsDrawerHeader(
-      //         decoration: BoxDecoration(
-      //           color: Colors.blue[400],
-      //         ),
-      //         accountName: Row(
-      //           children: [
-      //             Text(
-      //               '$name님',
-      //               style: const TextStyle(
-      //                 color: Colors.white,
-      //                 fontSize: 40,
-      //                 fontWeight: FontWeight.w700,
-      //               ),
-      //             ),
-      //             const SizedBox(
-      //               width: 55,
-      //             ),
-      //             // Icon(
-      //             //   Icons.gpp_bad_outlined,
-      //             //   color: getSecurityLevel(),
-      //             //   size: 70,
-      //             // ),
-      //             getSecurityLevel(),
-      //           ],
-      //         ),
-      //         accountEmail: Text(
-      //           '$email',
-      //           style: const TextStyle(
-      //             color: Colors.white,
-      //           ),
-      //         ),
-      //         // onDetailsPressed: () {
-      //         //   print('detail clicked');
-      //         // },
-      //       ),
-      //       ListTile(
-      //         leading: const Icon(
-      //           Icons.policy_outlined,
-      //           color: Colors.grey,
-      //         ),
-      //         title: const Text(
-      //           '보안레벨 설정',
-      //           style: TextStyle(
-      //             color: Colors.grey,
-      //           ),
-      //         ),
-      //         onTap: () {
-      //           print('Security Level Clicked');
-      //           Navigator.pushNamed(context, SecurityLevel.route);
-      //         },
-      //         trailing: const Icon(
-      //           Icons.add,
-      //           color: Colors.grey,
-      //         ),
-      //       ),
-      //       ListTile(
-      //         leading: const Icon(
-      //           Icons.account_circle_outlined,
-      //           color: Colors.grey,
-      //         ),
-      //         title: const Text(
-      //           '회원정보 수정',
-      //           style: TextStyle(
-      //             color: Colors.grey,
-      //           ),
-      //         ),
-      //         onTap: () {
-      //           print('Edit User Info Clicked');
-      //           Navigator.push(
-      //             context,
-      //             MaterialPageRoute(
-      //               builder: (context) => const RegisterScreen(
-      //                 data: 'data',
-      //                 flag: null,
-      //                 routeCode: false,
-      //               ),
-      //             ),
-      //           );
-      //         },
-      //         trailing: const Icon(
-      //           Icons.add,
-      //           color: Colors.grey,
-      //         ),
-      //       ),
-      //       ListTile(
-      //         leading: const Icon(
-      //           Icons.logout_rounded,
-      //           color: Colors.grey,
-      //         ),
-      //         title: const Text(
-      //           '로그아웃',
-      //           style: TextStyle(
-      //             color: Colors.grey,
-      //           ),
-      //         ),
-      //         onTap: () {
-      //           logoutAction();
-      //         },
-      //       ),
-      //       ListTile(
-      //         leading: const Icon(
-      //           Icons.science_outlined,
-      //           color: Colors.grey,
-      //         ),
-      //         title: const Text(
-      //           '매장 상세 페이지',
-      //           style: TextStyle(
-      //             color: Colors.grey,
-      //           ),
-      //         ),
-      //         onTap: () {
-      //           Navigator.pushNamed(context, Routes.storeDetail);
-      //         },
-      //       ),
-      //       ListTile(
-      //         leading: const Icon(
-      //           Icons.science_outlined,
-      //           color: Colors.grey,
-      //         ),
-      //         title: const Text(
-      //           '2차 비밀번호',
-      //           style: TextStyle(
-      //             color: Colors.grey,
-      //           ),
-      //         ),
-      //         onTap: () {
-      //           Navigator.pushNamed(context, SecondaryPasswordScreen.route);
-      //         },
-      //       ),
-      //     ],
-      //   ),
-      // ),
-      // body: RegisterStoreWidget(
-      //     animationController: _animationController,
-      //     offsetAnimation: _offsetAnimation,
-      //     opacityAnimation: _opacityAnimation),
     );
   }
 }
