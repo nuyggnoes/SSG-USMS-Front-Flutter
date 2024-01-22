@@ -26,12 +26,12 @@ class UserService {
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
       },
-      baseUrl: "http://10.0.2.2:3003",
+      // baseUrl: "http://10.0.2.2:3003",
+      baseUrl: baseUrl,
     );
     Dio dio = Dio(baseoptions);
 
     // dio.interceptors.add(CustomInterceptor(storage: storage));
-
     var param = {
       'username': username,
       'password': password,
@@ -66,20 +66,46 @@ class UserService {
     } on DioException catch (e) {
       if (e.response?.statusCode == 400) {
         print("[Error] : [$e]");
-        // Future.microtask(() {
-        //   _showErrorDialog('아이디와 비밀번호가 일치하지 않습니다.', context);
-        // });
+        Future.microtask(() {
+          customShowDialog(
+              context: context,
+              title: '로그인 실패',
+              message: '아이디 또는 비밀번호가 일치하지 않습니다.',
+              onPressed: () {
+                Navigator.pop(context);
+              });
+        });
+      } else if (e.response?.statusCode == 401) {
+        Future.microtask(() {
+          customShowDialog(
+              context: context,
+              title: '2차 비밀번호',
+              message: '2차 비밀번호 인증이 필요합니다.',
+              onPressed: () {
+                Navigator.pushNamed(context, Routes.secondaryPassword);
+              });
+        });
+      } else if (e.response?.statusCode == 429) {
+        Future.microtask(() {
+          customShowDialog(
+              context: context,
+              title: '로그인 실패',
+              message: '${e.response?.data['message']}',
+              onPressed: () {
+                Navigator.pop(context);
+              });
+        });
+      } else {
+        Future.microtask(() {
+          customShowDialog(
+              context: context,
+              title: '서버 오류',
+              message: e.message!,
+              onPressed: () {
+                Navigator.pop(context);
+              });
+        });
       }
-    } on SocketException catch (e) {
-      print("[Server ERR] : $e");
-      // Future.microtask(() {
-      //   _showErrorDialog('서버에 연결할 수 없습니다. 나중에 다시 시도해주세요.', context);
-      // });
-    } catch (e) {
-      print("[Error] : [$e]");
-      // Future.microtask(() {
-      //   _showErrorDialog('알 수 없는 오류가 발생했습니다.', context);
-      // });
     }
   }
 
@@ -96,11 +122,8 @@ class UserService {
     final jsonString = await storage.read(key: 'userInfo');
     User? user;
     if (jsonString != null) {
-      // 역직렬화
       final Map<String, dynamic> userMap = jsonDecode(jsonString);
-      // 사용자 정보로 변환
       user = User.fromMap(userMap);
-      // 이제 user를 사용할 수 있음
     }
     return user;
   }

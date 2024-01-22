@@ -9,6 +9,7 @@ class StoreService {
   static const baseUrl = MyApp.url;
   static const storage = FlutterSecureStorage();
 
+  // 특정 회원이 소유한 매장들 조회
   Future<List<Store>?> getUserStoresById(
       {required BuildContext context, required int uid}) async {
     var jSessionId = await storage.read(key: 'cookie');
@@ -63,6 +64,7 @@ class StoreService {
     return null;
   }
 
+  // 특정 매장 정보 조회
   Future<Store?> getStoreInfo(
       {required BuildContext context,
       required int uid,
