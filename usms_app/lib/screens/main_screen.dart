@@ -62,34 +62,40 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
 
     switch (store!.store_state) {
       case 0:
-        customShowDialog(
-            context: context,
-            title: '반려',
-            message: '반려상태',
-            onPressed: () {
-              print('hi');
-            });
+        Future.microtask(() {
+          customShowDialog(
+              context: context,
+              title: '반려',
+              message: '반려상태',
+              onPressed: () {
+                print('반려반려');
+              });
+        });
         break;
       case 1:
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => StoreDetail2(
-              uid: widget.uid,
-              storeId: storeId,
-              storeInfo: store,
+        Future.microtask(() {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => StoreDetail2(
+                uid: widget.uid,
+                storeId: storeId,
+                storeInfo: store,
+              ),
             ),
-          ),
-        );
+          );
+        });
         break;
       case 2:
-        customShowDialog(
-            context: context,
-            title: '승인요청중',
-            message: '승인 요청중',
-            onPressed: () {
-              print('hi');
-            });
+        Future.microtask(() {
+          customShowDialog(
+              context: context,
+              title: '승인요청중',
+              message: '승인 요청중',
+              onPressed: () {
+                print('승인요청중');
+              });
+        });
         break;
     }
   }
