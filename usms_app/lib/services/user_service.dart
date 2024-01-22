@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -26,8 +25,8 @@ class UserService {
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
       },
-      // baseUrl: "http://10.0.2.2:3003",
-      baseUrl: baseUrl,
+      baseUrl: "http://10.0.2.2:3003",
+      // baseUrl: baseUrl,
     );
     Dio dio = Dio(baseoptions);
 

@@ -15,7 +15,6 @@ import 'package:usms_app/services/user_service.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
-  static const route = '/main';
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();

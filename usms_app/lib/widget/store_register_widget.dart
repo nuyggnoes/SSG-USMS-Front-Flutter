@@ -1,31 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:usms_app/screens/register_store_screen.dart';
-import 'package:usms_app/routes.dart';
 
 class RegisterStoreWidget extends StatelessWidget {
   const RegisterStoreWidget({
     super.key,
-    required int uid,
-    required AnimationController animationController,
-    required Animation<double> opacityAnimation,
-    required Animation<Offset> offsetAnimation,
-  })  : _animationController = animationController,
-        _offsetAnimation = offsetAnimation,
-        _opacityAnimation = opacityAnimation;
-
-  final AnimationController _animationController;
-  final Animation<double> _opacityAnimation;
-  final Animation<Offset> _offsetAnimation;
+    required this.uid,
+    required this.animationController,
+    required this.opacityAnimation,
+    required this.offsetAnimation,
+  });
+  final int uid;
+  final AnimationController animationController;
+  final Animation<double> opacityAnimation;
+  final Animation<Offset> offsetAnimation;
 
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-      animation: _animationController,
+      animation: animationController,
       builder: (context, child) {
         return SlideTransition(
-          position: _offsetAnimation,
+          position: offsetAnimation,
           child: Opacity(
-            opacity: _opacityAnimation.value,
+            opacity: opacityAnimation.value,
             child: Container(
               width: MediaQuery.of(context).size.width * 0.8,
               height: 520,
@@ -95,9 +92,13 @@ class RegisterStoreWidget extends StatelessWidget {
                             ),
                             ElevatedButton(
                               onPressed: () {
-                                print('추가하기');
-                                Navigator.pushNamed(
-                                    context, Routes.registerStore);
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        RegisterStore(uid: uid),
+                                  ),
+                                );
                               },
                               child: const Text(
                                 '추가',

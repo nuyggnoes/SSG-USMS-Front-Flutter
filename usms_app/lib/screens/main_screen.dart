@@ -16,6 +16,8 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
+  final GlobalKey<_MainScreenState> homeKey = GlobalKey<_MainScreenState>();
+
   late AnimationController _animationController;
   late Animation<Offset> _offsetAnimation;
   late Animation<double> _opacityAnimation;

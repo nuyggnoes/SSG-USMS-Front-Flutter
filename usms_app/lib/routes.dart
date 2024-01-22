@@ -41,7 +41,7 @@ class Routes {
           const RegisterScreen(data: '', flag: null, routeCode: false),
       home: (context) => const HomeScreen(),
       securitySetting: (context) => const SecurityLevel(),
-      registerStore: (context) => const RegisterStore(),
+      // registerStore: (context) => const RegisterStore(),
       storeDetail: (context) => const StoreDetail(),
       payInfo: (context) => const PayInfoScreen(),
       secondaryPassword: (context) => const SecondaryPasswordScreen(),

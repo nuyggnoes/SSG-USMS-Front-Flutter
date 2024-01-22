@@ -3,11 +3,16 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:kpostal/kpostal.dart';
 import 'package:usms_app/services/show_dialog.dart';
+import 'package:usms_app/services/store_service.dart';
 import 'package:usms_app/widget/custom_textFormField.dart';
 
 class RegisterStore extends StatefulWidget {
-  const RegisterStore({super.key});
-  static const route = '/register-store';
+  const RegisterStore({
+    super.key,
+    required this.uid,
+  });
+
+  final int uid;
 
   @override
   State<RegisterStore> createState() => _RegisterStoreState();
@@ -15,6 +20,7 @@ class RegisterStore extends StatefulWidget {
 
 class _RegisterStoreState extends State<RegisterStore> {
   final _formKey = GlobalKey<FormState>();
+  final StoreService storeService = StoreService();
 
   final _storeNameController = TextEditingController();
   final _storeNumController1 = TextEditingController();
@@ -431,7 +437,19 @@ class _RegisterStoreState extends State<RegisterStore> {
                         child: ElevatedButton(
                           onPressed: () {
                             if (_formKey.currentState?.validate() ?? false) {
-                              requestStore();
+                              formData.fields.addAll([
+                                MapEntry(
+                                    'storeName', _storeNameController.text),
+                                MapEntry('businessLicenseCode',
+                                    '${_storeNumController1.text}-${_storeNumController2.text}-${_storeNumController3.text}'),
+                                MapEntry('storeAddress',
+                                    '${_addressTextController.text} ${_detailAddressController.text}'),
+                              ]);
+                              // requestStore();
+                              storeService.requestStore(
+                                  formData: formData,
+                                  uid: widget.uid,
+                                  context: context);
                             }
                           },
                           style: ElevatedButton.styleFrom(
