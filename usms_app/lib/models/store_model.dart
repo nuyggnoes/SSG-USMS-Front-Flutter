@@ -1,4 +1,5 @@
 class Store {
+  final int store_id;
   final int user_id;
   final String store_name;
   final String store_address;
@@ -8,6 +9,7 @@ class Store {
   int? uid;
 
   Store({
+    required this.store_id,
     required this.user_id,
     required this.store_name,
     required this.store_address,
@@ -18,7 +20,8 @@ class Store {
   });
 
   Store.fromJson(Map<String, dynamic> json)
-      : user_id = json["user_id"],
+      : store_id = json['store_id'],
+        user_id = json["user_id"],
         store_name = json['store_name'],
         store_address = json['store_address'],
         store_register_code = json['store_register_code'],
@@ -35,6 +38,7 @@ class Store {
       };
   factory Store.fromMap(Map<String, dynamic> map) {
     return Store(
+      store_id: map['store_id'],
       uid: map['uid'],
       user_id: map['user_id'],
       store_name: map['store_name'],

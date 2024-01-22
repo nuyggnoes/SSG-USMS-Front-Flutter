@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:usms_app/models/store_model.dart';
 import 'package:usms_app/routes.dart';
+import 'package:usms_app/screens/store_detail_screen2.dart';
+import 'package:usms_app/services/show_dialog.dart';
 import 'package:usms_app/services/store_service.dart';
 import 'package:usms_app/widget/store_register_widget.dart';
 import 'package:usms_app/widget/test_card.dart';
@@ -55,6 +57,39 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   }
 
   late List<Widget> widgetOptions;
+  checkStoreState(BuildContext context, int storeId) async {
+    Store? store = await storeService.getStoreInfo(widget.uid, storeId);
+
+    switch (store!.store_state) {
+      case 0:
+        customShowDialog(
+            context: context,
+            title: '반려',
+            message: '반려상태',
+            onPressed: () {
+              print('hi');
+            });
+        break;
+      case 1:
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => StoreDetail2(uid: widget.uid),
+          ),
+        );
+        break;
+      case 2:
+        customShowDialog(
+            context: context,
+            title: '승인요청중',
+            message: '승인 요청중',
+            onPressed: () {
+              print('hi');
+            });
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -85,20 +120,8 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                         builder: ((context, snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
-                            print('로딩 중 .....');
                             return const CircularProgressIndicator();
-                          } else if (snapshot.hasError) {
-                            return Padding(
-                              padding: const EdgeInsets.all(12),
-                              child: Text(
-                                'Error: ${snapshot.error}',
-                                style: const TextStyle(
-                                  fontSize: 15,
-                                ),
-                              ),
-                            );
                           } else if (snapshot.hasData) {
-                            print('데이터가 있을 경우');
                             List<Store> storeList = snapshot.data!;
                             return SizedBox(
                               height: 400,
@@ -115,8 +138,8 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                                     animationController: _animationController,
                                     opacityAnimation: _opacityAnimation,
                                     onTapAction: () {
-                                      Navigator.pushNamed(
-                                          context, Routes.storeDetail2);
+                                      // storeState 확인
+                                      checkStoreState(context, store.store_id);
                                     },
                                   );
                                 },
@@ -136,7 +159,15 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                         animationController: _animationController,
                         opacityAnimation: _opacityAnimation,
                         onTapAction: () {
-                          Navigator.pushNamed(context, Routes.storeDetail2);
+                          // Navigator.pushNamed(context, Routes.storeDetail2,
+                          //     arguments: widget.uid);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  StoreDetail2(uid: widget.uid),
+                            ),
+                          );
                         },
                       ),
                       const SizedBox(
@@ -175,6 +206,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                     height: 30,
                   ),
                   RegisterStoreWidget(
+                    uid: widget.uid,
                     animationController: _animationController,
                     offsetAnimation: _offsetAnimation,
                     opacityAnimation: _opacityAnimation,

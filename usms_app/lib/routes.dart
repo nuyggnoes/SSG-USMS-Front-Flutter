@@ -48,7 +48,7 @@ class Routes {
       cctvDetail: (context) => const CCTVScreen(),
       cctvReplay: (context) => const CCTVReplay(),
       heroTest: (contest) => const TestScreen(),
-      storeDetail2: (context) => const StoreDetail2()
+      // storeDetail2: (context) => const StoreDetail2()
     };
   }
 }

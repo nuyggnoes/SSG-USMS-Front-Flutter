@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:usms_app/routes.dart';
+import 'package:usms_app/services/show_dialog.dart';
 
 class CurrencyCard extends StatelessWidget {
   final String name, amount;
@@ -10,9 +12,9 @@ class CurrencyCard extends StatelessWidget {
   final Color selectedCardColors;
   final AnimationController animationController;
   final Animation<double> opacityAnimation;
-  final void Function()? onTapAction;
+  void Function()? onTapAction;
 
-  const CurrencyCard({
+  CurrencyCard({
     super.key,
     required this.name,
     required this.code,
@@ -21,7 +23,7 @@ class CurrencyCard extends StatelessWidget {
     required this.selectedCardColors,
     required this.animationController,
     required this.opacityAnimation,
-    required this.onTapAction,
+    this.onTapAction,
   });
 
   @override
@@ -33,13 +35,34 @@ class CurrencyCard extends StatelessWidget {
       case 1:
         storeStateText = '';
         stateTextColor = null;
+        // onTapAction = () {
+        //   Navigator.pushNamed(context, Routes.storeDetail2);
+        // };
         break;
       case 2:
         storeStateText = '승인 요청 중';
         stateTextColor = Colors.black.withOpacity(0.5);
+      // onTapAction = () {
+      //   customShowDialog(
+      //       context: context,
+      //       title: '승인 요청 중',
+      //       message: '승인 요청 중입니다. 잠시만 기다려주세요.',
+      //       onPressed: () {
+      //         Navigator.pop(context);
+      //       });
+      // };
       case 0:
         storeStateText = '반려';
         stateTextColor = Colors.red.withOpacity(0.8);
+      // onTapAction = () {
+      //   customShowDialog(
+      //       context: context,
+      //       title: '반려',
+      //       message: '반려이유',
+      //       onPressed: () {
+      //         Navigator.pop(context);
+      //       });
+      // };
     }
 
     return AnimatedBuilder(

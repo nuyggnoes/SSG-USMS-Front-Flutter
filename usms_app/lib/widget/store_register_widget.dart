@@ -5,6 +5,7 @@ import 'package:usms_app/routes.dart';
 class RegisterStoreWidget extends StatelessWidget {
   const RegisterStoreWidget({
     super.key,
+    required int uid,
     required AnimationController animationController,
     required Animation<double> opacityAnimation,
     required Animation<Offset> offsetAnimation,

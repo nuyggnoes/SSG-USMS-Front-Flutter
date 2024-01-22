@@ -14,7 +14,11 @@ import 'package:usms_app/widget/custom_textFormField.dart';
 import 'package:video_player/video_player.dart';
 
 class StoreDetail2 extends StatefulWidget {
-  const StoreDetail2({super.key});
+  const StoreDetail2({
+    super.key,
+    required this.uid,
+  });
+  final uid;
 
   @override
   State<StoreDetail2> createState() => _StoreDetailState();
@@ -279,9 +283,9 @@ class _StoreDetailState extends State<StoreDetail2> {
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.blueAccent,
                               ),
-                              child: const Text(
-                                'CCTV 설치 및 연결 방법',
-                                style: TextStyle(
+                              child: Text(
+                                'CCTV 설치 및 연결 방법 ${widget.uid}',
+                                style: const TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w900,
                                 ),
