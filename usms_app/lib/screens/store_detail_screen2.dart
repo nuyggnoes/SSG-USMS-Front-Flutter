@@ -1,14 +1,10 @@
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
-import 'package:usms_app/screens/cctv_detail_screen.dart';
 import 'package:usms_app/screens/cctv_replay_screen.dart';
-import 'package:usms_app/screens/hero_test_screen.dart';
 import 'package:usms_app/screens/no_cctv_screen.dart';
 
-import 'package:usms_app/screens/notification_list_screen.dart';
-import 'package:usms_app/screens/statistic_screen.dart';
-
 import 'package:usms_app/routes.dart';
+import 'package:usms_app/services/store_service.dart';
 import 'package:usms_app/widget/ad_slider.dart';
 import 'package:usms_app/widget/custom_textFormField.dart';
 import 'package:video_player/video_player.dart';
@@ -16,15 +12,21 @@ import 'package:video_player/video_player.dart';
 class StoreDetail2 extends StatefulWidget {
   const StoreDetail2({
     super.key,
+    required this.storeId,
     required this.uid,
+    required this.storeInfo,
   });
   final uid;
+  final storeId;
+  final storeInfo;
 
   @override
   State<StoreDetail2> createState() => _StoreDetailState();
 }
 
 class _StoreDetailState extends State<StoreDetail2> {
+  final StoreService storeService = StoreService();
+
   final List<String> urlStringList = [
     'https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8',
     'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
@@ -46,6 +48,10 @@ class _StoreDetailState extends State<StoreDetail2> {
   @override
   void initState() {
     super.initState();
+    storeService.getStoreDetail(
+      uid: widget.uid,
+      storeId: widget.storeId,
+    );
     // 특정 회원의 특정 매장 정보를 가져온 후
     // 특정 매장에 cctv 정보가 없으면 페이지 상태 변화
     setVideoPlayer();

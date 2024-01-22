@@ -57,7 +57,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   }
 
   late List<Widget> widgetOptions;
-  checkStoreState(BuildContext context, int storeId) async {
+  checkStoreState(int storeId) async {
     Store? store = await storeService.getStoreInfo(widget.uid, storeId);
 
     switch (store!.store_state) {
@@ -74,7 +74,11 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => StoreDetail2(uid: widget.uid),
+            builder: (context) => StoreDetail2(
+              uid: widget.uid,
+              storeId: storeId,
+              storeInfo: store,
+            ),
           ),
         );
         break;
@@ -139,7 +143,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                                     opacityAnimation: _opacityAnimation,
                                     onTapAction: () {
                                       // storeState 확인
-                                      checkStoreState(context, store.store_id);
+                                      checkStoreState(store.store_id);
                                     },
                                   );
                                 },
@@ -164,8 +168,11 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  StoreDetail2(uid: widget.uid),
+                              builder: (context) => StoreDetail2(
+                                uid: widget.uid,
+                                storeId: 1,
+                                storeInfo: null,
+                              ),
                             ),
                           );
                         },

@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:usms_app/main.dart';
 import 'package:usms_app/models/store_model.dart';
 import 'package:usms_app/models/user_model.dart';
 
@@ -25,11 +24,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   final storage = const FlutterSecureStorage();
   final UserService userService = UserService();
-  late String? name = '';
-  late String? email = '';
   late int? uid;
-  int state = 0;
-  late Icon securityIcon;
 
   late User? user;
   late Store store;
