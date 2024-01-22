@@ -58,7 +58,8 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
 
   late List<Widget> widgetOptions;
   checkStoreState(int storeId) async {
-    Store? store = await storeService.getStoreInfo(widget.uid, storeId);
+    Store? store = await storeService.getStoreInfo(
+        uid: widget.uid, storeId: storeId, context: context);
 
     switch (store!.store_state) {
       case 0:
@@ -126,7 +127,8 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                   Column(
                     children: [
                       FutureBuilder(
-                        future: storeService.getUserStoresById(widget.uid),
+                        future: storeService.getUserStoresById(
+                            uid: widget.uid, context: context),
                         builder: ((context, snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {

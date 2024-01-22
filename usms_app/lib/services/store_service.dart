@@ -1,15 +1,16 @@
-import 'dart:io';
-
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:usms_app/main.dart';
 import 'package:usms_app/models/store_model.dart';
+import 'package:usms_app/services/show_dialog.dart';
 
 class StoreService {
   static const baseUrl = MyApp.url;
   static const storage = FlutterSecureStorage();
 
-  Future<List<Store>?> getUserStoresById(int uid) async {
+  Future<List<Store>?> getUserStoresById(
+      {required BuildContext context, required int uid}) async {
     var jSessionId = await storage.read(key: 'cookie');
 
     Response response;
@@ -18,7 +19,7 @@ class StoreService {
         'Content-Type': 'application/json; charset=utf-8',
         'cookie': jSessionId,
       },
-      baseUrl: "http://10.0.2.2:3003",
+      baseUrl: baseUrl,
     );
     Dio dio = Dio(baseoptions);
 
@@ -30,40 +31,42 @@ class StoreService {
     try {
       response = await dio.get('/api/users/$uid/stores', data: param);
       if (response.statusCode == 200) {
-        // print(
-        //     '====================StoreGetService response 200=====================');
+        print('=================StoreGetService response 200=================');
         // List<Mape<String, dynamic>> stores
         List<Store> storeList = Store.fromMapToStoreModel(response.data);
         return storeList;
       }
     } on DioException catch (e) {
-      if (e.response?.statusCode == 404) {
-        // print('[ERROR MESSAGE] : ${e.message}');
-      }
       if (e.response?.statusCode == 400) {
-        // print("[Error] : [$e]");
-        // Future.microtask(() {
-        //   _showErrorDialog('아이디와 비밀번호가 일치하지 않습니다.', context);
-        // });
+        Future.microtask(() {
+          customShowDialog(
+              context: context,
+              title: '로딩 실패',
+              message: e.response!.data['message'],
+              onPressed: () {
+                Navigator.pop(context);
+              });
+        });
         return null;
+      } else {
+        Future.microtask(() {
+          customShowDialog(
+              context: context,
+              title: '서버 오류',
+              message: '유저 정보를 불러오는데 실패하였습니다.',
+              onPressed: () {
+                Navigator.pop(context);
+              });
+        });
       }
-    } on SocketException catch (e) {
-      print("[Server ERR] : $e");
-      // Future.microtask(() {
-      //   _showErrorDialog('서버에 연결할 수 없습니다. 나중에 다시 시도해주세요.', context);
-      // });
-      return null;
-    } catch (e) {
-      print("[Error] : [$e]");
-      // Future.microtask(() {
-      //   _showErrorDialog('알 수 없는 오류가 발생했습니다.', context);
-      // });
-      return null;
     }
     return null;
   }
 
-  Future<Store?> getStoreInfo(int uid, int storeId) async {
+  Future<Store?> getStoreInfo(
+      {required BuildContext context,
+      required int uid,
+      required int storeId}) async {
     var jSessionId = await storage.read(key: 'cookie');
 
     Response response;
@@ -87,27 +90,26 @@ class StoreService {
       }
     } on DioException catch (e) {
       if (e.response?.statusCode == 404) {
-        // print('[ERROR MESSAGE] : ${e.message}');
+        Future.microtask(() {
+          customShowDialog(
+              context: context,
+              title: 'BAD REQUEST',
+              message: '${e.response!.data['message']}',
+              onPressed: () {
+                Navigator.pop(context);
+              });
+        });
+      } else {
+        Future.microtask(() {
+          customShowDialog(
+              context: context,
+              title: '서버 오류',
+              message: '매장 정보를 불러오는데 실패하였습니다.',
+              onPressed: () {
+                Navigator.pop(context);
+              });
+        });
       }
-      if (e.response?.statusCode == 400) {
-        // print("[Error] : [$e]");
-        // Future.microtask(() {
-        //   _showErrorDialog('아이디와 비밀번호가 일치하지 않습니다.', context);
-        // });
-        return null;
-      }
-    } on SocketException catch (e) {
-      print("[Server ERR] : $e");
-      // Future.microtask(() {
-      //   _showErrorDialog('서버에 연결할 수 없습니다. 나중에 다시 시도해주세요.', context);
-      // });
-      return null;
-    } catch (e) {
-      print("[Error] : [$e]");
-      // Future.microtask(() {
-      //   _showErrorDialog('알 수 없는 오류가 발생했습니다.', context);
-      // });
-      return null;
     }
     return null;
   }
