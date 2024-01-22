@@ -1,9 +1,11 @@
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
+import 'package:usms_app/models/cctv_model.dart';
 import 'package:usms_app/screens/cctv_replay_screen.dart';
 import 'package:usms_app/screens/no_cctv_screen.dart';
 
 import 'package:usms_app/routes.dart';
+import 'package:usms_app/services/cctv_service.dart';
 import 'package:usms_app/services/store_service.dart';
 import 'package:usms_app/widget/ad_slider.dart';
 import 'package:usms_app/widget/custom_textFormField.dart';
@@ -25,7 +27,8 @@ class StoreDetail2 extends StatefulWidget {
 }
 
 class _StoreDetailState extends State<StoreDetail2> {
-  final StoreService storeService = StoreService();
+  final CCTVService cctvService = CCTVService();
+  late List<CCTV> cctvList;
 
   final List<String> urlStringList = [
     'https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8',
@@ -48,12 +51,9 @@ class _StoreDetailState extends State<StoreDetail2> {
   @override
   void initState() {
     super.initState();
-    storeService.getStoreDetail(
-      uid: widget.uid,
-      storeId: widget.storeId,
-    );
-    // 특정 회원의 특정 매장 정보를 가져온 후
+    // 특정 회원의 특정 매장의 CCTV 정보를 가져온 후
     // 특정 매장에 cctv 정보가 없으면 페이지 상태 변화
+
     setVideoPlayer();
   }
 
@@ -125,6 +125,31 @@ class _StoreDetailState extends State<StoreDetail2> {
     }
 
     setState(() {});
+  }
+
+  ChewieController setController(String cctvStreamKey) {
+    ChewieController chewieController;
+    var videoController =
+        VideoPlayerController.networkUrl(Uri.parse(cctvStreamKey));
+    // if (!videoController.value.isInitialized) {
+    //   videoController.initialize();
+
+    //   chewieController = ChewieController(
+    //     videoPlayerController: videoController,
+    //     autoPlay: false,
+    //     aspectRatio: 16 / 9,
+    //   );
+    // }
+    while (!videoController.value.isInitialized) {
+      videoController.initialize();
+    }
+    chewieController = ChewieController(
+      videoPlayerController: videoController,
+      autoPlay: false,
+      aspectRatio: 16 / 9,
+    );
+
+    return chewieController;
   }
 
   @override
@@ -227,6 +252,38 @@ class _StoreDetailState extends State<StoreDetail2> {
                                 ),
                           const SizedBox(
                             height: 20,
+                          ),
+                          FutureBuilder(
+                            future: cctvService.getAllcctvList(
+                                storeId: widget.storeId, uid: widget.uid),
+                            builder: ((context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const CircularProgressIndicator();
+                              } else if (snapshot.hasData) {
+                                List<CCTV> cctvList = snapshot.data!;
+                                return SizedBox(
+                                  height: 620,
+                                  child: ListView.builder(
+                                    itemCount: cctvList.length,
+                                    itemBuilder: (context, index) {
+                                      CCTV cctv = cctvList[index];
+                                      urlStringList.add(cctv.cctvStreamKey);
+                                      // videoController와 chewieController 등록.
+                                      var chewieController =
+                                          setController(cctv.cctvStreamKey);
+                                      return ChewieListItem(
+                                        chewieController: chewieController,
+                                        index: index,
+                                        routes: Routes.cctvReplay,
+                                      );
+                                    },
+                                  ),
+                                );
+                              } else {
+                                return const NoCCTV();
+                              }
+                            }),
                           ),
                           ExpansionTile(
                             title: const Text('CCTV 추가하기'),
@@ -350,10 +407,10 @@ class ChewieListItem extends StatelessWidget {
                     children: [
                       IconButton(
                         onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const CCTVReplay()));
+                          // Navigator.push(
+                          //     context,
+                          //     MaterialPageRoute(
+                          //         builder: (context) => const CCTVReplay()));
                         },
                         icon: const Icon(Icons.replay),
                       ),

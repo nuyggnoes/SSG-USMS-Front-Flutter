@@ -10,7 +10,7 @@ void customShowDialog({
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: const Text('오류'),
+        title: Text(title),
         content: Text(message),
         actions: <Widget>[
           TextButton(
@@ -22,5 +22,6 @@ void customShowDialog({
         ],
       );
     },
+    barrierDismissible: false,
   );
 }

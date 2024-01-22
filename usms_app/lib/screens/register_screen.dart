@@ -6,6 +6,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:usms_app/models/user_model.dart';
 
 import 'package:usms_app/screens/home_screen.dart';
+import 'package:usms_app/services/user_service.dart';
 import 'package:usms_app/widget/custom_textFormField.dart';
 
 import 'package:usms_app/widget/show_dialog.dart';
@@ -27,6 +28,8 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
+  final UserService userService = UserService();
+
   late String buttonName;
 
   late User user;
@@ -205,25 +208,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // SizedBox(
-                        //   height: 70,
-                        //   child: TextFormField(
-                        //     controller: _nameController,
-                        //     maxLength: 21,
-                        //     keyboardType: TextInputType.text,
-                        //     decoration: const InputDecoration(
-                        //       counterText: '',
-                        //       labelText: '이름',
-                        //       helperText: '',
-                        //     ),
-                        //     validator: (String? value) {
-                        //       if (value?.isEmpty ?? true) {
-                        //         return '이름을 입력해주세요!';
-                        //       }
-                        //       return null;
-                        //     },
-                        //   ),
-                        // ),
                         CustomTextFormField(
                           labelText: '이름',
                           textController: _nameController,
@@ -238,27 +222,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         const SizedBox(
                           height: 10,
                         ),
-                        // SizedBox(
-                        //   height: 70,
-                        //   child: TextFormField(
-                        //     enabled:
-                        //         widget.flag == false || widget.flag == null,
-                        //     controller: _phoneTextEditController,
-                        //     maxLength: 11,
-                        //     keyboardType: TextInputType.number,
-                        //     decoration: const InputDecoration(
-                        //       counterText: '',
-                        //       labelText: '휴대전화 번호',
-                        //       helperText: '',
-                        //     ),
-                        //     validator: (String? value) {
-                        //       if (value?.isEmpty ?? true) {
-                        //         return '전화번호를 입력해주세요!';
-                        //       }
-                        //       return null;
-                        //     },
-                        //   ),
-                        // ),
                         CustomTextFormField(
                           labelText: '휴대폰 번호',
                           isEnabled:
@@ -277,29 +240,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         const SizedBox(
                           height: 50,
                         ),
-                        // SizedBox(
-                        //   height: 70,
-                        //   child: TextFormField(
-                        //     enabled: widget.flag ?? false,
-                        //     controller: _usernameController,
-                        //     maxLength: 20,
-                        //     keyboardType: TextInputType.text,
-                        //     decoration: const InputDecoration(
-                        //       counterText: '',
-                        //       labelText: '아이디',
-                        //       helperText: '',
-                        //     ),
-                        //     validator: (String? value) {
-                        //       if (value?.isEmpty ?? true) {
-                        //         return '아이디를 입력해주세요!';
-                        //       }
-                        //       if (value!.length < 5) {
-                        //         return '아이디는 최소 5자 이상 최대 20자 이하입니다.';
-                        //       }
-                        //       return null;
-                        //     },
-                        //   ),
-                        // ),
                         CustomTextFormField(
                           labelText: '아이디',
                           maxLength: 20,
@@ -320,26 +260,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         const SizedBox(
                           height: 10,
                         ),
-                        // SizedBox(
-                        //   height: 70,
-                        //   child: TextFormField(
-                        //     enabled: widget.flag == true || widget.flag == null,
-                        //     controller: _emailTextEditController,
-                        //     maxLength: 21,
-                        //     keyboardType: TextInputType.emailAddress,
-                        //     decoration: const InputDecoration(
-                        //       counterText: '',
-                        //       labelText: '이메일',
-                        //       helperText: '',
-                        //     ),
-                        //     validator: (String? value) {
-                        //       if (value?.isEmpty ?? true) {
-                        //         return '이메일을 입력해주세요!';
-                        //       }
-                        //       return null;
-                        //     },
-                        //   ),
-                        // ),
                         CustomTextFormField(
                           labelText: '이메일',
                           isEnabled: widget.flag == true || widget.flag == null,
@@ -356,26 +276,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         const SizedBox(
                           height: 10,
                         ),
-                        // SizedBox(
-                        //   height: 70,
-                        //   child: TextFormField(
-                        //     controller: _passwordTextEditController,
-                        //     maxLength: 21,
-                        //     obscureText: true,
-                        //     keyboardType: TextInputType.text,
-                        //     decoration: const InputDecoration(
-                        //       counterText: '',
-                        //       labelText: '비밀번호',
-                        //       helperText: '',
-                        //     ),
-                        //     validator: (String? value) {
-                        //       if (value?.isEmpty ?? true) {
-                        //         return '비밀번호를 입력해주세요!';
-                        //       }
-                        //       return null;
-                        //     },
-                        //   ),
-                        // ),
                         CustomTextFormField(
                           labelText: '비밀번호',
                           maxLength: 30,
@@ -393,37 +293,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         const SizedBox(
                           height: 10,
                         ),
-                        // SizedBox(
-                        //   height: 70,
-                        //   child: TextFormField(
-                        //     controller: _checkPasswordTextEditController,
-                        //     onChanged: (value) {
-                        //       if (value != _passwordTextEditController.text) {
-                        //         setState(() {
-                        //           _passwordMatchError = '비밀번호가 일치하지 않습니다!';
-                        //         });
-                        //       } else {
-                        //         setState(() {
-                        //           _passwordMatchError = null;
-                        //         });
-                        //       }
-                        //     },
-                        //     maxLength: 21,
-                        //     obscureText: true,
-                        //     keyboardType: TextInputType.text,
-                        //     decoration: const InputDecoration(
-                        //       counterText: '',
-                        //       labelText: '비밀번호 확인',
-                        //       helperText: '',
-                        //     ),
-                        //     validator: (String? value) {
-                        //       if (value?.isEmpty ?? true) {
-                        //         return '비밀번호를 한 번 더 입력해주세요!';
-                        //       }
-                        //       return _passwordMatchError;
-                        //     },
-                        //   ),
-                        // ),
                         CustomTextFormField(
                           labelText: '비밀번호 확인',
                           maxLength: 30,
@@ -449,7 +318,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             return _passwordMatchError;
                           },
                         ),
-
                         SizedBox(
                           height: MediaQuery.of(context).size.height * 0.2,
                         ),
@@ -468,7 +336,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   security_state: 0,
                                   is_lock: false,
                                 );
-                                requestRegister(user);
+                                // requestRegister(user);
+                                userService.requestRegister(
+                                    context: context, user: user);
                               }
                               // FlutterLocalNotification.showNotification();
                             },

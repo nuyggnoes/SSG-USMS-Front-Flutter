@@ -6,6 +6,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 //screen
 import 'package:usms_app/screens/register_screen.dart';
+import 'package:usms_app/services/user_service.dart';
 import 'package:usms_app/widget/show_dialog.dart';
 
 /* 
@@ -25,6 +26,8 @@ class VerificationScreen extends StatefulWidget {
 class _VerificationScreenState extends State<VerificationScreen>
     with TickerProviderStateMixin {
   late final TabController _tabController;
+
+  final UserService userService = UserService();
 
   String _authenticationMethod = "";
   String _code = "";
@@ -365,8 +368,17 @@ class _VerificationScreenState extends State<VerificationScreen>
                   onPressed: () async {
                     if (formKey.currentState?.validate() ?? false) {
                       formKey.currentState!.save();
-                      if (await getVerificationNumber(
-                          code, _authenticationMethod)) {
+                      // if (await getVerificationNumber(
+                      //     code, _authenticationMethod)) {
+                      //   // _showDialog('', '인증번호가 전송되었습니다.');
+                      //   _focusNode.requestFocus();
+                      //   updateVerification(true);
+                      // }
+                      if (await userService.getVerificationNumber(
+                        code: code,
+                        value: _authenticationMethod,
+                        context: context,
+                      )) {
                         // _showDialog('', '인증번호가 전송되었습니다.');
                         _focusNode.requestFocus();
                         updateVerification(true);
@@ -445,7 +457,14 @@ class _VerificationScreenState extends State<VerificationScreen>
                         onPressed: () {
                           if (codeForm.currentState?.validate() ?? false) {
                             codeForm.currentState!.save();
-                            requestVerification(_code);
+                            // requestVerification(_code);
+                            userService.requestVerification(
+                              context: context,
+                              data: _authenticationMethod,
+                              type: methodState,
+                              routeCode: true,
+                              code: _code,
+                            );
                           }
                         },
                         style: ButtonStyle(
