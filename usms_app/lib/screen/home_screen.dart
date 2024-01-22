@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:usms_app/main.dart';
+import 'package:usms_app/models/store_model.dart';
 import 'package:usms_app/models/user_model.dart';
 
 // screen
@@ -29,6 +30,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   late Icon securityIcon;
 
   late User user;
+  late Store store;
   late List<Widget> widgetOptions;
 
   @override
@@ -70,7 +72,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         print('====================userInfo 200=====================');
 
         print('[RES BODY] : ${response.data}');
-        // user = User.fromMap(response.data);
+        await storage.write(key: 'userStore', value: jsonEncode(response.data));
+        store = Store.fromMap(response.data); // List<Store> 로 받아야할 것 같은 느낌
         // uid = user.uid;
         // storeDTO response
         /* status 400 BAD REQUEST
@@ -86,14 +89,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               "message": "허용되지않은 size값입니다."
           } 
         */
-
-        setState(() {
-          name = user.person_name;
-          email = user.email;
-          state = user.security_state;
-        });
-        await storage.write(key: 'userInfo', value: jsonEncode(response.data));
-        print('유저 보안 레벨 : $state');
       }
     } on DioException catch (e) {
       if (e.response?.statusCode == 400) {

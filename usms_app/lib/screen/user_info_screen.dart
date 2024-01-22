@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:usms_app/models/user_model.dart';
 import 'package:usms_app/service/routes.dart';
+import 'package:usms_app/service/user_service.dart';
 import 'package:usms_app/widget/cctv_name.dart';
 import 'package:usms_app/widget/custom_info_button.dart';
 
@@ -16,6 +17,7 @@ class MyPageScreen extends StatefulWidget {
 
 class _MyPageScreenState extends State<MyPageScreen> {
   final storage = const FlutterSecureStorage();
+  final UserService userService = UserService();
 
   String name = '';
   String phone = '';
@@ -81,15 +83,15 @@ class _MyPageScreenState extends State<MyPageScreen> {
     return securityIcon;
   }
 
-  logoutAction() async {
-    await storage.delete(key: 'auto_login');
-    await storage.delete(key: 'cookie');
-    _pagePopAction();
-  }
+  // logoutAction() async {
+  //   await storage.delete(key: 'auto_login');
+  //   await storage.delete(key: 'cookie');
+  //   _pagePopAction();
+  // }
 
-  _pagePopAction() {
-    Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
-  }
+  // _pagePopAction() {
+  //   Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -153,7 +155,11 @@ class _MyPageScreenState extends State<MyPageScreen> {
                       ),
                       TextButton(
                         onPressed: () {
-                          logoutAction();
+                          // logoutAction();
+                          userService.logoutAction(() {
+                            Navigator.pushNamedAndRemoveUntil(
+                                context, '/', (route) => false);
+                          });
                         },
                         child: Text(
                           "로그아웃 >",

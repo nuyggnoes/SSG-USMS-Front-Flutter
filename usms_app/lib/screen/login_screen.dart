@@ -5,6 +5,7 @@ import 'package:usms_app/screen/home_screen.dart';
 import 'package:usms_app/service/routes.dart';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:usms_app/service/user_service.dart';
 
 import 'package:usms_app/widget/my_checkbox.dart';
 
@@ -24,6 +25,8 @@ class _LoginState extends State<Login> {
   static const storage = FlutterSecureStorage();
   dynamic userInfo = '';
 
+  final UserService userService = UserService();
+
   @override
   void initState() {
     super.initState();
@@ -33,8 +36,6 @@ class _LoginState extends State<Login> {
   }
 
   _checkAutoLogin() async {
-    // read 함수로 key값에 맞는 정보를 불러오고 데이터타입은 String 타입
-    // 데이터가 없을때는 null을 반환
     userInfo = await storage.read(key: 'auto_login');
 
     if (userInfo != null) {
@@ -47,70 +48,70 @@ class _LoginState extends State<Login> {
     }
   }
 
-  loginAction({
-    required String username,
-    required String password,
-    required bool autoLogin,
-  }) async {
-    Response response;
-    var baseoptions = BaseOptions(
-      headers: {
-        'Content-Type': 'application/json; charset=utf-8',
-        'accessToken': 'fake_token',
-      },
-      baseUrl: "http://10.0.2.2:3003",
-    );
-    Dio dio = Dio(baseoptions);
+  // loginAction({
+  //   required String username,
+  //   required String password,
+  //   required bool autoLogin,
+  // }) async {
+  //   Response response;
+  //   var baseoptions = BaseOptions(
+  //     headers: {
+  //       'Content-Type': 'application/json; charset=utf-8',
+  //       'accessToken': 'fake_token',
+  //     },
+  //     baseUrl: "http://10.0.2.2:3003",
+  //   );
+  //   Dio dio = Dio(baseoptions);
 
-    // dio.interceptors.add(CustomInterceptor(storage: storage));
+  //   // dio.interceptors.add(CustomInterceptor(storage: storage));
 
-    var param = {
-      'username': username,
-      'password': password,
-    };
-    try {
-      response = await dio.post('/login', data: param);
-      if (response.statusCode == 200) {
-        print('====================response 200=====================');
-        String JSESSIONID = response.headers['cookie']?.first ?? '';
-        // jsessionid를 cookie:value로 저장
+  //   var param = {
+  //     'username': username,
+  //     'password': password,
+  //   };
+  //   try {
+  //     response = await dio.post('/login', data: param);
+  //     if (response.statusCode == 200) {
+  //       print('====================response 200=====================');
+  //       var JSESSIONID = response.headers['cookie']?.first ?? '';
+  //       // jsessionid를 cookie:value로 저장
 
-        // var val = jsonEncode(user.toJson());
-        await storage.write(
-          key: 'cookie',
-          value: username,
-        );
-        if (autoLogin) {
-          await storage.write(
-            key: 'auto_login',
-            value: username,
-          );
-        }
-        successLogin();
-      }
-    } on DioException catch (e) {
-      if (e.response?.statusCode == 400) {
-        print("[Error] : [$e]");
-        Future.microtask(() {
-          _showErrorDialog('아이디와 비밀번호가 일치하지 않습니다.', context);
-        });
-      }
-    } on SocketException catch (e) {
-      print("[Server ERR] : $e");
-      Future.microtask(() {
-        _showErrorDialog('서버에 연결할 수 없습니다. 나중에 다시 시도해주세요.', context);
-      });
-    } catch (e) {
-      print("[Error] : [$e]");
-      Future.microtask(() {
-        _showErrorDialog('알 수 없는 오류가 발생했습니다.', context);
-      });
-    }
-  }
+  //       // var val = jsonEncode(user.toJson());
+  //       await storage.write(
+  //         key: 'cookie',
+  //         value: username,
+  //       );
+  //       if (autoLogin) {
+  //         await storage.write(
+  //           key: 'auto_login',
+  //           value: username,
+  //         );
+  //       }
+  //       successLogin();
+  //     }
+  //   } on DioException catch (e) {
+  //     if (e.response?.statusCode == 400) {
+  //       print("[Error] : [$e]");
+  //       Future.microtask(() {
+  //         _showErrorDialog('아이디와 비밀번호가 일치하지 않습니다.', context);
+  //       });
+  //     }
+  //   } on SocketException catch (e) {
+  //     print("[Server ERR] : $e");
+  //     Future.microtask(() {
+  //       _showErrorDialog('서버에 연결할 수 없습니다. 나중에 다시 시도해주세요.', context);
+  //     });
+  //   } catch (e) {
+  //     print("[Error] : [$e]");
+  //     Future.microtask(() {
+  //       _showErrorDialog('알 수 없는 오류가 발생했습니다.', context);
+  //     });
+  //   }
+  // }
 
-  successLogin() {
-    Navigator.pushNamed(context, Routes.home);
-  }
+  // successLogin() {
+  //   Navigator.pushNamed(context, Routes.home);
+  // }
 
   void _showErrorDialog(String message, BuildContext context) {
     showDialog(
@@ -265,11 +266,12 @@ class _LoginState extends State<Login> {
                                 onPressed: () {
                                   if (_formKey.currentState?.validate() ??
                                       false) {
-                                    loginAction(
+                                    userService.loginAction(
                                       username: _idTextEditController.text,
                                       password:
                                           _passwordTextEditController.text,
                                       autoLogin: _AutoLoginChecked,
+                                      context: context,
                                     );
                                   }
                                 },
@@ -297,8 +299,6 @@ class _LoginState extends State<Login> {
                                           setState(() {
                                             _AutoLoginChecked = value!;
                                           });
-                                          print(
-                                              '체크 상태(true면 체크상태) : $_AutoLoginChecked');
                                         },
                                       ),
                                     ),
@@ -362,13 +362,6 @@ class _LoginState extends State<Login> {
                         ),
                         TextButton(
                           onPressed: () {
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //     builder: (context) => const RegisterScreen(),
-                            //     // fullscreenDialog: true, // true : bottom
-                            //   ),
-                            // );
                             Navigator.pushNamed(
                                 context, Routes.identityVerification);
                           },
