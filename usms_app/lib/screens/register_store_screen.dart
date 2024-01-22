@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:kpostal/kpostal.dart';
-import 'package:usms_app/service/show_dialog.dart';
+import 'package:usms_app/services/show_dialog.dart';
 import 'package:usms_app/widget/custom_textFormField.dart';
 
 class RegisterStore extends StatefulWidget {

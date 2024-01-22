@@ -6,9 +6,9 @@ import 'package:intl/date_symbol_data_local.dart';
 
 // api
 import 'package:usms_app/api/firebase_api.dart';
-import 'package:usms_app/screen/cctv_replay_screen.dart';
-import 'package:usms_app/screen/hero_test_screen.dart';
-import 'package:usms_app/service/routes.dart';
+import 'package:usms_app/screens/cctv_replay_screen.dart';
+import 'package:usms_app/screens/hero_test_screen.dart';
+import 'package:usms_app/routes.dart';
 
 // route
 final navigatorKey = GlobalKey<NavigatorState>();

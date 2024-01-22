@@ -2,7 +2,7 @@ import 'package:date_field/date_field.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:usms_app/models/word_model.dart';
-import 'package:usms_app/service/word_json.dart';
+import 'package:usms_app/services/word_json.dart';
 import 'package:usms_app/widget/word_widget.dart';
 
 class NotificationListScreen extends StatefulWidget {

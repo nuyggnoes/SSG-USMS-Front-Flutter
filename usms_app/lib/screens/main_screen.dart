@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:usms_app/service/routes.dart';
+import 'package:usms_app/models/store_model.dart';
+import 'package:usms_app/routes.dart';
+import 'package:usms_app/services/store_service.dart';
 import 'package:usms_app/widget/store_register_widget.dart';
 import 'package:usms_app/widget/test_card.dart';
 
 class MainScreen extends StatefulWidget {
-  const MainScreen({super.key});
+  const MainScreen({super.key, required this.uid});
+  final uid;
 
   @override
   State<MainScreen> createState() => _MainScreenState();
@@ -14,6 +17,8 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<Offset> _offsetAnimation;
   late Animation<double> _opacityAnimation;
+  final StoreService storeService = StoreService();
+  late List<Store>? storeList;
 
   @override
   void initState() {
@@ -75,6 +80,53 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                   // 반려, 승인요청, 승인상태에 따라 다른페이지로 route
                   Column(
                     children: [
+                      FutureBuilder(
+                        future: storeService.getUserStoresById(widget.uid),
+                        builder: ((context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            print('로딩 중 .....');
+                            return const CircularProgressIndicator();
+                          } else if (snapshot.hasError) {
+                            return Padding(
+                              padding: const EdgeInsets.all(12),
+                              child: Text(
+                                'Error: ${snapshot.error}',
+                                style: const TextStyle(
+                                  fontSize: 15,
+                                ),
+                              ),
+                            );
+                          } else if (snapshot.hasData) {
+                            print('데이터가 있을 경우');
+                            List<Store> storeList = snapshot.data!;
+                            return SizedBox(
+                              height: 400,
+                              child: ListView.builder(
+                                itemCount: storeList.length,
+                                itemBuilder: (context, index) {
+                                  Store store = storeList[index];
+                                  return CurrencyCard(
+                                    name: store.store_name,
+                                    code: store.store_state,
+                                    amount: '',
+                                    icon: Icons.store_mall_directory_rounded,
+                                    selectedCardColors: Colors.blue.shade200,
+                                    animationController: _animationController,
+                                    opacityAnimation: _opacityAnimation,
+                                    onTapAction: () {
+                                      Navigator.pushNamed(
+                                          context, Routes.storeDetail2);
+                                    },
+                                  );
+                                },
+                              ),
+                            );
+                          } else {
+                            return Container();
+                          }
+                        }),
+                      ),
                       CurrencyCard(
                         name: 'GS25 무인매장점',
                         code: 0, // store_state : 승인(1) / 승인요청중(2) / 반려(0)

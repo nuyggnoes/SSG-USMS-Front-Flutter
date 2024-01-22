@@ -1,11 +1,11 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:usms_app/screen/home_screen.dart';
-import 'package:usms_app/service/routes.dart';
+import 'package:usms_app/screens/home_screen.dart';
+import 'package:usms_app/routes.dart';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:usms_app/service/user_service.dart';
+import 'package:usms_app/services/user_service.dart';
 
 import 'package:usms_app/widget/my_checkbox.dart';
 

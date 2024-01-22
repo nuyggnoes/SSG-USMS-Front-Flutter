@@ -8,10 +8,11 @@ import 'package:usms_app/models/store_model.dart';
 import 'package:usms_app/models/user_model.dart';
 
 // screen
-import 'package:usms_app/screen/main_screen.dart';
-import 'package:usms_app/screen/notification_list_screen.dart';
-import 'package:usms_app/screen/statistic_screen.dart';
-import 'package:usms_app/screen/user_info_screen.dart';
+import 'package:usms_app/screens/main_screen.dart';
+import 'package:usms_app/screens/notification_list_screen.dart';
+import 'package:usms_app/screens/statistic_screen.dart';
+import 'package:usms_app/screens/user_info_screen.dart';
+import 'package:usms_app/services/user_service.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -23,30 +24,42 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   final storage = const FlutterSecureStorage();
+  final UserService userService = UserService();
   late String? name = '';
   late String? email = '';
   late int? uid;
   int state = 0;
   late Icon securityIcon;
 
-  late User user;
+  late User? user;
   late Store store;
-  late List<Widget> widgetOptions;
+  late List<Widget> widgetOptions = <Widget>[];
 
   @override
   void initState() {
     super.initState();
+    try {
+      userService.getUserInfo().then((value) {
+        setState(() {
+          user = value;
+          uid = user!.uid;
+          widgetOptions = <Widget>[
+            MainScreen(
+              uid: uid,
+            ),
+            const NotificationListScreen(),
+            const StatisticScreen(),
+            MyPageScreen(
+              context: super.context,
+            ),
+          ];
+        });
+      });
+    } catch (e) {
+      print("Error in initState: $e");
+    }
     // getUserInfo();
     // getUserStores();
-
-    widgetOptions = <Widget>[
-      const MainScreen(),
-      const NotificationListScreen(),
-      const StatisticScreen(),
-      MyPageScreen(
-        context: super.context,
-      ),
-    ];
   }
 
   Future<void> getUserStores() async {
@@ -99,47 +112,47 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     }
   }
 
-  Future<void> getUserInfo() async {
-    final username = await storage.read(key: 'cookie');
-    print('username = $username');
-    Response response;
-    var baseoptions = BaseOptions(
-      headers: {
-        'Content-Type': 'application/json; charset=utf-8',
-      },
-      baseUrl: "http://10.0.2.2:3003",
-    );
-    Dio dio = Dio(baseoptions);
+  // Future<void> getUserInfo() async {
+  //   final username = await storage.read(key: 'cookie');
+  //   print('username = $username');
+  //   Response response;
+  //   var baseoptions = BaseOptions(
+  //     headers: {
+  //       'Content-Type': 'application/json; charset=utf-8',
+  //     },
+  //     baseUrl: "http://10.0.2.2:3003",
+  //   );
+  //   Dio dio = Dio(baseoptions);
 
-    var param = {
-      'username': username,
-    };
-    print(param);
-    try {
-      response = await dio.get('/login', data: param);
-      if (response.statusCode == 200) {
-        print('====================userInfo 200=====================');
-        print('전역변수 : ${MyApp.url}');
-        print('[RES BODY] : ${response.data}');
-        user = User.fromMap(response.data);
-        uid = user.uid;
+  //   var param = {
+  //     'username': username,
+  //   };
+  //   print(param);
+  //   try {
+  //     response = await dio.get('/login', data: param);
+  //     if (response.statusCode == 200) {
+  //       print('====================userInfo 200=====================');
+  //       print('전역변수 : ${MyApp.url}');
+  //       print('[RES BODY] : ${response.data}');
+  //       user = User.fromMap(response.data);
+  //       uid = user.uid;
 
-        setState(() {
-          name = user.person_name;
-          email = user.email;
-          state = user.security_state;
-        });
-        await storage.write(key: 'userInfo', value: jsonEncode(response.data));
-        print('유저 보안 레벨 : $state');
-      }
-    } on DioException catch (e) {
-      if (e.response?.statusCode == 400) {
-        print("[ERROR] : [$e]");
-        // 400 에러의 body
-        print('[ERR Body] : ${e.response?.data}');
-      }
-    }
-  }
+  //       setState(() {
+  //         name = user.person_name;
+  //         email = user.email;
+  //         state = user.security_state;
+  //       });
+  //       await storage.write(key: 'userInfo', value: jsonEncode(response.data));
+  //       print('유저 보안 레벨 : $state');
+  //     }
+  //   } on DioException catch (e) {
+  //     if (e.response?.statusCode == 400) {
+  //       print("[ERROR] : [$e]");
+  //       // 400 에러의 body
+  //       print('[ERR Body] : ${e.response?.data}');
+  //     }
+  //   }
+  // }
 
   logoutAction() async {
     await storage.delete(key: 'auto_login');
@@ -190,7 +203,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         type: BottomNavigationBarType.fixed,
       ),
       body: SafeArea(
-        child: widgetOptions.elementAt(selectedIndex),
+        child: widgetOptions.isEmpty
+            ? const CircularProgressIndicator()
+            : Container(
+                child: widgetOptions.elementAt(selectedIndex),
+              ),
       ),
     );
   }

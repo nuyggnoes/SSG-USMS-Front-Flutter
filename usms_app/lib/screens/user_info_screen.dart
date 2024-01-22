@@ -3,9 +3,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:usms_app/models/user_model.dart';
-import 'package:usms_app/service/routes.dart';
-import 'package:usms_app/service/user_service.dart';
-import 'package:usms_app/widget/cctv_name.dart';
+import 'package:usms_app/routes.dart';
+import 'package:usms_app/services/user_service.dart';
 import 'package:usms_app/widget/custom_info_button.dart';
 
 class MyPageScreen extends StatefulWidget {
@@ -18,6 +17,7 @@ class MyPageScreen extends StatefulWidget {
 class _MyPageScreenState extends State<MyPageScreen> {
   final storage = const FlutterSecureStorage();
   final UserService userService = UserService();
+  late User? user;
 
   String name = '';
   String phone = '';
@@ -30,33 +30,43 @@ class _MyPageScreenState extends State<MyPageScreen> {
 
   @override
   void initState() {
-    getUserInfo();
+    try {
+      userService.getUserInfo().then((value) {
+        setState(() {
+          user = value;
+          name = user!.person_name;
+          phone = user!.phone_number;
+          username = user!.username;
+          email = user!.email;
+          securityState = user!.security_state;
+          getSecurityLevel();
+        });
+      });
+    } catch (e) {
+      print("Error in initState: $e");
+    }
     super.initState();
   }
 
-  getUserInfo() async {
-    FlutterSecureStorage storage = const FlutterSecureStorage();
-    final jsonString = await storage.read(key: 'userInfo');
+  // getUserInfo() async {
+  //   FlutterSecureStorage storage = const FlutterSecureStorage();
+  //   final jsonString = await storage.read(key: 'userInfo');
 
-    if (jsonString != null) {
-      // 역직렬화
-      final Map<String, dynamic> userMap = jsonDecode(jsonString);
+  //   if (jsonString != null) {
+  //     final Map<String, dynamic> userMap = jsonDecode(jsonString);
+  //     User user = User.fromMap(userMap);
 
-      // 사용자 정보로 변환
-      User user = User.fromMap(userMap);
-      // 이제 user를 사용할 수 있음
-
-      setState(() {
-        name = user.person_name;
-        phone = user.phone_number;
-        username = user.username;
-        email = user.email;
-        securityState = user.security_state;
-        getSecurityLevel();
-      });
-    }
-    return null;
-  }
+  //     setState(() {
+  //       name = user.person_name;
+  //       phone = user.phone_number;
+  //       username = user.username;
+  //       email = user.email;
+  //       securityState = user.security_state;
+  //       getSecurityLevel();
+  //     });
+  //   }
+  //   return null;
+  // }
 
   Icon getSecurityLevel() {
     setState(() {
@@ -142,7 +152,7 @@ class _MyPageScreenState extends State<MyPageScreen> {
                                   children: [
                                     securityIcon,
                                     Text(
-                                      ' Lv. $securityState  ',
+                                      ' Lv. $securityState ',
                                       style: const TextStyle(
                                           fontWeight: FontWeight.w700),
                                     ),

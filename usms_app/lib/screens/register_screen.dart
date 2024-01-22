@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:usms_app/models/user_model.dart';
 
-import 'package:usms_app/screen/home_screen.dart';
+import 'package:usms_app/screens/home_screen.dart';
 import 'package:usms_app/widget/custom_textFormField.dart';
 
 import 'package:usms_app/widget/show_dialog.dart';

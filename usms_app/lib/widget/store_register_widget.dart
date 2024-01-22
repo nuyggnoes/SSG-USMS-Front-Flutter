@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:usms_app/screen/register_store_screen.dart';
-import 'package:usms_app/service/routes.dart';
+import 'package:usms_app/screens/register_store_screen.dart';
+import 'package:usms_app/routes.dart';
 
 class RegisterStoreWidget extends StatelessWidget {
   const RegisterStoreWidget({

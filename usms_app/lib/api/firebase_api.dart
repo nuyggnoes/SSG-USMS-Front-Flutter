@@ -5,7 +5,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'package:usms_app/main.dart';
-import 'package:usms_app/screen/notification_screen.dart';
+import 'package:usms_app/screens/notification_screen.dart';
 
 Future<void> backgroundMessageHandler(RemoteMessage message) async {
   print("=================앱이 백그라운드에서 실행 중==================");

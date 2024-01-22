@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 //screen
-import 'package:usms_app/screen/register_screen.dart';
+import 'package:usms_app/screens/register_screen.dart';
 import 'package:usms_app/widget/show_dialog.dart';
 
 /* 

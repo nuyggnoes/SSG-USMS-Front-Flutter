@@ -1,14 +1,14 @@
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
-import 'package:usms_app/screen/cctv_detail_screen.dart';
-import 'package:usms_app/screen/cctv_replay_screen.dart';
-import 'package:usms_app/screen/hero_test_screen.dart';
-import 'package:usms_app/screen/no_cctv_screen.dart';
+import 'package:usms_app/screens/cctv_detail_screen.dart';
+import 'package:usms_app/screens/cctv_replay_screen.dart';
+import 'package:usms_app/screens/hero_test_screen.dart';
+import 'package:usms_app/screens/no_cctv_screen.dart';
 
-import 'package:usms_app/screen/notification_list_screen.dart';
-import 'package:usms_app/screen/statistic_screen.dart';
+import 'package:usms_app/screens/notification_list_screen.dart';
+import 'package:usms_app/screens/statistic_screen.dart';
 
-import 'package:usms_app/service/routes.dart';
+import 'package:usms_app/routes.dart';
 import 'package:usms_app/widget/ad_slider.dart';
 import 'package:usms_app/widget/custom_textFormField.dart';
 import 'package:video_player/video_player.dart';

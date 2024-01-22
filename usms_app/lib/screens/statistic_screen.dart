@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:usms_app/models/word_model.dart';
-import 'package:usms_app/service/word_json.dart';
+import 'package:usms_app/services/word_json.dart';
 
 class StatisticScreen extends StatefulWidget {
   static const route = 'statistic-screen';

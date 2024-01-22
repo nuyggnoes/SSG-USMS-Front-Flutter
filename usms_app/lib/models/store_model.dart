@@ -44,4 +44,8 @@ class Store {
       store_state: map['store_state'],
     );
   }
+  static List<Store> fromMapToStoreModel(List<Map<String, dynamic>> list) {
+    List<Store> storeList = list.map((json) => Store.fromMap(json)).toList();
+    return storeList;
+  }
 }

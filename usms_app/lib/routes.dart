@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:usms_app/screen/cctv_detail_screen.dart';
-import 'package:usms_app/screen/cctv_replay_screen.dart';
-import 'package:usms_app/screen/home_screen.dart';
-import 'package:usms_app/screen/identity_verification_screen.dart';
-import 'package:usms_app/screen/login_screen.dart';
-import 'package:usms_app/screen/payment_information_screen.dart';
-import 'package:usms_app/screen/register_screen.dart';
-import 'package:usms_app/screen/register_store_screen.dart';
-import 'package:usms_app/screen/secondary_password_screen.dart';
-import 'package:usms_app/screen/set_security_level_screen.dart';
-import 'package:usms_app/screen/store_detail_screen.dart';
-import 'package:usms_app/screen/store_detail_screen2.dart';
-import 'package:usms_app/screen/test_screen.dart';
+import 'package:usms_app/screens/cctv_detail_screen.dart';
+import 'package:usms_app/screens/cctv_replay_screen.dart';
+import 'package:usms_app/screens/home_screen.dart';
+import 'package:usms_app/screens/identity_verification_screen.dart';
+import 'package:usms_app/screens/login_screen.dart';
+import 'package:usms_app/screens/payment_information_screen.dart';
+import 'package:usms_app/screens/register_screen.dart';
+import 'package:usms_app/screens/register_store_screen.dart';
+import 'package:usms_app/screens/secondary_password_screen.dart';
+import 'package:usms_app/screens/set_security_level_screen.dart';
+import 'package:usms_app/screens/store_detail_screen.dart';
+import 'package:usms_app/screens/store_detail_screen2.dart';
+import 'package:usms_app/screens/test_screen.dart';
 
 class Routes {
   static const String login = '/';
