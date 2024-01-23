@@ -43,6 +43,8 @@ class _StoreDetailState extends State<StoreDetail2> {
   final _formKey = GlobalKey<FormState>();
   final cctvNameController = TextEditingController();
 
+  CCTV cctv = CCTV(cctvName: 'cctvName1', storeId: 1);
+
   @override
   void initState() {
     super.initState();
@@ -222,7 +224,10 @@ class _StoreDetailState extends State<StoreDetail2> {
                   ),
                   FutureBuilder(
                     future: cctvService.getAllcctvList(
-                        storeId: widget.storeId, uid: widget.uid),
+                      context: context,
+                      storeId: widget.storeId,
+                      uid: widget.uid,
+                    ),
                     builder: ((context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return const CircularProgressIndicator();

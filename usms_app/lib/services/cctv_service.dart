@@ -13,6 +13,7 @@ class CCTVService {
 
   // 특정 매장 전체 CCTV 조회
   Future<List<CCTV>?> getAllcctvList({
+    required BuildContext context,
     required int storeId,
     required int uid,
   }) async {
@@ -38,15 +39,22 @@ class CCTVService {
         return cctvList;
       }
     } on DioException catch (e) {
-      if (e.response?.statusCode == 404) {
-        // print('[ERROR MESSAGE] : ${e.message}');
-      }
       if (e.response?.statusCode == 400) {
         // print("[Error] : [$e]");
         // Future.microtask(() {
         //   _showErrorDialog('아이디와 비밀번호가 일치하지 않습니다.', context);
         // });
         return null;
+      } else {
+        Future.microtask(() {
+          customShowDialog(
+              context: context,
+              title: '서버 오류',
+              message: 'CCTV 정보를 불러오는데 실패하였습니다.',
+              onPressed: () {
+                Navigator.pop(context);
+              });
+        });
       }
     } on SocketException catch (e) {
       print("[Server ERR] : $e");
