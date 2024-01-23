@@ -14,7 +14,7 @@ class UserService {
   static const storage = FlutterSecureStorage();
 
   // 로그인
-  Future<bool> loginAction({
+  loginAction({
     required BuildContext context,
     required String username,
     required String password,
@@ -42,6 +42,7 @@ class UserService {
         var JSESSIONID = response.headers['cookie']?.first ?? '';
         // response.data type : Map<String, dynamic>
         // user = User.fromMap(response.data);
+        print('[RESPONSE DATA] : ${response.data}');
         print('[sessionid] : $JSESSIONID');
         await storage.write(
           key: 'cookie',
@@ -58,10 +59,9 @@ class UserService {
           );
         }
         // successLogin(context);
-        // Future.microtask(() {
-        //   Navigator.pushNamed(context, Routes.home);
-        // });
-        return true;
+        Future.microtask(() {
+          Navigator.pushNamed(context, Routes.home);
+        });
       }
     } on DioException catch (e) {
       if (e.response?.statusCode == 400) {
@@ -107,7 +107,6 @@ class UserService {
         });
       }
     }
-    return false;
   }
 
   // 로그아웃
@@ -123,6 +122,7 @@ class UserService {
   Future<User?> getUserInfo() async {
     final jsonString = await storage.read(key: 'userInfo');
     User? user;
+    print(jsonString);
     if (jsonString != null) {
       final Map<String, dynamic> userMap = jsonDecode(jsonString);
       user = User.fromMap(userMap);

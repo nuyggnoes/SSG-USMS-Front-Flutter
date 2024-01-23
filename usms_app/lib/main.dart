@@ -7,11 +7,8 @@ import 'package:provider/provider.dart';
 
 // api
 import 'package:usms_app/api/firebase_api.dart';
-import 'package:usms_app/screens/cctv_replay_screen.dart';
-import 'package:usms_app/screens/hero_test_screen.dart';
 import 'package:usms_app/routes.dart';
-import 'package:usms_app/screens/login_screen.dart';
-import 'package:usms_app/utils/authentication_wrapper.dart';
+import 'package:usms_app/utils/store_provider.dart';
 import 'package:usms_app/utils/user_provider.dart';
 
 // route
@@ -44,8 +41,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => UserProvider(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => UserProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => StoreProvider(),
+        ),
+      ],
       child: MaterialApp(
         title: 'Push Notification',
         theme: ThemeData(

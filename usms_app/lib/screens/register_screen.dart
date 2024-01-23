@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:provider/provider.dart';
 import 'package:usms_app/models/user_model.dart';
 
 import 'package:usms_app/services/user_service.dart';
@@ -71,8 +70,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
       // 사용자 정보로 변환
       User user = User.fromMap(userMap);
       // 이제 user를 사용할 수 있음
-      _nameController.text = user.person_name;
-      _phoneTextEditController.text = user.phone_number;
+      _nameController.text = user.nickname;
+      _phoneTextEditController.text = user.phoneNumber;
       _usernameController.text = user.username;
       _emailTextEditController.text = user.email;
     }
@@ -306,10 +305,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 username: _usernameController.text,
                                 password: _passwordTextEditController.text,
                                 email: _emailTextEditController.text,
-                                person_name: _nameController.text,
-                                phone_number: _phoneTextEditController.text,
-                                security_state: 0,
-                                is_lock: false,
+                                nickname: _nameController.text,
+                                phoneNumber: _phoneTextEditController.text,
+                                // security_state: 0,
+                                // is_lock: false,
                               );
                               // requestRegister(user);
                               if (widget.flag != null) {

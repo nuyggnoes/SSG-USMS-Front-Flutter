@@ -3,9 +3,9 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:kpostal/kpostal.dart';
 import 'package:provider/provider.dart';
-import 'package:usms_app/models/user_model.dart';
 import 'package:usms_app/services/show_dialog.dart';
 import 'package:usms_app/services/store_service.dart';
+import 'package:usms_app/utils/user_provider.dart';
 import 'package:usms_app/widget/custom_textFormField.dart';
 
 class RegisterStore extends StatefulWidget {
@@ -450,8 +450,10 @@ class _RegisterStoreState extends State<RegisterStore> {
                               // requestStore();
                               storeService.requestStore(
                                   formData: formData,
-                                  uid: Provider.of<User>(context, listen: false)
-                                      .uid!,
+                                  uid: Provider.of<UserProvider>(context,
+                                          listen: false)
+                                      .user
+                                      .id!,
                                   context: context);
                             }
                           },

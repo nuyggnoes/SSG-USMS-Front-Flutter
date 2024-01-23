@@ -6,6 +6,7 @@ import 'package:usms_app/routes.dart';
 import 'package:usms_app/screens/store_detail_screen2.dart';
 import 'package:usms_app/services/show_dialog.dart';
 import 'package:usms_app/services/store_service.dart';
+import 'package:usms_app/utils/user_provider.dart';
 import 'package:usms_app/widget/store_register_widget.dart';
 import 'package:usms_app/widget/test_card.dart';
 
@@ -64,7 +65,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
 
   checkStoreState(int storeId) async {
     Store? store = await storeService.getStoreInfo(
-        uid: Provider.of<User>(context).uid!,
+        uid: Provider.of<User>(context).id!,
         storeId: storeId,
         context: context);
 
@@ -86,7 +87,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
       //       context,
       //       MaterialPageRoute(
       //         builder: (context) => StoreDetail2(
-      //           uid: Provider.of<User>(context).uid,
+      //           uid: Provider.of<UserProvider>(context).uid,
       //           storeId: storeId,
       //           storeInfo: store,
       //         ),
@@ -135,7 +136,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                     children: [
                       FutureBuilder(
                         future: storeService.getUserStoresById(
-                            uid: Provider.of<User>(context).uid!,
+                            uid: Provider.of<User>(context).id!,
                             context: context),
                         builder: ((context, snapshot) {
                           if (snapshot.connectionState ==
@@ -159,7 +160,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                                     opacityAnimation: _opacityAnimation,
                                     onTapAction: () {
                                       // storeState 확인
-                                      checkStoreState(store.store_id);
+                                      checkStoreState(store.storeId!);
                                     },
                                   );
                                 },
@@ -187,7 +188,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                             context,
                             MaterialPageRoute(
                               builder: (context) => StoreDetail2(
-                                uid: widget.uid,
+                                uid: Provider.of<UserProvider>(context).user.id,
                                 storeId: 1,
                                 storeInfo: null,
                               ),
@@ -231,7 +232,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                     height: 30,
                   ),
                   RegisterStoreWidget(
-                    uid: Provider.of<User>(context).uid!,
+                    uid: Provider.of<User>(context).id!,
                     animationController: _animationController,
                     offsetAnimation: _offsetAnimation,
                     opacityAnimation: _opacityAnimation,

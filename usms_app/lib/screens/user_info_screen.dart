@@ -24,7 +24,7 @@ class _MyPageScreenState extends State<MyPageScreen> {
   String username = '';
   String email = '';
 
-  int securityState = 0;
+  int? securityState = 0;
   Icon securityIcon = const Icon(Icons.gpp_bad_outlined);
   Color securityColor = Colors.grey;
 
@@ -44,11 +44,11 @@ class _MyPageScreenState extends State<MyPageScreen> {
       userService.getUserInfo().then((value) {
         setState(() {
           user = value;
-          name = user!.person_name;
-          phone = user!.phone_number;
+          name = user!.nickname;
+          phone = user!.phoneNumber;
           username = user!.username;
           email = user!.email;
-          securityState = user!.security_state;
+          securityState = user!.securityLevel;
           getSecurityLevel();
         });
       });
@@ -60,14 +60,13 @@ class _MyPageScreenState extends State<MyPageScreen> {
 
   Icon getSecurityLevel() {
     setState(() {
-      if (Provider.of<User>(context, listen: false).security_state == 0) {
+      if (Provider.of<User>(context, listen: false).securityLevel == 0) {
         securityIcon = const Icon(
           Icons.gpp_bad_outlined,
           color: Colors.white,
         );
         securityColor = Colors.red.shade400;
-      } else if (Provider.of<User>(context, listen: false).security_state ==
-          1) {
+      } else if (Provider.of<User>(context, listen: false).securityLevel == 1) {
         securityIcon = const Icon(
           Icons.health_and_safety_outlined,
           color: Colors.white,
@@ -119,7 +118,7 @@ class _MyPageScreenState extends State<MyPageScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                Provider.of<User>(context).person_name,
+                                Provider.of<User>(context).nickname,
                                 style: const TextStyle(
                                   fontSize: 30,
                                   fontWeight: FontWeight.w800,
@@ -133,7 +132,7 @@ class _MyPageScreenState extends State<MyPageScreen> {
                                   children: [
                                     securityIcon,
                                     Text(
-                                      ' Lv. ${Provider.of<User>(context).security_state} ',
+                                      ' Lv. ${Provider.of<User>(context).securityLevel} ',
                                       style: const TextStyle(
                                           fontWeight: FontWeight.w700),
                                     ),

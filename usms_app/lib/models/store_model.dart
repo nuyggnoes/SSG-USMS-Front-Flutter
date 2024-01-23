@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Store with ChangeNotifier {
-  final int store_id;
+  int? storeId;
   final int user_id;
   final String store_name;
   final String store_address;
@@ -10,7 +10,7 @@ class Store with ChangeNotifier {
   final int store_state;
 
   Store({
-    required this.store_id,
+    this.storeId,
     required this.user_id,
     required this.store_name,
     required this.store_address,
@@ -20,7 +20,7 @@ class Store with ChangeNotifier {
   });
 
   Store.fromJson(Map<String, dynamic> json)
-      : store_id = json['store_id'],
+      : storeId = json['storeId'],
         user_id = json["user_id"],
         store_name = json['store_name'],
         store_address = json['store_address'],
@@ -38,13 +38,12 @@ class Store with ChangeNotifier {
       };
   factory Store.fromMap(Map<String, dynamic> map) {
     return Store(
-      store_id: map['store_id'],
       user_id: map['user_id'],
-      store_name: map['store_name'],
-      store_address: map['store_address'],
-      store_register_code: map['store_register_code'],
-      store_registration_img_id: map['store_registration_img_id'],
-      store_state: map['store_state'],
+      store_name: map['name'],
+      store_address: map['address'],
+      store_register_code: map['registrationCode'],
+      store_registration_img_id: map['registrationImgId'],
+      store_state: map['state'],
     );
   }
   static List<Store> fromMapToStoreModel(List<Map<String, dynamic>> list) {

@@ -5,10 +5,10 @@ class UserProvider with ChangeNotifier {
   User _user = User(
     username: '',
     password: '',
-    person_name: '',
+    nickname: '',
     email: '',
-    phone_number: '',
-    security_state: 0,
+    phoneNumber: '',
+    securityLevel: 0,
     is_lock: false,
   );
 

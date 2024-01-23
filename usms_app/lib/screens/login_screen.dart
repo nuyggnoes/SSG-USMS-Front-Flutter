@@ -157,20 +157,20 @@ class _LoginState extends State<Login> {
                               onPressed: () async {
                                 if (_formKey.currentState?.validate() ??
                                     false) {
-                                  // userService.loginAction(
-                                  //   username: _idTextEditController.text,
-                                  //   password: _passwordTextEditController.text,
-                                  //   autoLogin: _AutoLoginChecked,
-                                  //   context: context,
-                                  // );
-                                  if (await userService.loginAction(
+                                  userService.loginAction(
                                     username: _idTextEditController.text,
                                     password: _passwordTextEditController.text,
                                     autoLogin: _AutoLoginChecked,
                                     context: context,
-                                  )) {
-                                    Navigator.pushNamed(context, Routes.home);
-                                  }
+                                  );
+                                  // if (await userService.loginAction(
+                                  //   username: _idTextEditController.text,
+                                  //   password: _passwordTextEditController.text,
+                                  //   autoLogin: _AutoLoginChecked,
+                                  //   context: context,
+                                  // )) {
+                                  //   Navigator.pushNamed(context, Routes.home);
+                                  // }
                                 }
                               },
                               style: ElevatedButton.styleFrom(

@@ -1,13 +1,9 @@
-import 'dart:io';
-
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 //screen
-import 'package:usms_app/screens/register_screen.dart';
+
 import 'package:usms_app/services/user_service.dart';
-import 'package:usms_app/widget/show_dialog.dart';
 
 /* 
   - 아이디 찾기
@@ -56,255 +52,111 @@ class _VerificationScreenState extends State<VerificationScreen>
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Identity Verification Screen',
-      home: GestureDetector(
-        onTap: () {
-          FocusScope.of(context).unfocus();
-        },
-        child: Scaffold(
-          appBar: AppBar(
-            leading: IconButton(
-              icon: const Icon(Icons.arrow_back_ios_new_rounded),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-            title: const Text('본인 인증'),
-            centerTitle: true,
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios_new_rounded),
+            onPressed: () {
+              Navigator.pop(context);
+            },
           ),
-          body: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                TabBar(
-                  onTap: (value) {
-                    FocusScope.of(context).unfocus();
-                    setState(() {
-                      phoneVerfication = false;
-                      emailVerification = false;
-                      methodState = !methodState;
-                      print('methodState : $methodState');
-                    });
-                  },
+          title: const Text('본인 인증'),
+          centerTitle: true,
+        ),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TabBar(
+                onTap: (value) {
+                  FocusScope.of(context).unfocus();
+                  setState(() {
+                    phoneVerfication = false;
+                    emailVerification = false;
+                    methodState = !methodState;
+                    print('methodState : $methodState');
+                  });
+                },
+                controller: _tabController,
+                indicatorColor: Colors.blueAccent,
+                labelColor: Colors.blueAccent,
+                unselectedLabelColor: Colors.black54,
+                // isScrollable: true,
+                tabs: const <Widget>[
+                  Tab(
+                    text: "휴대폰 인증",
+                  ),
+                  Tab(
+                    text: "이메일 인증",
+                  ),
+                ],
+              ),
+              Container(
+                height: 400,
+                margin: const EdgeInsets.only(left: 16.0, right: 16.0),
+                child: TabBarView(
+                  physics: const NeverScrollableScrollPhysics(),
                   controller: _tabController,
-                  indicatorColor: Colors.blueAccent,
-                  labelColor: Colors.blueAccent,
-                  unselectedLabelColor: Colors.black54,
-                  // isScrollable: true,
-                  tabs: const <Widget>[
-                    Tab(
-                      text: "휴대폰 인증",
+                  children: <Widget>[
+                    Container(
+                      margin: const EdgeInsets.symmetric(
+                        vertical: 50,
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 30,
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: _textForm(
+                        '휴대폰 번호',
+                        TextInputType.number,
+                        1,
+                        phoneVerfication,
+                        _phoneFormKey,
+                        (value) {
+                          setState(() {
+                            phoneVerfication = value;
+                          });
+                        },
+                      ),
                     ),
-                    Tab(
-                      text: "이메일 인증",
+                    Container(
+                      width: 400,
+                      margin: const EdgeInsets.symmetric(
+                        vertical: 50,
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 30,
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      child: _textForm(
+                        '이메일 주소',
+                        TextInputType.emailAddress,
+                        0,
+                        emailVerification,
+                        _emailFormKey,
+                        (value) {
+                          setState(() {
+                            emailVerification = value;
+                          });
+                        },
+                      ),
                     ),
                   ],
                 ),
-                Container(
-                  height: 400,
-                  margin: const EdgeInsets.only(left: 16.0, right: 16.0),
-                  child: TabBarView(
-                    physics: const NeverScrollableScrollPhysics(),
-                    controller: _tabController,
-                    children: <Widget>[
-                      Container(
-                        margin: const EdgeInsets.symmetric(
-                          vertical: 50,
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 30,
-                        ),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: _textForm(
-                          '휴대폰 번호',
-                          TextInputType.number,
-                          1,
-                          phoneVerfication,
-                          _phoneFormKey,
-                          (value) {
-                            setState(() {
-                              phoneVerfication = value;
-                            });
-                          },
-                        ),
-                      ),
-                      Container(
-                        width: 400,
-                        margin: const EdgeInsets.symmetric(
-                          vertical: 50,
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 30,
-                        ),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                        child: _textForm(
-                          '이메일 주소',
-                          TextInputType.emailAddress,
-                          0,
-                          emailVerification,
-                          _emailFormKey,
-                          (value) {
-                            setState(() {
-                              emailVerification = value;
-                            });
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
     );
-  }
-
-  Future<bool> getVerificationNumber(int code, String value) async {
-    Response response;
-    var baseoptions = BaseOptions(
-      headers: {
-        'Content-Type': 'application/json; charset=utf-8',
-      },
-      baseUrl: "http://10.0.2.2:3003",
-    );
-    Dio dio = Dio(baseoptions);
-
-    var param = {
-      'code': code,
-      'value': value,
-    };
-    print(param);
-    // try {
-    //   response = await dio.post('/api/identification', data: param);
-    //   if (response.statusCode == 200) {
-    //     print('====================response 200=====================');
-    //     // header에 있는 임시 key값 추출 후 인증번호를 보낼 때 header에 포함시킴
-    //     Map<String, List<String>> headers = response.headers.map;
-    //     String authenticationKey = headers['x-authentication-key']?.first ?? '';
-    //     await storage.write(
-    //         key: 'x-authentication-key', value: authenticationKey.toString());
-    //     _showDialog('', response.data['message'], 0); // 인증 번호 발송 성공 dialog
-    //     return true;
-    //   }
-    // } on DioException catch (e) {
-    //   if (e.response?.statusCode == 400) {
-    //     print("[ERROR] : [$e]");
-    //     // 400 에러의 body
-    //     print('[ERR Body] : ${e.response?.data}');
-
-    //     var errorCode = e.response?.data['code'];
-
-    //     switch (errorCode) {
-    //       // 코드 번호 상관없이 Body의 message를 dialog에 띄우는거면 한 줄로 처리해도 되지 않을까
-    //       case 605:
-    //         // 존재하지 않는 요청 code인 경우
-    //         _showDialog('인증번호 발송 실패', e.response!.data['message'], 0);
-    //         break;
-    //       case 606:
-    //         // 요청 code에 부적절한 value 양식일 경우
-    //         _showDialog('인증번호 발송 실패', e.response!.data['message']);
-    //         break;
-    //       case 607:
-    //         // value 값이 DB에 저장되지 않은 경우
-    //         _showDialog('인증번호 발송 실패', e.response!.data['message']);
-    //         break;
-    //     }
-    //     return false;
-    //   }
-    // } on SocketException catch (e) {
-    //   print("[ERROR] : [$e]");
-    // }
-    // _showDialog('', '인증 번호 발송 성공', 0); // 나중에 삭제
-    if (mounted) {
-      CustomDialog.showPopDialog(context, '', '인증 번호 발송 성공', null);
-    }
-    return true; // 나중에 false로 수정
-  }
-
-  requestVerification(String code) async {
-    print('[인증번호] : $code');
-    var xKey = await storage.read(key: 'x-authenticate-key');
-    Response response;
-    var baseoptions = BaseOptions(
-      headers: {
-        'Content-Type': 'application/json; charset=utf-8',
-        'x-authenticate-key': '$xKey',
-      },
-      baseUrl: "http://10.0.2.2:3003",
-    );
-    Dio dio = Dio(baseoptions);
-
-    var param = {
-      'identificaitonCode': code,
-    };
-    try {
-      response = await dio.get('/api/identification', data: param);
-      if (response.statusCode == 200) {
-        print('====================response 200=====================');
-        String jwtToken = response.headers['Authorization']?.first ?? '';
-        await storage.write(key: 'Authorization', value: jwtToken);
-        _showDialog('', response.data['message'], 1); // 인증 성공 dialog
-      }
-    } on DioException catch (e) {
-      if (e.response?.statusCode == 400) {
-        print("[ERROR] : [$e]");
-        // 400 에러의 body
-        print('[ERR Body] : ${e.response?.data}');
-        _showDialog('', e.response?.data['message'], 0);
-      }
-    } on SocketException catch (e) {
-      print("[ERROR] : [$e]");
-    }
-    _showDialog('', '인증 성공', 1); // 나중에 삭제
-  }
-
-  void _showDialog(String title, String message, int code) {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(title),
-          content: Text(message),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                // Navigator.pop(context);
-                _handleOnPressedOptions(context, code);
-              },
-              child: const Text('확인'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  _handleOnPressedOptions(BuildContext context, int code) {
-    switch (code) {
-      case 0:
-        Navigator.pop(context);
-        break;
-      case 1:
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => RegisterScreen(
-              data: _authenticationMethod,
-              flag: methodState,
-              routeCode: true,
-            ),
-          ),
-        );
-        break;
-    }
   }
 
   Widget _textForm(
@@ -383,8 +235,6 @@ class _VerificationScreenState extends State<VerificationScreen>
                         _focusNode.requestFocus();
                         updateVerification(true);
                       }
-                      print(
-                          '[CODE] : $code \n [VALUE] : $_authenticationMethod');
                     }
                   },
                   style: ButtonStyle(

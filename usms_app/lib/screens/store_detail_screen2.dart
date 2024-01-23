@@ -308,7 +308,7 @@ class _StoreDetailState extends State<StoreDetail2> {
                                           storeId: widget.storeId,
                                           uid: Provider.of<User>(context,
                                                   listen: false)
-                                              .uid!,
+                                              .id!,
                                           name: cctvNameController.text,
                                         );
                                       }

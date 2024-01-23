@@ -3,52 +3,50 @@ import 'package:flutter/material.dart';
 class User with ChangeNotifier {
   final String username;
   final String password;
-  final String person_name;
+  final String nickname;
   final String email;
-  final String phone_number;
-  final int security_state;
-  final bool is_lock;
-  int? uid;
+  final String phoneNumber;
+  int? securityLevel;
+  bool? is_lock;
+  int? id;
 
   User({
     required this.username,
     required this.password,
-    required this.person_name,
+    required this.nickname,
     required this.email,
-    required this.phone_number,
-    required this.security_state,
-    required this.is_lock,
-    this.uid,
+    required this.phoneNumber,
+    this.securityLevel,
+    this.is_lock,
+    this.id,
   });
 
   User.fromJson(Map<String, dynamic> json)
       : username = json["username"],
         password = json['password'],
-        person_name = json['person_name'],
+        nickname = json['nickname'],
         email = json['email'],
-        phone_number = json['phone_number'],
-        security_state = json['security_state'],
+        phoneNumber = json['phoneNumber'],
+        securityLevel = json['securityLevel'],
         is_lock = json['is_lock'];
 
   Map<String, dynamic> toJson() => {
         'username': username,
         'password': password,
-        'person_name': person_name,
+        'nickname': nickname,
         'email': email,
-        'phone_number': phone_number,
-        'security_state': security_state,
-        'is_lock': is_lock,
+        'phoneNumber': phoneNumber,
       };
   factory User.fromMap(Map<String, dynamic> map) {
     return User(
-      uid: map['uid'],
+      id: map['id'],
       username: map['username'],
       password: map['password'],
-      person_name: map['person_name'],
+      nickname: map['nickname'],
       email: map['email'],
-      phone_number: map['phone_number'],
-      security_state: map['security_state'],
-      is_lock: map['_lock'],
+      phoneNumber: map['phoneNumber'],
+      securityLevel: map['securityLevel'],
+      is_lock: map['is_lock'],
     );
   }
 }

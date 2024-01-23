@@ -36,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         setState(() {
           user = value;
           Provider.of<UserProvider>(context, listen: false).updateUser(value!);
-          uid = user!.uid;
+          uid = user!.id;
           widgetOptions = <Widget>[
             MainScreen(
               uid: uid,
