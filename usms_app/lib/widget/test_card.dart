@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:usms_app/routes.dart';
-import 'package:usms_app/services/show_dialog.dart';
 
 class CurrencyCard extends StatelessWidget {
   final String name, amount;

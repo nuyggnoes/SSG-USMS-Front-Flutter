@@ -87,7 +87,8 @@ class StoreService {
         'Content-Type': 'application/json; charset=utf-8',
         'cookie': jSessionId,
       },
-      baseUrl: baseUrl,
+      // baseUrl: baseUrl,
+      baseUrl: "http://10.0.2.2:3003",
     );
     Dio dio = Dio(baseoptions);
 

@@ -72,22 +72,31 @@ class CCTVService {
     required String name,
   }) async {
     print('$storeId, $uid, $name');
+
+    var jSessionId = await storage.read(key: 'cookie');
     Response response;
     var baseoptions = BaseOptions(
-      headers: {"Content-Type": "multipart/form-data;"},
+      headers: {
+        "Content-Type": "multipart/form-data;",
+        "cookie": jSessionId,
+      },
       baseUrl: baseUrl,
     );
+    var body = {
+      'name': name,
+    };
 
     Dio dio = Dio(baseoptions);
     // try {
-    //   final response = await dio.post('/api/users/$uid/stores', data: formData);
+    //   final response =
+    //       await dio.post('/api/users/$uid/stores/$storeId/cctvs', data: body);
     //   if (response.statusCode == 200) {
     //     print('====================requestStore 200=====================');
     //     Future.microtask(() {
     //       customShowDialog(
     //           context: context,
-    //           title: '매장 생성 성공',
-    //           message: '매장 생성에 성공하였습니다.',
+    //           title: 'CCTV 생성 성공',
+    //           message: 'CCTV 생성에 성공하였습니다.',
     //           onPressed: () {
     //             Navigator.popUntil(context, ModalRoute.withName('/home'));
     //           });
@@ -109,7 +118,7 @@ class CCTVService {
     //       customShowDialog(
     //           context: context,
     //           title: '서버 오류',
-    //           message: '${e.message}',
+    //           message: 'CCTV 명 : $name\n StoreId : $storeId\n UserId : $uid',
     //           onPressed: () {
     //             Navigator.pop(context);
     //           });
@@ -120,9 +129,9 @@ class CCTVService {
       customShowDialog(
           context: context,
           title: 'CCTV 추가',
-          message: 'CCTV를 추가하였습니다.',
+          message: 'CCTV 명 : $name\n StoreId : $storeId\n UserId : $uid',
           onPressed: () {
-            // Navigator.pop(context);
+            Navigator.pop(context);
           });
     });
   }

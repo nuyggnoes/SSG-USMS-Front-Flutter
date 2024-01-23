@@ -6,6 +6,7 @@ import 'package:usms_app/routes.dart';
 import 'package:usms_app/screens/store_detail_screen2.dart';
 import 'package:usms_app/services/show_dialog.dart';
 import 'package:usms_app/services/store_service.dart';
+import 'package:usms_app/utils/store_provider.dart';
 import 'package:usms_app/utils/user_provider.dart';
 import 'package:usms_app/widget/store_register_widget.dart';
 import 'package:usms_app/widget/test_card.dart';
@@ -13,9 +14,8 @@ import 'package:usms_app/widget/test_card.dart';
 class MainScreen extends StatefulWidget {
   const MainScreen({
     super.key,
-    required this.uid,
   });
-  final uid;
+
   @override
   State<MainScreen> createState() => _MainScreenState();
 }
@@ -81,20 +81,20 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
               });
         });
         break;
-      // case 1:
-      //   Future.microtask(() {
-      //     Navigator.push(
-      //       context,
-      //       MaterialPageRoute(
-      //         builder: (context) => StoreDetail2(
-      //           uid: Provider.of<UserProvider>(context).uid,
-      //           storeId: storeId,
-      //           storeInfo: store,
-      //         ),
-      //       ),
-      //     );
-      //   });
-      //   break;
+      case 1:
+        Future.microtask(() {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => StoreDetail2(
+                uid: Provider.of<UserProvider>(context).user.id,
+                storeId: storeId,
+                storeInfo: store,
+              ),
+            ),
+          );
+        });
+        break;
       case 2:
         Future.microtask(() {
           customShowDialog(
@@ -144,12 +144,15 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                             return const CircularProgressIndicator();
                           } else if (snapshot.hasData) {
                             List<Store> storeList = snapshot.data!;
+                            // 1. 리스트를 한번에 Provider로 업데이트
                             return SizedBox(
                               height: 400,
                               child: ListView.builder(
                                 itemCount: storeList.length,
                                 itemBuilder: (context, index) {
                                   Store store = storeList[index];
+                                  Provider.of<StoreProvider>(context).updateStore(
+                                      store); //2. ListView를 생성할때 Store 각각을 StoreList.add() 를 통해 업데이트
                                   return CurrencyCard(
                                     name: store.store_name,
                                     code: store.store_state,
@@ -159,7 +162,6 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                                     animationController: _animationController,
                                     opacityAnimation: _opacityAnimation,
                                     onTapAction: () {
-                                      // storeState 확인
                                       checkStoreState(store.storeId!);
                                     },
                                   );

@@ -2,18 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:usms_app/models/store_model.dart';
 
 class StoreProvider with ChangeNotifier {
-  Store _store = Store(
-      user_id: -1,
-      store_name: '',
-      store_address: '',
-      store_register_code: '',
-      store_registration_img_id: -1,
-      store_state: -1);
+  final List<Store> _storeList = [];
 
-  Store get store => _store;
+  List<Store> get storeList => _storeList;
 
   void updateStore(Store newStore) {
-    _store = newStore;
+    _storeList.add(newStore);
     notifyListeners();
   }
 }
