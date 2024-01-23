@@ -20,7 +20,7 @@ class Routes {
   static const String home = '/home';
   static const String registerStore = '/register-store';
   static const String storeDetail = '/store-detail';
-  static const String storeDetail2 = '/store-detail2';
+  static const String storeDetail2 = '/home/store-detail2';
 
   static const String payInfo = '/pay-info';
 

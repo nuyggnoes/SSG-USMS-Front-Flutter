@@ -61,7 +61,6 @@ class UserService {
         // Future.microtask(() {
         //   Navigator.pushNamed(context, Routes.home);
         // });
-        print('잘 들어왔는데 왜 안되노');
         return true;
       }
     } on DioException catch (e) {

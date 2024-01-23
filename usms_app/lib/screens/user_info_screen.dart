@@ -3,15 +3,13 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
 import 'package:usms_app/models/user_model.dart';
 import 'package:usms_app/routes.dart';
-import 'package:usms_app/screens/login_screen.dart';
 
-import 'package:usms_app/screens/register_screen.dart';
 import 'package:usms_app/services/user_service.dart';
 import 'package:usms_app/widget/custom_info_button.dart';
 
 class MyPageScreen extends StatefulWidget {
-  const MyPageScreen({super.key, required this.context});
-  final BuildContext context;
+  const MyPageScreen({super.key});
+
   @override
   State<MyPageScreen> createState() => _MyPageScreenState();
 }
@@ -227,39 +225,27 @@ class _MyPageScreenState extends State<MyPageScreen> {
                         ),
                     child: Column(
                       children: [
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const RegisterScreen(
-                                    data: '', flag: null, routeCode: false),
-                              ),
-                            );
-                          },
-                          child: const Text('회원정보 수정'),
-                        ),
                         CustomInfoButton(
                           buttonText: '회원정보 수정',
-                          parentContext: widget.context,
+                          parentContext: context,
                           route: Routes.registerUser,
                           icon: Icons.manage_accounts,
                         ),
                         CustomInfoButton(
                           buttonText: '보안레벨 설정',
-                          parentContext: widget.context,
+                          parentContext: context,
                           route: Routes.securitySetting,
                           icon: Icons.admin_panel_settings,
                         ),
                         CustomInfoButton(
                           buttonText: '결제정보',
-                          parentContext: widget.context,
+                          parentContext: context,
                           route: Routes.payInfo,
                           icon: Icons.credit_card,
                         ),
                         CustomInfoButton(
                           buttonText: '2차 비밀번호',
-                          parentContext: widget.context,
+                          parentContext: context,
                           route: Routes.secondaryPassword,
                           icon: Icons.password_rounded,
                         ),

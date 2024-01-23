@@ -10,6 +10,7 @@ import 'package:usms_app/screens/notification_list_screen.dart';
 import 'package:usms_app/screens/statistic_screen.dart';
 import 'package:usms_app/screens/user_info_screen.dart';
 import 'package:usms_app/services/user_service.dart';
+import 'package:usms_app/utils/user_provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -34,6 +35,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       userService.getUserInfo().then((value) {
         setState(() {
           user = value;
+          Provider.of<UserProvider>(context, listen: false).updateUser(value!);
           uid = user!.uid;
           widgetOptions = <Widget>[
             MainScreen(
@@ -41,9 +43,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             ),
             const NotificationListScreen(),
             const StatisticScreen(),
-            MyPageScreen(
-              context: context,
-            ),
+            const MyPageScreen(),
           ];
         });
       });
@@ -62,8 +62,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider.value(
-      value: user,
+    return ChangeNotifierProvider(
+      create: (context) => user,
       child: Scaffold(
         bottomNavigationBar: BottomNavigationBar(
           items: const [

@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:provider/provider.dart';
 
 // api
 import 'package:usms_app/api/firebase_api.dart';
@@ -11,6 +12,7 @@ import 'package:usms_app/screens/hero_test_screen.dart';
 import 'package:usms_app/routes.dart';
 import 'package:usms_app/screens/login_screen.dart';
 import 'package:usms_app/utils/authentication_wrapper.dart';
+import 'package:usms_app/utils/user_provider.dart';
 
 // route
 final navigatorKey = GlobalKey<NavigatorState>();
@@ -42,32 +44,35 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Push Notification',
-      theme: ThemeData(
-        // Scheme
-        colorScheme: const ColorScheme(
-          background: Colors.white,
-          brightness: Brightness.light,
-          primary: Colors.blue,
-          onPrimary: Colors.black,
-          secondary: Colors.green,
-          onSecondary: Colors.amber,
-          error: Colors.grey,
-          onError: Colors.pink,
-          onBackground: Colors.blueAccent,
-          surface: Colors.white,
-          onSurface: Colors.black,
+    return ChangeNotifierProvider(
+      create: (context) => UserProvider(),
+      child: MaterialApp(
+        title: 'Push Notification',
+        theme: ThemeData(
+          // Scheme
+          colorScheme: const ColorScheme(
+            background: Colors.white,
+            brightness: Brightness.light,
+            primary: Colors.blue,
+            onPrimary: Colors.black,
+            secondary: Colors.green,
+            onSecondary: Colors.amber,
+            error: Colors.grey,
+            onError: Colors.pink,
+            onBackground: Colors.blueAccent,
+            surface: Colors.white,
+            onSurface: Colors.black,
+          ),
+          primarySwatch: Colors.blue,
+          highlightColor: Colors.blue[200],
+          textTheme: const TextTheme(
+            bodyMedium: TextStyle(fontSize: 16),
+          ),
         ),
-        primarySwatch: Colors.blue,
-        highlightColor: Colors.blue[200],
-        textTheme: const TextTheme(
-          bodyMedium: TextStyle(fontSize: 16),
-        ),
+        navigatorKey: navigatorKey,
+        initialRoute: Routes.login,
+        routes: Routes.routes,
       ),
-      navigatorKey: navigatorKey,
-      initialRoute: Routes.login,
-      routes: Routes.routes,
     );
   }
 }

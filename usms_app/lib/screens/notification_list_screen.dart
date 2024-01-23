@@ -6,7 +6,6 @@ import 'package:usms_app/services/word_json.dart';
 import 'package:usms_app/widget/word_widget.dart';
 
 class NotificationListScreen extends StatefulWidget {
-  static const route = 'notification-list-screen';
   const NotificationListScreen({super.key});
 
   @override

@@ -40,7 +40,6 @@ class User with ChangeNotifier {
         'is_lock': is_lock,
       };
   factory User.fromMap(Map<String, dynamic> map) {
-    // print("이 값이 도대체 뭐길래 ? ? ? ? ${map['is_lock']}");
     return User(
       uid: map['uid'],
       username: map['username'],
@@ -49,7 +48,7 @@ class User with ChangeNotifier {
       email: map['email'],
       phone_number: map['phone_number'],
       security_state: map['security_state'],
-      is_lock: map['_lock'], // 고쳐
+      is_lock: map['_lock'],
     );
   }
 }
