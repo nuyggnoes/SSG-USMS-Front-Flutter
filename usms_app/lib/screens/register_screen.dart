@@ -3,9 +3,13 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:provider/provider.dart';
+
 import 'package:usms_app/models/user_model.dart';
 
 import 'package:usms_app/services/user_service.dart';
+import 'package:usms_app/utils/user_provider.dart';
+
 import 'package:usms_app/widget/custom_textFormField.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -300,25 +304,29 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         child: ElevatedButton(
                           onPressed: () {
                             if (_formKey.currentState?.validate() ?? false) {
-                              print('회원가입버튼');
                               user = User(
                                 username: _usernameController.text,
                                 password: _passwordTextEditController.text,
                                 email: _emailTextEditController.text,
                                 nickname: _nameController.text,
                                 phoneNumber: _phoneTextEditController.text,
-                                // security_state: 0,
-                                // is_lock: false,
                               );
-                              // requestRegister(user);
                               if (widget.flag != null) {
+                                // 회원가입 요청
                                 userService.requestRegister(
                                     context: context,
                                     user: user,
                                     onPressed: _pagePopAction);
                               } else {
-                                // userService.editUserInfo(
-                                //     context: context, user: user);
+                                // 회원정보 수정 요청
+                                userService.editUserInfo(
+                                    context: context,
+                                    user: Provider.of<UserProvider>(context,
+                                            listen: false)
+                                        .user,
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    });
                               }
                             }
                             // FlutterLocalNotification.showNotification();

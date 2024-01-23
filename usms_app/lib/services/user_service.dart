@@ -336,7 +336,7 @@ class UserService {
         'Content-Type': 'application/json; charset=utf-8',
         'Authorization': 'Bearer $jwtToken',
       },
-      baseUrl: baseUrl,
+      // baseUrl: baseUrl,
     );
     Dio dio = Dio(baseoptions);
     // try {
@@ -394,5 +394,82 @@ class UserService {
             onPressed();
           });
     });
+  }
+
+  // 회원정보 수정
+  editUserInfo({
+    required BuildContext context,
+    required User user,
+    required Function onPressed,
+  }) async {
+    print('[회원(id = ${user.id}) 정보 수정] => ${user.toJson()}');
+    Response response;
+    var jwtToken = await storage.read(key: 'Authorization');
+    var baseoptions = BaseOptions(
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+        'Authorization': 'Bearer $jwtToken',
+      },
+      baseUrl: baseUrl,
+    );
+    Dio dio = Dio(baseoptions);
+    // try {
+    //   // response = await dio.post('/api/users', data: user.toJson());
+    //   response = await dio.patch('/api/users/$userId', data: user.toJson());
+
+    //   if (response.statusCode == 200) {
+    //     Future.microtask(() {
+    //       customShowDialog(
+    //         context: context,
+    //         title: '환영합니다.',
+    //         message: '회원가입 성공',
+    //         onPressed: () {
+    //           Navigator.popUntil(context, ModalRoute.withName('/'));
+    //         },
+    //       );
+    //     });
+    //   }
+    // } on DioException catch (e) {
+    //   if (e.response?.statusCode == 400) {
+    //     print("[ERROR] : [$e]");
+    //     // 400 에러의 body
+    //     print('[ERR Body] : ${e.response?.data}');
+
+    //     var errorCode = e.response?.data['code'];
+    //     Future.microtask(() {
+    //       customShowDialog(
+    //         context: context,
+    //         title: '회원가입 실패',
+    //         message: '${e.response?.data}',
+    //         onPressed: () {
+    //           Navigator.pop(context);
+    //         },
+    //       );
+    //     });
+    //     return false;
+    //   } else {
+    //     Future.microtask(() {
+    //       customShowDialog(
+    //         context: context,
+    //         title: '서버 오류',
+    //         message: '${e.message}',
+    //         onPressed: () {
+    //           Navigator.pop(context);
+    //         },
+    //       );
+    //     });
+    //   }
+    // }
+    // Future.microtask(() {
+    //   customShowDialog(
+    //       context: context,
+    //       title: '.',
+    //       message: '회원정보 수정이 완료되었습니다.',
+    //       onPressed: () {
+    //         // Navigator.pop(context);
+    //         onPressed();
+    //       });
+    // });
+    onPressed();
   }
 }
