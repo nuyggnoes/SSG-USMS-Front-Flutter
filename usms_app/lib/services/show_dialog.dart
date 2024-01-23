@@ -16,6 +16,7 @@ void customShowDialog({
           TextButton(
             onPressed: () {
               onPressed();
+              // Navigator.pop(context);
             },
             child: const Text('확인'),
           ),

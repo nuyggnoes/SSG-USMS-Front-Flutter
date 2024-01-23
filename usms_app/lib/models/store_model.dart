@@ -1,4 +1,6 @@
-class Store {
+import 'package:flutter/material.dart';
+
+class Store with ChangeNotifier {
   final int store_id;
   final int user_id;
   final String store_name;

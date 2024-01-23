@@ -1,9 +1,9 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:provider/provider.dart';
 import 'package:usms_app/models/user_model.dart';
 import 'package:usms_app/routes.dart';
+import 'package:usms_app/screens/register_screen.dart';
 import 'package:usms_app/services/user_service.dart';
 import 'package:usms_app/widget/custom_info_button.dart';
 
@@ -70,13 +70,14 @@ class _MyPageScreenState extends State<MyPageScreen> {
 
   Icon getSecurityLevel() {
     setState(() {
-      if (securityState == 0) {
+      if (Provider.of<User>(context, listen: false).security_state == 0) {
         securityIcon = const Icon(
           Icons.gpp_bad_outlined,
           color: Colors.white,
         );
         securityColor = Colors.red.shade400;
-      } else if (securityState == 1) {
+      } else if (Provider.of<User>(context, listen: false).security_state ==
+          1) {
         securityIcon = const Icon(
           Icons.health_and_safety_outlined,
           color: Colors.white,
@@ -138,7 +139,7 @@ class _MyPageScreenState extends State<MyPageScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                name,
+                                Provider.of<User>(context).person_name,
                                 style: const TextStyle(
                                   fontSize: 30,
                                   fontWeight: FontWeight.w800,
@@ -152,7 +153,7 @@ class _MyPageScreenState extends State<MyPageScreen> {
                                   children: [
                                     securityIcon,
                                     Text(
-                                      ' Lv. $securityState ',
+                                      ' Lv. ${Provider.of<User>(context).security_state} ',
                                       style: const TextStyle(
                                           fontWeight: FontWeight.w700),
                                     ),
@@ -244,6 +245,18 @@ class _MyPageScreenState extends State<MyPageScreen> {
                         ),
                     child: Column(
                       children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const RegisterScreen(
+                                    data: '', flag: null, routeCode: false),
+                              ),
+                            );
+                          },
+                          child: const Text('회원정보 수정'),
+                        ),
                         CustomInfoButton(
                           buttonText: '회원정보 수정',
                           parentContext: widget.context,

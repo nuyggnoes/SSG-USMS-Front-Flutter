@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:usms_app/main.dart';
 import 'package:usms_app/models/store_model.dart';
+import 'package:usms_app/screens/home_screen.dart';
 import 'package:usms_app/services/show_dialog.dart';
 
 class StoreService {
@@ -65,7 +66,11 @@ class StoreService {
           title: '매장 생성 성공',
           message: '매장 생성에 성공하였습니다.',
           onPressed: () {
-            Navigator.popUntil(context, ModalRoute.withName('/home'));
+            // Navigator.popUntil(context, ModalRoute.withName('/'));
+            Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => const HomeScreen()),
+                (route) => false);
           });
     });
   }
@@ -74,6 +79,7 @@ class StoreService {
   Future<List<Store>?> getUserStoresById(
       {required BuildContext context, required int uid}) async {
     var jSessionId = await storage.read(key: 'cookie');
+    print('[PROVIDER UID = $uid] ');
 
     Response response;
     var baseoptions = BaseOptions(

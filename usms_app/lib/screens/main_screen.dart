@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:usms_app/models/store_model.dart';
+import 'package:usms_app/models/user_model.dart';
 import 'package:usms_app/routes.dart';
 import 'package:usms_app/screens/store_detail_screen2.dart';
 import 'package:usms_app/services/show_dialog.dart';
@@ -130,7 +132,8 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                     children: [
                       FutureBuilder(
                         future: storeService.getUserStoresById(
-                            uid: widget.uid, context: context),
+                            uid: Provider.of<User>(context).uid!,
+                            context: context),
                         builder: ((context, snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
@@ -223,7 +226,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                     height: 30,
                   ),
                   RegisterStoreWidget(
-                    uid: widget.uid,
+                    uid: Provider.of<User>(context).uid!,
                     animationController: _animationController,
                     offsetAnimation: _offsetAnimation,
                     opacityAnimation: _opacityAnimation,

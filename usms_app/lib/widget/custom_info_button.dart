@@ -21,13 +21,14 @@ class CustomInfoButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        // print('hi');
+        print('hi');
         print('$route');
         Navigator.pushNamed(
           context,
           route,
           arguments: routeCode,
         );
+        route();
       },
       child: Container(
         padding: const EdgeInsets.symmetric(

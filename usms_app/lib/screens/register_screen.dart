@@ -3,13 +3,11 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:provider/provider.dart';
 import 'package:usms_app/models/user_model.dart';
 
-import 'package:usms_app/screens/home_screen.dart';
 import 'package:usms_app/services/user_service.dart';
 import 'package:usms_app/widget/custom_textFormField.dart';
-
-import 'package:usms_app/widget/show_dialog.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({
@@ -73,24 +71,36 @@ class _RegisterScreenState extends State<RegisterScreen> {
       // 사용자 정보로 변환
       User user = User.fromMap(userMap);
       // 이제 user를 사용할 수 있음
-      _nameController.text = user.person_name;
-      _phoneTextEditController.text = user.phone_number;
-      _usernameController.text = user.username;
-      _emailTextEditController.text = user.email;
+      // _nameController.text = user.person_name;
+      // _phoneTextEditController.text = user.phone_number;
+      // _usernameController.text = user.username;
+      // _emailTextEditController.text = user.email;
     }
   }
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  //   _nameController.text = Provider.of<User>(context).person_name;
+  //   _usernameController.text = Provider.of<User>(context).username;
+  //   _phoneTextEditController.text = Provider.of<User>(context).phone_number;
+  //   _emailTextEditController.text = Provider.of<User>(context).email;
+  // }
 
   @override
   void initState() {
     super.initState();
-    if (widget.routeCode == true && widget.flag != null) {
-      _phoneTextEditController.text = widget.flag! ? widget.data : '';
-      _emailTextEditController.text = widget.flag! ? '' : widget.data;
-      buttonName = '회원가입';
-    } else if (widget.routeCode == false && widget.flag == null) {
-      getUserInfo();
-      buttonName = '수정';
-    }
+    // if (widget.routeCode == true && widget.flag != null) {
+    //   _phoneTextEditController.text = widget.flag! ? widget.data : '';
+    //   _emailTextEditController.text = widget.flag! ? '' : widget.data;
+    //   buttonName = '회원가입';
+    // } else if (widget.routeCode == false && widget.flag == null) {
+    //   // _nameController.text = Provider.of<User>(context).person_name;
+    //   // _usernameController.text = Provider.of<User>(context).username;
+    //   // _phoneTextEditController.text = Provider.of<User>(context).phone_number;
+    //   // _emailTextEditController.text = Provider.of<User>(context).email;
+    //   // getUserInfo();
+    //   buttonName = '수정';
+    // }
   }
 
   @override
@@ -160,6 +170,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.routeCode == true && widget.flag != null) {
+      _phoneTextEditController.text = widget.flag! ? widget.data : '';
+      _emailTextEditController.text = widget.flag! ? '' : widget.data;
+      buttonName = '회원가입';
+    } else if (widget.flag == null && widget.routeCode == false) {
+      _nameController.text = Provider.of<User>(context).person_name;
+      _usernameController.text = Provider.of<User>(context).username;
+      _phoneTextEditController.text = Provider.of<User>(context).phone_number;
+      _emailTextEditController.text = Provider.of<User>(context).email;
+      buttonName = '수정';
+    }
     return MaterialApp(
       theme: ThemeData(
         primaryColor: Colors.grey,
@@ -243,7 +264,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         CustomTextFormField(
                           labelText: '아이디',
                           maxLength: 20,
-                          isEnabled: widget.flag ?? false,
+                          isEnabled: widget.routeCode,
                           counterText: '',
                           textController: _usernameController,
                           textType: TextInputType.text,
@@ -337,8 +358,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   is_lock: false,
                                 );
                                 // requestRegister(user);
-                                userService.requestRegister(
-                                    context: context, user: user);
+                                if (widget.flag != null) {
+                                  userService.requestRegister(
+                                      context: context, user: user);
+                                } else {
+                                  // userService.editUserInfo(
+                                  //     context: context, user: user);
+                                }
                               }
                               // FlutterLocalNotification.showNotification();
                             },

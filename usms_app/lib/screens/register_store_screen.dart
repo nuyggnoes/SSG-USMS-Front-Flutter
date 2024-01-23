@@ -2,6 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:kpostal/kpostal.dart';
+import 'package:provider/provider.dart';
+import 'package:usms_app/models/user_model.dart';
 import 'package:usms_app/services/show_dialog.dart';
 import 'package:usms_app/services/store_service.dart';
 import 'package:usms_app/widget/custom_textFormField.dart';
@@ -448,7 +450,8 @@ class _RegisterStoreState extends State<RegisterStore> {
                               // requestStore();
                               storeService.requestStore(
                                   formData: formData,
-                                  uid: widget.uid,
+                                  uid: Provider.of<User>(context, listen: false)
+                                      .uid!,
                                   context: context);
                             }
                           },
