@@ -1,12 +1,13 @@
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:usms_app/models/cctv_model.dart';
+import 'package:usms_app/models/user_model.dart';
 import 'package:usms_app/screens/cctv_replay_screen.dart';
 import 'package:usms_app/screens/no_cctv_screen.dart';
 
 import 'package:usms_app/routes.dart';
 import 'package:usms_app/services/cctv_service.dart';
-import 'package:usms_app/services/store_service.dart';
 import 'package:usms_app/widget/ad_slider.dart';
 import 'package:usms_app/widget/custom_textFormField.dart';
 import 'package:video_player/video_player.dart';
@@ -312,7 +313,14 @@ class _StoreDetailState extends State<StoreDetail2> {
                                       onPressed: () {
                                         if (_formKey.currentState?.validate() ??
                                             false) {
-                                          print('빈칸 없음');
+                                          cctvService.registerCCTV(
+                                            context: context,
+                                            storeId: widget.storeId,
+                                            uid: Provider.of<User>(context,
+                                                    listen: false)
+                                                .uid!,
+                                            name: cctvNameController.text,
+                                          );
                                         }
                                       },
                                       style: ElevatedButton.styleFrom(

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
 import 'package:usms_app/models/user_model.dart';
 import 'package:usms_app/routes.dart';
+import 'package:usms_app/screens/login_screen.dart';
+
 import 'package:usms_app/screens/register_screen.dart';
 import 'package:usms_app/services/user_service.dart';
 import 'package:usms_app/widget/custom_info_button.dart';
@@ -14,6 +17,7 @@ class MyPageScreen extends StatefulWidget {
 }
 
 class _MyPageScreenState extends State<MyPageScreen> {
+  final FlutterSecureStorage storage = const FlutterSecureStorage();
   final UserService userService = UserService();
   late User? user;
 
@@ -25,6 +29,16 @@ class _MyPageScreenState extends State<MyPageScreen> {
   int securityState = 0;
   Icon securityIcon = const Icon(Icons.gpp_bad_outlined);
   Color securityColor = Colors.grey;
+
+  logoutAction() async {
+    await storage.delete(key: 'auto_login');
+    await storage.delete(key: 'cookie');
+    await storage.delete(key: 'userInfo');
+    print('userService.logout()');
+    // Navigator
+    // 여기에 추가
+    Navigator.pop(context);
+  }
 
   @override
   void initState() {
@@ -134,11 +148,11 @@ class _MyPageScreenState extends State<MyPageScreen> {
                       ),
                       TextButton(
                         onPressed: () {
-                          // logoutAction();
-                          userService.logoutAction(() {
-                            Navigator.pushNamedAndRemoveUntil(
-                                context, '/', (route) => false);
-                          });
+                          logoutAction();
+                          // userService.logoutAction(() {
+                          //   Navigator.pushNamedAndRemoveUntil(
+                          //       context, '/', (route) => false);
+                          // });
                         },
                         child: Text(
                           "로그아웃 >",

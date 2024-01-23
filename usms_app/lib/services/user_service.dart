@@ -14,7 +14,7 @@ class UserService {
   static const storage = FlutterSecureStorage();
 
   // 로그인
-  loginAction({
+  Future<bool> loginAction({
     required BuildContext context,
     required String username,
     required String password,
@@ -58,9 +58,11 @@ class UserService {
           );
         }
         // successLogin(context);
-        Future.microtask(() {
-          Navigator.pushNamed(context, Routes.home);
-        });
+        // Future.microtask(() {
+        //   Navigator.pushNamed(context, Routes.home);
+        // });
+        print('잘 들어왔는데 왜 안되노');
+        return true;
       }
     } on DioException catch (e) {
       if (e.response?.statusCode == 400) {
@@ -106,6 +108,7 @@ class UserService {
         });
       }
     }
+    return false;
   }
 
   // 로그아웃
@@ -113,6 +116,7 @@ class UserService {
     await storage.delete(key: 'auto_login');
     await storage.delete(key: 'cookie');
     await storage.delete(key: 'userInfo');
+    print('userService.logout()');
     pagePop();
   }
 
@@ -317,9 +321,6 @@ class UserService {
             );
           });
     });
-    // routecode true and flag != null
-    // flag = true : phone
-    // flag = false : email
   }
 
   // 회원가입 요청

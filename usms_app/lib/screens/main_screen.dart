@@ -60,7 +60,6 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
     super.dispose();
   }
 
-  late List<Widget> widgetOptions;
   checkStoreState(int storeId) async {
     Store? store = await storeService.getStoreInfo(
         uid: widget.uid, storeId: storeId, context: context);
@@ -167,59 +166,59 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                           }
                         }),
                       ),
-                      CurrencyCard(
-                        name: 'GS25 무인매장점',
-                        code: 0, // store_state : 승인(1) / 승인요청중(2) / 반려(0)
-                        amount: '',
-                        icon: Icons.store_mall_directory_rounded,
-                        selectedCardColors: Colors.blue.shade200,
-                        animationController: _animationController,
-                        opacityAnimation: _opacityAnimation,
-                        onTapAction: () {
-                          // Navigator.pushNamed(context, Routes.storeDetail2,
-                          //     arguments: widget.uid);
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => StoreDetail2(
-                                uid: widget.uid,
-                                storeId: 1,
-                                storeInfo: null,
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      CurrencyCard(
-                        name: 'GS25 무인매장점2',
-                        code: 1,
-                        amount: '',
-                        icon: Icons.storefront,
-                        selectedCardColors: Colors.blue.shade300,
-                        animationController: _animationController,
-                        opacityAnimation: _opacityAnimation,
-                        onTapAction: () {
-                          Navigator.pushNamed(context, Routes.storeDetail);
-                        },
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      CurrencyCard(
-                        name: '신세계I&C 부산캠퍼스',
-                        code: 2,
-                        amount: '',
-                        icon: Icons.filter_vintage_outlined,
-                        selectedCardColors: Colors.red.shade400,
-                        animationController: _animationController,
-                        opacityAnimation: _opacityAnimation,
-                        onTapAction: () {
-                          Navigator.pushNamed(context, Routes.cctvReplay);
-                        },
-                      ),
+                      // CurrencyCard(
+                      //   name: 'GS25 무인매장점',
+                      //   code: 0, // store_state : 승인(1) / 승인요청중(2) / 반려(0)
+                      //   amount: '',
+                      //   icon: Icons.store_mall_directory_rounded,
+                      //   selectedCardColors: Colors.blue.shade200,
+                      //   animationController: _animationController,
+                      //   opacityAnimation: _opacityAnimation,
+                      //   onTapAction: () {
+                      //     // Navigator.pushNamed(context, Routes.storeDetail2,
+                      //     //     arguments: widget.uid);
+                      //     Navigator.push(
+                      //       context,
+                      //       MaterialPageRoute(
+                      //         builder: (context) => StoreDetail2(
+                      //           uid: Provider.of<User>(context).uid,
+                      //           storeId: 1,
+                      //           storeInfo: null,
+                      //         ),
+                      //       ),
+                      //     );
+                      //   },
+                      // ),
+                      // const SizedBox(
+                      //   height: 20,q
+                      // ),
+                      // CurrencyCard(
+                      //   name: 'GS25 무인매장점2',
+                      //   code: 1,
+                      //   amount: '',
+                      //   icon: Icons.storefront,
+                      //   selectedCardColors: Colors.blue.shade300,
+                      //   animationController: _animationController,
+                      //   opacityAnimation: _opacityAnimation,
+                      //   onTapAction: () {
+                      //     Navigator.pushNamed(context, Routes.storeDetail);
+                      //   },
+                      // ),
+                      // const SizedBox(
+                      //   height: 20,
+                      // ),
+                      // CurrencyCard(
+                      //   name: '신세계I&C 부산캠퍼스',
+                      //   code: 2,
+                      //   amount: '',
+                      //   icon: Icons.filter_vintage_outlined,
+                      //   selectedCardColors: Colors.red.shade400,
+                      //   animationController: _animationController,
+                      //   opacityAnimation: _opacityAnimation,
+                      //   onTapAction: () {
+                      //     Navigator.pushNamed(context, Routes.cctvReplay);
+                      //   },
+                      // ),
                     ],
                   ),
                   const SizedBox(

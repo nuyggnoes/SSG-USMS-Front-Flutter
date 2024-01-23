@@ -1,6 +1,3 @@
-import 'dart:convert';
-
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
@@ -65,44 +62,42 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => user,
-      child: MaterialApp(
-        home: Scaffold(
-          bottomNavigationBar: BottomNavigationBar(
-            items: const [
-              BottomNavigationBarItem(
-                icon: Icon(Icons.home_outlined),
-                label: '홈',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.notifications_sharp),
-                label: '알림',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.bar_chart_rounded),
-                label: '통계',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.person),
-                label: '내 정보',
-              ),
-            ],
-            currentIndex: selectedIndex,
-            selectedItemColor: Colors.blue[400],
-            iconSize: 37,
-            onTap: _onItemTapped,
-            showSelectedLabels: false,
-            showUnselectedLabels: false,
-            type: BottomNavigationBarType.fixed,
-          ),
-          body: SafeArea(
-            child: widgetOptions.isEmpty
-                ? const CircularProgressIndicator()
-                : Container(
-                    child: widgetOptions.elementAt(selectedIndex),
-                  ),
-          ),
+    return ChangeNotifierProvider.value(
+      value: user,
+      child: Scaffold(
+        bottomNavigationBar: BottomNavigationBar(
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home_outlined),
+              label: '홈',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.notifications_sharp),
+              label: '알림',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.bar_chart_rounded),
+              label: '통계',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: '내 정보',
+            ),
+          ],
+          currentIndex: selectedIndex,
+          selectedItemColor: Colors.blue[400],
+          iconSize: 37,
+          onTap: _onItemTapped,
+          showSelectedLabels: false,
+          showUnselectedLabels: false,
+          type: BottomNavigationBarType.fixed,
+        ),
+        body: SafeArea(
+          child: widgetOptions.isEmpty
+              ? const CircularProgressIndicator()
+              : Container(
+                  child: widgetOptions.elementAt(selectedIndex),
+                ),
         ),
       ),
     );

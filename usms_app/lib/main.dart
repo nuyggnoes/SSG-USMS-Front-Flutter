@@ -9,6 +9,8 @@ import 'package:usms_app/api/firebase_api.dart';
 import 'package:usms_app/screens/cctv_replay_screen.dart';
 import 'package:usms_app/screens/hero_test_screen.dart';
 import 'package:usms_app/routes.dart';
+import 'package:usms_app/screens/login_screen.dart';
+import 'package:usms_app/utils/authentication_wrapper.dart';
 
 // route
 final navigatorKey = GlobalKey<NavigatorState>();
@@ -53,7 +55,7 @@ class MyApp extends StatelessWidget {
           onSecondary: Colors.amber,
           error: Colors.grey,
           onError: Colors.pink,
-          onBackground: Colors.teal,
+          onBackground: Colors.blueAccent,
           surface: Colors.white,
           onSurface: Colors.black,
         ),
@@ -65,16 +67,6 @@ class MyApp extends StatelessWidget {
       ),
       navigatorKey: navigatorKey,
       initialRoute: Routes.login,
-      onGenerateRoute: (settings) {
-        switch (settings.name) {
-          case Routes.cctvReplay:
-            return MaterialPageRoute(builder: (context) => const CCTVReplay());
-          default:
-            return MaterialPageRoute(
-              builder: (context) => const TestTest(),
-            );
-        }
-      },
       routes: Routes.routes,
     );
   }

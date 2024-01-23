@@ -8,7 +8,6 @@ class Store with ChangeNotifier {
   final String store_register_code;
   final int store_registration_img_id;
   final int store_state;
-  int? uid;
 
   Store({
     required this.store_id,
@@ -18,7 +17,6 @@ class Store with ChangeNotifier {
     required this.store_register_code,
     required this.store_registration_img_id,
     required this.store_state,
-    this.uid,
   });
 
   Store.fromJson(Map<String, dynamic> json)
@@ -41,7 +39,6 @@ class Store with ChangeNotifier {
   factory Store.fromMap(Map<String, dynamic> map) {
     return Store(
       store_id: map['store_id'],
-      uid: map['uid'],
       user_id: map['user_id'],
       store_name: map['store_name'],
       store_address: map['store_address'],
