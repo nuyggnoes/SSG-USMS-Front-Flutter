@@ -326,6 +326,7 @@ class UserService {
   requestRegister({
     required BuildContext context,
     required User user,
+    required Function onPressed,
   }) async {
     print(user.toJson());
     Response response;
@@ -390,7 +391,7 @@ class UserService {
           title: '환영합니다.',
           message: '회원가입 성공',
           onPressed: () {
-            Navigator.popUntil(context, ModalRoute.withName('/'));
+            onPressed();
           });
     });
   }

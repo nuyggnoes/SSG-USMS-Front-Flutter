@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
 import 'package:usms_app/models/user_model.dart';
 import 'package:usms_app/routes.dart';
@@ -15,7 +14,6 @@ class MyPageScreen extends StatefulWidget {
 }
 
 class _MyPageScreenState extends State<MyPageScreen> {
-  final storage = const FlutterSecureStorage();
   final UserService userService = UserService();
   late User? user;
 
@@ -48,26 +46,6 @@ class _MyPageScreenState extends State<MyPageScreen> {
     super.initState();
   }
 
-  // getUserInfo() async {
-  //   FlutterSecureStorage storage = const FlutterSecureStorage();
-  //   final jsonString = await storage.read(key: 'userInfo');
-
-  //   if (jsonString != null) {
-  //     final Map<String, dynamic> userMap = jsonDecode(jsonString);
-  //     User user = User.fromMap(userMap);
-
-  //     setState(() {
-  //       name = user.person_name;
-  //       phone = user.phone_number;
-  //       username = user.username;
-  //       email = user.email;
-  //       securityState = user.security_state;
-  //       getSecurityLevel();
-  //     });
-  //   }
-  //   return null;
-  // }
-
   Icon getSecurityLevel() {
     setState(() {
       if (Provider.of<User>(context, listen: false).security_state == 0) {
@@ -93,16 +71,6 @@ class _MyPageScreenState extends State<MyPageScreen> {
     });
     return securityIcon;
   }
-
-  // logoutAction() async {
-  //   await storage.delete(key: 'auto_login');
-  //   await storage.delete(key: 'cookie');
-  //   _pagePopAction();
-  // }
-
-  // _pagePopAction() {
-  //   Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -265,19 +233,19 @@ class _MyPageScreenState extends State<MyPageScreen> {
                         ),
                         CustomInfoButton(
                           buttonText: '보안레벨 설정',
-                          parentContext: context,
+                          parentContext: widget.context,
                           route: Routes.securitySetting,
                           icon: Icons.admin_panel_settings,
                         ),
                         CustomInfoButton(
                           buttonText: '결제정보',
-                          parentContext: context,
+                          parentContext: widget.context,
                           route: Routes.payInfo,
                           icon: Icons.credit_card,
                         ),
                         CustomInfoButton(
                           buttonText: '2차 비밀번호',
-                          parentContext: context,
+                          parentContext: widget.context,
                           route: Routes.secondaryPassword,
                           icon: Icons.password_rounded,
                         ),

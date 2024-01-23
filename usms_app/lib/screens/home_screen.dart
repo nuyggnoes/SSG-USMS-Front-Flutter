@@ -45,7 +45,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             const NotificationListScreen(),
             const StatisticScreen(),
             MyPageScreen(
-              context: super.context,
+              context: context,
             ),
           ];
         });
