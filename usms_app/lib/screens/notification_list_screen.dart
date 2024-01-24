@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:usms_app/models/behavior_model.dart';
 import 'package:usms_app/models/word_model.dart';
+import 'package:usms_app/services/cctv_service.dart';
 import 'package:usms_app/services/word_json.dart';
 import 'package:usms_app/widget/word_widget.dart';
 
@@ -15,6 +17,9 @@ class _NotificationListScreenState extends State<NotificationListScreen>
     with TickerProviderStateMixin {
   late final TabController _tabController;
   final Future<List<WordModel>> words = WordJson.getWords();
+  final Future<List<Behavior>> abnormalBehaviors =
+      CCTVService.getAllBehaviors();
+  // 매장 알림이면 매장 아이디가 필요한게 아니라 userId만 있으면 되는거 아닌가.
 
   DateTime? _startDate;
   DateTime? _endDate;
@@ -54,6 +59,7 @@ class _NotificationListScreenState extends State<NotificationListScreen>
     '투기': false,
     '주취행동': false,
   };
+  int tabBarIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -67,6 +73,22 @@ class _NotificationListScreenState extends State<NotificationListScreen>
           child: Column(
             children: [
               TabBar(
+                onTap: (value) {
+                  tabBarIndex = value;
+                  print(value);
+                  setState(() {
+                    filterButtonStates = {
+                      '입실': false,
+                      '퇴실': false,
+                      '폭행, 싸움': false,
+                      '절도, 강도': false,
+                      '기물 파손': false,
+                      '실신': false,
+                      '투기': false,
+                      '주취행동': false,
+                    };
+                  });
+                },
                 indicatorColor: Colors.blueAccent,
                 controller: _tabController,
                 labelColor: Colors.black54,
@@ -192,6 +214,21 @@ class _NotificationListScreenState extends State<NotificationListScreen>
                             print('[SELECT DATE] : $_startDate ~ $_endDate');
                             print(
                                 '[SELECT DATE] : $startDateString,$endtDateString');
+
+                            print('tabbarIndex = $tabBarIndex');
+                            if (tabBarIndex == 0) {
+                              for (var entry in filterButtonStates.entries) {
+                                if (entry.value == true) {
+                                  print('개인 알림 기록 Category: ${entry.key}');
+                                }
+                              }
+                            } else {
+                              for (var entry in filterButtonStates.entries) {
+                                if (entry.value == true) {
+                                  print('업주 긴급 알림 Category: ${entry.key}');
+                                }
+                              }
+                            }
                           },
                           child: const Text(
                             '조회',
@@ -203,21 +240,21 @@ class _NotificationListScreenState extends State<NotificationListScreen>
                     const SizedBox(
                       height: 20,
                     ),
-                    SizedBox(
-                      height: 100,
-                      child: GridView.count(
-                        crossAxisCount: 4,
-                        mainAxisSpacing: 8,
-                        crossAxisSpacing: 8,
-                        shrinkWrap: true,
-                        childAspectRatio: 5 / 2,
-                        physics: const NeverScrollableScrollPhysics(),
-                        padding: const EdgeInsets.all(8.0),
-                        children: filterButtonStates.keys.map((String text) {
-                          return buildToggleButton(text);
-                        }).toList(),
-                      ),
-                    ),
+                    // SizedBox(
+                    //   height: 100,
+                    //   child: GridView.count(
+                    //     crossAxisCount: 4,
+                    //     mainAxisSpacing: 8,
+                    //     crossAxisSpacing: 8,
+                    //     shrinkWrap: true,
+                    //     childAspectRatio: 3 / 1,
+                    //     physics: const NeverScrollableScrollPhysics(),
+                    //     padding: const EdgeInsets.all(8.0),
+                    //     children: filterButtonStates.keys.map((String text) {
+                    //       return buildToggleButton(text);
+                    //     }).toList(),
+                    //   ),
+                    // ),
                   ],
                 ),
               ),
@@ -226,43 +263,93 @@ class _NotificationListScreenState extends State<NotificationListScreen>
                   physics: const NeverScrollableScrollPhysics(),
                   controller: _tabController,
                   children: <Widget>[
-                    FutureBuilder(
-                      future: words,
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          return Column(
-                            children: [
-                              Expanded(
-                                child: ListView.separated(
-                                  shrinkWrap: true,
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 10, horizontal: 60),
-                                  itemCount: snapshot.data!.length,
-                                  itemBuilder: (context, index) {
-                                    var word = snapshot.data![index];
-                                    return Word(
-                                      eng: word.eng,
-                                      kor: word.kor,
-                                      id: word.id,
-                                      day: word.day,
-                                      isDone: word.isDone,
-                                    );
-                                  },
-                                  separatorBuilder: (context, index) =>
-                                      const SizedBox(
-                                    height: 20,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          );
-                        }
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      },
+                    Column(
+                      children: [
+                        SizedBox(
+                          height: 100,
+                          child: GridView.count(
+                            crossAxisCount: 4,
+                            mainAxisSpacing: 8,
+                            crossAxisSpacing: 8,
+                            shrinkWrap: true,
+                            childAspectRatio: 3 / 1,
+                            physics: const NeverScrollableScrollPhysics(),
+                            padding: const EdgeInsets.all(8.0),
+                            children:
+                                filterButtonStates.keys.map((String text) {
+                              return buildToggleButton(text);
+                            }).toList(),
+                          ),
+                        ),
+                        Expanded(
+                          child: FutureBuilder(
+                            // future: words,
+                            future: abnormalBehaviors,
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                return Column(
+                                  children: [
+                                    Expanded(
+                                      child: ListView.separated(
+                                        shrinkWrap: true,
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 10, horizontal: 60),
+                                        itemCount: snapshot.data!.length,
+                                        itemBuilder: (context, index) {
+                                          print(
+                                              '길이 : ${snapshot.data!.length}');
+                                          var word = snapshot.data![index];
+                                          return const Word(
+                                            eng: 'word.eng',
+                                            kor: 'word.kor',
+                                            id: 1,
+                                            day: 1,
+                                            isDone: true,
+                                          );
+                                        },
+                                        separatorBuilder: (context, index) =>
+                                            const SizedBox(
+                                          height: 20,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              } else if (snapshot.hasError) {
+                                // 에러가 발생한 경우의 처리
+                                return Center(
+                                    child: Text('에러 발생: ${snapshot.error}'));
+                              } else {
+                                // 데이터가 없는 경우의 처리
+                                return const Center(child: Text('진짜 없음'));
+                              }
+                            },
+                          ),
+                        ),
+                      ],
                     ),
-                    makeListView(20),
+                    Column(
+                      children: [
+                        SizedBox(
+                          height: 100,
+                          child: GridView.count(
+                            crossAxisCount: 4,
+                            mainAxisSpacing: 8,
+                            crossAxisSpacing: 8,
+                            shrinkWrap: true,
+                            childAspectRatio: 3 / 1,
+                            physics: const NeverScrollableScrollPhysics(),
+                            padding: const EdgeInsets.all(8.0),
+                            children: filterButtonStates.keys
+                                .skip(2)
+                                .map((String text) {
+                              return buildToggleButton(text);
+                            }).toList(),
+                          ),
+                        ),
+                        Expanded(child: makeListView(20)),
+                      ],
+                    ),
                   ],
                 ),
               ),
@@ -277,7 +364,6 @@ class _NotificationListScreenState extends State<NotificationListScreen>
     return GestureDetector(
       onTap: () {
         setState(() {
-          // isToggleOn = !isToggleOn;
           filterButtonStates[buttonText] = !filterButtonStates[buttonText]!;
           print('$buttonText 의 상태 : ${filterButtonStates[buttonText]}');
         });
@@ -291,13 +377,11 @@ class _NotificationListScreenState extends State<NotificationListScreen>
           ),
           borderRadius: BorderRadius.circular(40),
           color: filterButtonStates[buttonText]! ? Colors.blue : Colors.white,
-          // color: isToggleOn ? Colors.blue : Colors.white,
         ),
         child: Text(
           '#$buttonText',
           style: TextStyle(
             color: filterButtonStates[buttonText]! ? Colors.white : Colors.blue,
-            // color: isToggleOn ? Colors.white : Colors.blue,
           ),
         ),
       ),

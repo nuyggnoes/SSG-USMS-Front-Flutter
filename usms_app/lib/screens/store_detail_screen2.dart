@@ -191,27 +191,27 @@ class _StoreDetailState extends State<StoreDetail2> {
             ),
             child: Column(
               children: [
-                // chewieList.isEmpty
-                //     ? const SizedBox(
-                //         height: 620,
-                //         child: Center(
-                //           child: CircularProgressIndicator(),
-                //         ),
-                //       )
-                //     : SizedBox(
-                //         height: 620,
-                //         child: ListView.builder(
-                //           itemCount: chewieList.length,
-                //           itemBuilder: (context, index) {
-                //             print('chewieList 길이 : ${chewieList.length}');
-                //             return ChewieListItem(
-                //               chewieController: chewieList[index],
-                //               index: index,
-                //               routes: Routes.cctvReplay,
-                //             );
-                //           },
-                //         ),
-                //       ),
+                chewieList.isEmpty
+                    ? const SizedBox(
+                        height: 620,
+                        child: Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      )
+                    : SizedBox(
+                        height: 620,
+                        child: ListView.builder(
+                          itemCount: chewieList.length,
+                          itemBuilder: (context, index) {
+                            print('chewieList 길이 : ${chewieList.length}');
+                            return ChewieListItem(
+                              chewieController: chewieList[index],
+                              index: index,
+                              routes: Routes.cctvReplay,
+                            );
+                          },
+                        ),
+                      ),
                 Container(
                   height: 10,
                   width: 400,
