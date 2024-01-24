@@ -140,7 +140,8 @@ class CCTVService {
           title: 'CCTV 추가',
           message: 'CCTV 명 : $name\n StoreId : $storeId\n UserId : $uid',
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pop(context); // 400 이면 1번 호출
+            Navigator.pop(context); // 200 이면 2번 호출
           });
     });
   }

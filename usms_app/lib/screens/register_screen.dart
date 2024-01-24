@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
@@ -49,32 +48,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   final storage = const FlutterSecureStorage();
 
-  // getUserInfo() async {
-  //   FlutterSecureStorage storage = const FlutterSecureStorage();
-  //   final jsonString = await storage.read(key: 'userInfo');
-  //   if (jsonString != null) {
-  //     // 역직렬화
-  //     final Map<String, dynamic> userMap = jsonDecode(jsonString);
+  getUserInfo() async {
+    FlutterSecureStorage storage = const FlutterSecureStorage();
+    final jsonString = await storage.read(key: 'userInfo');
+    if (jsonString != null) {
+      // 역직렬화
+      final Map<String, dynamic> userMap = jsonDecode(jsonString);
 
-  //     // 사용자 정보로 변환
-  //     User user = User.fromMap(userMap);
-  //     // 이제 user를 사용할 수 있음
-  //     _nameController.text = user.nickname;
-  //     _phoneTextEditController.text = user.phoneNumber;
-  //     _usernameController.text = user.username;
-  //     _emailTextEditController.text = user.email;
-  //   }
-  // }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _nameController.text = Provider.of<UserProvider>(context).user.nickname;
-    _phoneTextEditController.text =
-        Provider.of<UserProvider>(context).user.phoneNumber;
-    _usernameController.text = Provider.of<UserProvider>(context).user.username;
-    _emailTextEditController.text =
-        Provider.of<UserProvider>(context).user.email;
+      // 사용자 정보로 변환
+      User user = User.fromMap(userMap);
+      // 이제 user를 사용할 수 있음
+      _nameController.text = user.nickname;
+      _phoneTextEditController.text = user.phoneNumber;
+      _usernameController.text = user.username;
+      _emailTextEditController.text = user.email;
+    }
   }
 
   @override
@@ -85,7 +73,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       _emailTextEditController.text = widget.flag! ? '' : widget.data;
       buttonName = '회원가입';
     } else if (widget.routeCode == false && widget.flag == null) {
-      // getUserInfo();
+      getUserInfo();
       buttonName = '수정';
     }
   }
@@ -104,53 +92,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   _pagePopAction() {
     Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
   }
-
-  // requestRegister(User user) async {
-  //   print(user.toJson());
-  //   Response response;
-  //   var jwtToken = await storage.read(key: 'Authorization');
-  //   var baseoptions = BaseOptions(
-  //     headers: {
-  //       'Content-Type': 'application/json; charset=utf-8',
-  //       'Authorization': 'Bearer $jwtToken',
-  //     },
-  //     baseUrl: "http://10.0.2.2:3003",
-  //   );
-  //   Dio dio = Dio(baseoptions);
-  //   // try {
-  //   //   response = await dio.post('/api/identification', data: user.toJson());
-
-  //   //   if (response.statusCode == 200) {
-  //   //     // 회원가입 성공시
-  //   //     // 1. 로그인 화면으로
-  //   //     _pagePopAction();
-  //   //     // 2. 메인화면으로
-  //   //   }
-  //   // } on DioException catch (e) {
-  //   //   if (e.response?.statusCode == 400) {
-  //   //     print("[ERROR] : [$e]");
-  //   //     // 400 에러의 body
-  //   //     print('[ERR Body] : ${e.response?.data}');
-
-  //   //     var errorCode = e.response?.data['code'];
-  //   //     // _showDialog('인증번호 발송 실패', e.response!.data['message'], 0);
-  //   //     if (mounted) {
-  //   //       CustomDialog.showPopDialog(
-  //   //           context, '회원가입 실패', e.response!.data['message'], null);
-  //   //     }
-  //   //     return false;
-  //   //   } else if (e.response?.statusCode == null) {
-  //   //     print('여기다!');
-  //   //     if (mounted) {
-  //   //       CustomDialog.showPopDialog(
-  //   //           context, '서버 오류', '서버에 문제가 발생했습니다. 나중에 다시 시도해 주세요.', null);
-  //   //     }
-  //   //   }
-  //   // } on SocketException catch (e) {
-  //   //   print('[ERR] : ${e.message}');
-  //   // }
-  //   _pagePopAction();
-  // }
 
   String? _passwordMatchError;
 

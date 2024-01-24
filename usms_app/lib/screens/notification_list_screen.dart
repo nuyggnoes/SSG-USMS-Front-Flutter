@@ -1,4 +1,3 @@
-import 'package:date_field/date_field.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:usms_app/models/word_model.dart';
@@ -43,6 +42,15 @@ class _NotificationListScreenState extends State<NotificationListScreen>
     );
   }
 
+  bool isToggleOn = false;
+
+  Map<String, bool> filterButtonStates = {
+    '입실': false,
+    '퇴실': false,
+    '폭행, 싸움': false,
+    '절도, 강도': false,
+  };
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,63 +78,141 @@ class _NotificationListScreenState extends State<NotificationListScreen>
               ),
               Padding(
                 padding: const EdgeInsets.all(15),
-                child: Row(
+                child: Column(
                   children: [
-                    Expanded(
-                      child: DateTimeFormField(
-                        mode: DateTimeFieldPickerMode.date,
-                        dateFormat: DateFormat.yMd(),
-                        decoration: const InputDecoration(
-                          labelText: '날짜를 선택해주세요.',
-                        ),
-                        firstDate: DateTime.utc(2022),
-                        lastDate: DateTime.now(),
-                        onChanged: (DateTime? value) {
-                          setState(() {
-                            _startDate = value;
-                          });
-                        },
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 20,
-                      child: Text('~'),
-                    ),
-                    Expanded(
-                      child: DateTimeFormField(
-                        mode: DateTimeFieldPickerMode.date,
-                        dateFormat: DateFormat.yMd(),
-                        decoration: const InputDecoration(
-                          labelText: '날짜를 선택해주세요.',
-                        ),
-                        firstDate: DateTime.utc(2022),
-                        lastDate: DateTime.now(),
-                        onChanged: (DateTime? value) {
-                          _endDate = value;
-                        },
-                      ),
-                    ),
-                    ElevatedButton(
-                      style: ButtonStyle(
-                        side: const MaterialStatePropertyAll(
-                          BorderSide(color: Colors.grey),
-                        ),
-                        fixedSize: MaterialStateProperty.all(
-                          const Size(80, 60),
-                        ),
-                        shape: MaterialStateProperty.all(
-                          const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.zero,
+                    Row(
+                      children: [
+                        Expanded(
+                          child: ElevatedButton(
+                            style: ButtonStyle(
+                              side: const MaterialStatePropertyAll(
+                                BorderSide(color: Colors.grey),
+                              ),
+                              fixedSize: MaterialStateProperty.all(
+                                const Size(80, 50),
+                              ),
+                              shape: MaterialStateProperty.all(
+                                const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.zero,
+                                ),
+                              ),
+                            ),
+                            onPressed: () async {
+                              final selectedDate = await showDatePicker(
+                                context: context,
+                                initialDate: _startDate,
+                                firstDate: DateTime(2000),
+                                lastDate: DateTime.now(),
+                                locale: const Locale('ko', 'KR'),
+                              );
+                              if (selectedDate != null) {
+                                setState(() {
+                                  _startDate = selectedDate;
+                                });
+                              }
+                            },
+                            child: Text(
+                              _startDate == null
+                                  ? ''
+                                  : DateFormat('yyyy-MM-dd')
+                                      .format(_startDate!),
+                              style: const TextStyle(color: Colors.black),
+                            ),
                           ),
                         ),
-                      ),
-                      onPressed: () {
-                        print('[SELECT DATE] : $_startDate ~ $_endDate');
-                      },
-                      child: const Text(
-                        '조회',
-                        style: TextStyle(color: Colors.black),
-                      ),
+                        const SizedBox(
+                          width: 20,
+                          child: Text(' -- '),
+                        ),
+                        Expanded(
+                          child: ElevatedButton(
+                            style: ButtonStyle(
+                              side: const MaterialStatePropertyAll(
+                                BorderSide(color: Colors.grey),
+                              ),
+                              fixedSize: MaterialStateProperty.all(
+                                const Size(80, 50),
+                              ),
+                              shape: MaterialStateProperty.all(
+                                const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.zero,
+                                ),
+                              ),
+                            ),
+                            onPressed: () async {
+                              final selectedDate = await showDatePicker(
+                                context: context,
+                                initialDate: _endDate,
+                                firstDate: DateTime(2000),
+                                lastDate: DateTime.now(),
+                                locale: const Locale('ko', 'KR'),
+                              );
+                              if (selectedDate != null) {
+                                setState(() {
+                                  _endDate = selectedDate;
+                                });
+                              }
+                            },
+                            child: Text(
+                              _endDate == null
+                                  ? ''
+                                  : DateFormat('yyyy-MM-dd').format(_endDate!),
+                              style: const TextStyle(color: Colors.black),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 20,
+                        ),
+                        ElevatedButton(
+                          style: ButtonStyle(
+                            side: const MaterialStatePropertyAll(
+                              BorderSide(color: Colors.grey),
+                            ),
+                            fixedSize: MaterialStateProperty.all(
+                              const Size(80, 50),
+                            ),
+                            shape: MaterialStateProperty.all(
+                              const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.zero,
+                              ),
+                            ),
+                          ),
+                          onPressed: () {
+                            String startDateString;
+                            String endtDateString;
+                            startDateString =
+                                _startDate.toString().split(" ").first;
+                            endtDateString =
+                                _endDate.toString().split(" ").first;
+                            print('[SELECT DATE] : $_startDate ~ $_endDate');
+                            print(
+                                '[SELECT DATE] : $startDateString,$endtDateString');
+                          },
+                          child: const Text(
+                            '조회',
+                            style: TextStyle(color: Colors.black),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.center,
+                    //   children: filterButtonStates.keys.map((String text) {
+                    //     return buildToggleButton(text);
+                    //   }).toList(),
+                    // ),
+                    GridView.count(
+                      crossAxisCount: 4,
+                      mainAxisSpacing: 8,
+                      crossAxisSpacing: 8,
+                      padding: const EdgeInsets.all(8.0),
+                      children: filterButtonStates.keys.map((String text) {
+                        return buildToggleButton(text);
+                      }).toList(),
                     ),
                   ],
                 ),
@@ -177,6 +263,37 @@ class _NotificationListScreenState extends State<NotificationListScreen>
                 ),
               ),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildToggleButton(String buttonText) {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          // isToggleOn = !isToggleOn;
+          filterButtonStates[buttonText] = !filterButtonStates[buttonText]!;
+          print(filterButtonStates[buttonText]);
+        });
+      },
+      child: Container(
+        padding: const EdgeInsets.all(5),
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: Colors.blue,
+            width: 2.0,
+          ),
+          borderRadius: BorderRadius.circular(40),
+          color: filterButtonStates[buttonText]! ? Colors.blue : Colors.white,
+          // color: isToggleOn ? Colors.blue : Colors.white,
+        ),
+        child: Text(
+          '#$buttonText',
+          style: TextStyle(
+            color: filterButtonStates[buttonText]! ? Colors.white : Colors.blue,
+            // color: isToggleOn ? Colors.white : Colors.blue,
           ),
         ),
       ),

@@ -51,7 +51,7 @@ class _StoreDetailState extends State<StoreDetail2> {
     // 특정 회원의 특정 매장의 CCTV 정보를 가져온 후
     // 특정 매장에 cctv 정보가 없으면 페이지 상태 변화
 
-    setVideoPlayer();
+    // setVideoPlayer();
   }
 
   String testText = '';
@@ -264,62 +264,116 @@ class _StoreDetailState extends State<StoreDetail2> {
                     color: Colors.black,
                   ),
                 ),
-                ExpansionTile(
-                  title: const Text('CCTV 추가하기'),
-                  children: [
-                    SizedBox(
-                      width: double.infinity,
-                      height: 100,
-                      child: AdSlider(),
-                    ),
-                    Form(
-                      key: _formKey,
-                      child: Column(
-                        children: [
-                          CustomTextFormField(
-                            textController: cctvNameController,
-                            textType: TextInputType.text,
-                            labelText: 'CCTV 별칭',
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return 'CCTV 별칭을 입력해주세요.';
-                              }
-                              return null;
-                            },
-                          ),
-                          ElevatedButton(
-                            onPressed: () {
-                              if (_formKey.currentState?.validate() ?? false) {
-                                cctvService.registerCCTV(
-                                  context: context,
-                                  storeId: widget.storeId,
-                                  uid: Provider.of<UserProvider>(context,
-                                          listen: false)
-                                      .user
-                                      .id!,
-                                  name: cctvNameController.text,
-                                );
-                              }
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.blueAccent,
-                            ),
-                            child: const Text(
-                              'CCTV 추가하기',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w900,
+                IconButton(
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: const Text('CCTV 추가하기'),
+                            content: Form(
+                              key: _formKey,
+                              child: CustomTextFormField(
+                                labelText: 'CCTV명',
+                                maxLength: 20,
+                                counterText: '',
+                                textController: cctvNameController,
+                                textType: TextInputType.text,
+                                validator: (String? value) {
+                                  if (value?.isEmpty ?? true) {
+                                    return 'CCTV명을 입력해주세요!';
+                                  }
+                                  return null;
+                                },
                               ),
                             ),
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+                            actions: <Widget>[
+                              TextButton(
+                                child: const Text('취소'),
+                                onPressed: () {
+                                  cctvNameController.text = '';
+                                  Navigator.pop(context);
+                                },
+                              ),
+                              TextButton(
+                                child: const Text('확인'),
+                                onPressed: () {
+                                  if (_formKey.currentState?.validate() ??
+                                      false) {
+                                    cctvService.registerCCTV(
+                                      context: context,
+                                      storeId: widget.storeId,
+                                      uid: Provider.of<UserProvider>(context,
+                                              listen: false)
+                                          .user
+                                          .id!,
+                                      name: cctvNameController.text,
+                                    );
+                                  }
+                                },
+                              )
+                            ],
+                          );
+                        });
+                  },
+                  icon: const Icon(Icons.add),
                 ),
+                // ExpansionTile(
+                //   title: const Text('CCTV 추가하기'),
+                //   children: [
+                //     SizedBox(
+                //       width: double.infinity,
+                //       height: 100,
+                //       child: AdSlider(),
+                //     ),
+                //     Form(
+                //       key: _formKey,
+                //       child: Column(
+                //         children: [
+                //           CustomTextFormField(
+                //             textController: cctvNameController,
+                //             textType: TextInputType.text,
+                //             labelText: 'CCTV 별칭',
+                //             validator: (value) {
+                //               if (value!.isEmpty) {
+                //                 return 'CCTV 별칭을 입력해주세요.';
+                //               }
+                //               return null;
+                //             },
+                //           ),
+                //           ElevatedButton(
+                //             onPressed: () {
+                //               if (_formKey.currentState?.validate() ?? false) {
+                //                 cctvService.registerCCTV(
+                //                   context: context,
+                //                   storeId: widget.storeId,
+                //                   uid: Provider.of<UserProvider>(context,
+                //                           listen: false)
+                //                       .user
+                //                       .id!,
+                //                   name: cctvNameController.text,
+                //                 );
+                //               }
+                //             },
+                //             style: ElevatedButton.styleFrom(
+                //               backgroundColor: Colors.blueAccent,
+                //             ),
+                //             child: const Text(
+                //               'CCTV 추가하기',
+                //               style: TextStyle(
+                //                 color: Colors.white,
+                //                 fontWeight: FontWeight.w900,
+                //               ),
+                //             ),
+                //           ),
+                //           const SizedBox(
+                //             height: 20,
+                //           ),
+                //         ],
+                //       ),
+                //     ),
+                //   ],
+                // ),
                 const SizedBox(
                   height: 20,
                 ),

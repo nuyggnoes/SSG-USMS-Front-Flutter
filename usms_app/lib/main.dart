@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 // api
 import 'package:usms_app/api/firebase_api.dart';
@@ -54,6 +55,11 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
+        localizationsDelegates: const [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
         title: 'Push Notification',
         theme: ThemeData(
           // Scheme
@@ -65,7 +71,7 @@ class MyApp extends StatelessWidget {
             secondary: Colors.green,
             onSecondary: Colors.amber,
             error: Colors.red,
-            onError: Colors.pink,
+            onError: Colors.red,
             onBackground: Colors.blueAccent,
             surface: Colors.white,
             onSurface: Colors.black,
