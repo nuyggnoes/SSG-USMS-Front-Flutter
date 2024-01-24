@@ -3,11 +3,13 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:provider/provider.dart';
 import 'package:usms_app/main.dart';
 import 'package:usms_app/models/user_model.dart';
 import 'package:usms_app/routes.dart';
 import 'package:usms_app/screens/register_screen.dart';
 import 'package:usms_app/services/show_dialog.dart';
+import 'package:usms_app/utils/user_provider.dart';
 
 class UserService {
   static const baseUrl = MyApp.url;
@@ -414,20 +416,20 @@ class UserService {
     );
     Dio dio = Dio(baseoptions);
     // try {
-    //   // response = await dio.post('/api/users', data: user.toJson());
-    //   response = await dio.patch('/api/users/$userId', data: user.toJson());
+    //   response = await dio.patch('/api/users/${user.id}', data: user.toJson());
 
     //   if (response.statusCode == 200) {
     //     Future.microtask(() {
-    //       customShowDialog(
-    //         context: context,
-    //         title: '환영합니다.',
-    //         message: '회원가입 성공',
-    //         onPressed: () {
-    //           Navigator.popUntil(context, ModalRoute.withName('/'));
-    //         },
-    //       );
+    //       Provider.of<UserProvider>(context).updateUser(user);
     //     });
+    //     // Future.microtask(() {
+    //     //   customShowDialog(
+    //     //     context: context,
+    //     //     title: '',
+    //     //     message: '회원 정보 수정 완료',
+    //     //     onPressed: () {},
+    //     //   );
+    //     // });
     //   }
     // } on DioException catch (e) {
     //   if (e.response?.statusCode == 400) {

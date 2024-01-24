@@ -46,7 +46,10 @@ class Routes {
       payInfo: (context) => const PayInfoScreen(),
       secondaryPassword: (context) => const SecondaryPasswordScreen(),
       cctvDetail: (context) => const CCTVScreen(),
-      cctvReplay: (context) => const CCTVReplay(),
+      cctvReplay: (context) {
+        final int cctvId = ModalRoute.of(context)!.settings.arguments as int;
+        return CCTVReplay(cctvId: cctvId);
+      },
       heroTest: (contest) => const TestScreen(),
       // storeDetail2: (context) => const StoreDetail2()
     };

@@ -248,11 +248,64 @@ class _MyPageScreenState extends State<MyPageScreen> {
                           route: Routes.secondaryPassword,
                           icon: Icons.password_rounded,
                         ),
-                        CustomInfoButton(
-                          buttonText: 'Hero Test',
-                          parentContext: context,
-                          route: Routes.heroTest,
-                          icon: Icons.science,
+                        InkWell(
+                          onTap: () {
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    title: const Text('로그아웃'),
+                                    content: const Text('로그아웃 하시겠습니까?'),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        child: const Text('취소'),
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                      ),
+                                      TextButton(
+                                        child: const Text('확인'),
+                                        onPressed: () {
+                                          logoutAction();
+                                        },
+                                      )
+                                    ],
+                                  );
+                                });
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 10,
+                              horizontal: 10,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              border: Border(
+                                bottom: BorderSide(
+                                  color: Colors.grey.shade400,
+                                  width: 2,
+                                ),
+                              ),
+                            ),
+                            height: 70,
+                            child: const Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.logout_rounded,
+                                      color: Colors.grey,
+                                    ),
+                                    SizedBox(
+                                      width: 25,
+                                    ),
+                                    Text('로그아웃'),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
                       ],
                     ),

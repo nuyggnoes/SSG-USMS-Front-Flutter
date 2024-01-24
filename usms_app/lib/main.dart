@@ -8,6 +8,9 @@ import 'package:provider/provider.dart';
 // api
 import 'package:usms_app/api/firebase_api.dart';
 import 'package:usms_app/routes.dart';
+
+import 'package:usms_app/screens/cctv_replay_screen.dart';
+import 'package:usms_app/screens/test_screen.dart';
 import 'package:usms_app/utils/store_provider.dart';
 import 'package:usms_app/utils/user_provider.dart';
 
@@ -57,7 +60,7 @@ class MyApp extends StatelessWidget {
           colorScheme: const ColorScheme(
             background: Colors.white,
             brightness: Brightness.light,
-            primary: Colors.blue,
+            primary: Colors.blueAccent,
             onPrimary: Colors.black,
             secondary: Colors.green,
             onSecondary: Colors.amber,
@@ -76,6 +79,22 @@ class MyApp extends StatelessWidget {
         navigatorKey: navigatorKey,
         initialRoute: Routes.login,
         routes: Routes.routes,
+        onGenerateRoute: (settings) {
+          switch (settings.name) {
+            case Routes.cctvReplay:
+              // settings.arguments를 통해 전달된 값을 얻어옴
+              final int cctvId = settings.arguments as int;
+              return MaterialPageRoute(
+                builder: (context) => CCTVReplay(cctvId: cctvId),
+              );
+            // 다른 라우트들에 대한 처리 추가
+            // ...
+            default:
+              // 기본적으로 알 수 없는 경로에 대한 처리
+              return MaterialPageRoute(
+                  builder: (context) => const TestScreen());
+          }
+        },
       ),
     );
   }

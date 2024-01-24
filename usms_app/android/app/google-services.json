@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "887270635378",
+    "project_id": "fcmapp-5deff",
+    "storage_bucket": "fcmapp-5deff.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:887270635378:android:86173d135827f73fb44feb",
+        "android_client_info": {
+          "package_name": "com.example.usms_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCvZCZ_JWxWdnDeUhoYxzntW1Jd2pQu2uk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:887270635378:android:da6f2a6fab272275b44feb",
+        "android_client_info": {
+          "package_name": "com.example.webttonapp2"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCvZCZ_JWxWdnDeUhoYxzntW1Jd2pQu2uk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

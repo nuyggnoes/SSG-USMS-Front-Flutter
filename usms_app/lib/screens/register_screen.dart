@@ -49,36 +49,32 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   final storage = const FlutterSecureStorage();
 
-  String? validateEmail(String? value) {
-    const pattern = r"(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'"
-        r'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-'
-        r'\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*'
-        r'[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4]'
-        r'[0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9]'
-        r'[0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\'
-        r'x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])';
-    final regex = RegExp(pattern);
+  // getUserInfo() async {
+  //   FlutterSecureStorage storage = const FlutterSecureStorage();
+  //   final jsonString = await storage.read(key: 'userInfo');
+  //   if (jsonString != null) {
+  //     // 역직렬화
+  //     final Map<String, dynamic> userMap = jsonDecode(jsonString);
 
-    return value!.isNotEmpty && !regex.hasMatch(value)
-        ? '이메일 형식에 맞지 않습니다.'
-        : null;
-  }
+  //     // 사용자 정보로 변환
+  //     User user = User.fromMap(userMap);
+  //     // 이제 user를 사용할 수 있음
+  //     _nameController.text = user.nickname;
+  //     _phoneTextEditController.text = user.phoneNumber;
+  //     _usernameController.text = user.username;
+  //     _emailTextEditController.text = user.email;
+  //   }
+  // }
 
-  getUserInfo() async {
-    FlutterSecureStorage storage = const FlutterSecureStorage();
-    final jsonString = await storage.read(key: 'userInfo');
-    if (jsonString != null) {
-      // 역직렬화
-      final Map<String, dynamic> userMap = jsonDecode(jsonString);
-
-      // 사용자 정보로 변환
-      User user = User.fromMap(userMap);
-      // 이제 user를 사용할 수 있음
-      _nameController.text = user.nickname;
-      _phoneTextEditController.text = user.phoneNumber;
-      _usernameController.text = user.username;
-      _emailTextEditController.text = user.email;
-    }
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _nameController.text = Provider.of<UserProvider>(context).user.nickname;
+    _phoneTextEditController.text =
+        Provider.of<UserProvider>(context).user.phoneNumber;
+    _usernameController.text = Provider.of<UserProvider>(context).user.username;
+    _emailTextEditController.text =
+        Provider.of<UserProvider>(context).user.email;
   }
 
   @override
@@ -89,7 +85,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       _emailTextEditController.text = widget.flag! ? '' : widget.data;
       buttonName = '회원가입';
     } else if (widget.routeCode == false && widget.flag == null) {
-      getUserInfo();
+      // getUserInfo();
       buttonName = '수정';
     }
   }
@@ -109,54 +105,53 @@ class _RegisterScreenState extends State<RegisterScreen> {
     Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
   }
 
-  requestRegister(User user) async {
-    print(user.toJson());
-    Response response;
-    var jwtToken = await storage.read(key: 'Authorization');
-    var baseoptions = BaseOptions(
-      headers: {
-        'Content-Type': 'application/json; charset=utf-8',
-        'Authorization': 'Bearer $jwtToken',
-      },
-      baseUrl: "http://10.0.2.2:3003",
-    );
-    Dio dio = Dio(baseoptions);
-    // try {
-    //   response = await dio.post('/api/identification', data: user.toJson());
+  // requestRegister(User user) async {
+  //   print(user.toJson());
+  //   Response response;
+  //   var jwtToken = await storage.read(key: 'Authorization');
+  //   var baseoptions = BaseOptions(
+  //     headers: {
+  //       'Content-Type': 'application/json; charset=utf-8',
+  //       'Authorization': 'Bearer $jwtToken',
+  //     },
+  //     baseUrl: "http://10.0.2.2:3003",
+  //   );
+  //   Dio dio = Dio(baseoptions);
+  //   // try {
+  //   //   response = await dio.post('/api/identification', data: user.toJson());
 
-    //   if (response.statusCode == 200) {
-    //     // 회원가입 성공시
-    //     // 1. 로그인 화면으로
-    //     _pagePopAction();
-    //     // 2. 메인화면으로
-    //   }
-    // } on DioException catch (e) {
-    //   if (e.response?.statusCode == 400) {
-    //     print("[ERROR] : [$e]");
-    //     // 400 에러의 body
-    //     print('[ERR Body] : ${e.response?.data}');
+  //   //   if (response.statusCode == 200) {
+  //   //     // 회원가입 성공시
+  //   //     // 1. 로그인 화면으로
+  //   //     _pagePopAction();
+  //   //     // 2. 메인화면으로
+  //   //   }
+  //   // } on DioException catch (e) {
+  //   //   if (e.response?.statusCode == 400) {
+  //   //     print("[ERROR] : [$e]");
+  //   //     // 400 에러의 body
+  //   //     print('[ERR Body] : ${e.response?.data}');
 
-    //     var errorCode = e.response?.data['code'];
-    //     // _showDialog('인증번호 발송 실패', e.response!.data['message'], 0);
-    //     if (mounted) {
-    //       CustomDialog.showPopDialog(
-    //           context, '회원가입 실패', e.response!.data['message'], null);
-    //     }
-    //     return false;
-    //   } else if (e.response?.statusCode == null) {
-    //     print('여기다!');
-    //     if (mounted) {
-    //       CustomDialog.showPopDialog(
-    //           context, '서버 오류', '서버에 문제가 발생했습니다. 나중에 다시 시도해 주세요.', null);
-    //     }
-    //   }
-    // } on SocketException catch (e) {
-    //   print('[ERR] : ${e.message}');
-    // }
-    _pagePopAction();
-  }
+  //   //     var errorCode = e.response?.data['code'];
+  //   //     // _showDialog('인증번호 발송 실패', e.response!.data['message'], 0);
+  //   //     if (mounted) {
+  //   //       CustomDialog.showPopDialog(
+  //   //           context, '회원가입 실패', e.response!.data['message'], null);
+  //   //     }
+  //   //     return false;
+  //   //   } else if (e.response?.statusCode == null) {
+  //   //     print('여기다!');
+  //   //     if (mounted) {
+  //   //       CustomDialog.showPopDialog(
+  //   //           context, '서버 오류', '서버에 문제가 발생했습니다. 나중에 다시 시도해 주세요.', null);
+  //   //     }
+  //   //   }
+  //   // } on SocketException catch (e) {
+  //   //   print('[ERR] : ${e.message}');
+  //   // }
+  //   _pagePopAction();
+  // }
 
-  bool helper = false;
   String? _passwordMatchError;
 
   @override
@@ -321,9 +316,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 // 회원정보 수정 요청
                                 userService.editUserInfo(
                                     context: context,
-                                    user: Provider.of<UserProvider>(context,
-                                            listen: false)
-                                        .user,
+                                    user: Provider.of<UserProvider>(
+                                      context,
+                                      listen: false,
+                                    ).user,
                                     onPressed: () {
                                       Navigator.pop(context);
                                     });

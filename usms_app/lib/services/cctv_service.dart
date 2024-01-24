@@ -46,15 +46,16 @@ class CCTVService {
         // });
         return null;
       } else {
-        Future.microtask(() {
-          customShowDialog(
-              context: context,
-              title: '서버 오류',
-              message: 'CCTV 정보를 불러오는데 실패하였습니다.',
-              onPressed: () {
-                Navigator.pop(context);
-              });
-        });
+        // Future.microtask(() {
+        //   customShowDialog(
+        //       context: context,
+        //       title: '서버 오류',
+        //       message: 'CCTV 정보를 불러오는데 실패하였습니다.',
+        //       onPressed: () {
+        //         Navigator.pop(context);
+        //       });
+        // });
+        print('서버 오류');
       }
     } on SocketException catch (e) {
       print("[Server ERR] : $e");

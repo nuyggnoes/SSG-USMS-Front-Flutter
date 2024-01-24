@@ -170,179 +170,178 @@ class _StoreDetailState extends State<StoreDetail2> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).unfocus();
-      },
-      child: Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios_new_rounded),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-          centerTitle: true,
-          title: const Text('특정 매장 이름'),
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_new_rounded),
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
-        body: SingleChildScrollView(
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                vertical: 40,
-                horizontal: 20,
-              ),
-              child: Column(
-                children: [
-                  chewieList.isEmpty
-                      ? const SizedBox(
-                          height: 620,
-                          child: Center(
-                            child: CircularProgressIndicator(),
-                          ),
-                        )
-                      : SizedBox(
-                          height: 620,
-                          child: ListView.builder(
-                            itemCount: chewieList.length,
-                            itemBuilder: (context, index) {
-                              print('chewieList 길이 : ${chewieList.length}');
-                              return ChewieListItem(
-                                chewieController: chewieList[index],
-                                index: index,
-                                routes: Routes.cctvReplay,
-                              );
+        centerTitle: true,
+        title: const Text('특정 매장 이름'),
+      ),
+      body: SingleChildScrollView(
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              vertical: 40,
+              horizontal: 20,
+            ),
+            child: Column(
+              children: [
+                // chewieList.isEmpty
+                //     ? const SizedBox(
+                //         height: 620,
+                //         child: Center(
+                //           child: CircularProgressIndicator(),
+                //         ),
+                //       )
+                //     : SizedBox(
+                //         height: 620,
+                //         child: ListView.builder(
+                //           itemCount: chewieList.length,
+                //           itemBuilder: (context, index) {
+                //             print('chewieList 길이 : ${chewieList.length}');
+                //             return ChewieListItem(
+                //               chewieController: chewieList[index],
+                //               index: index,
+                //               routes: Routes.cctvReplay,
+                //             );
+                //           },
+                //         ),
+                //       ),
+                Container(
+                  height: 10,
+                  width: 400,
+                  decoration: const BoxDecoration(
+                    color: Colors.black,
+                  ),
+                ),
+                FutureBuilder(
+                  future: cctvService.getAllcctvList(
+                    context: context,
+                    storeId: widget.storeId,
+                    uid: widget.uid,
+                  ),
+                  builder: ((context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const CircularProgressIndicator();
+                    } else if (snapshot.hasData) {
+                      List<CCTV> cctvList = snapshot.data!;
+                      return SizedBox(
+                        height: 620,
+                        child: ListView.separated(
+                          itemCount: cctvList.length,
+                          itemBuilder: (context, index) {
+                            CCTV cctv = cctvList[index];
+                            urlStringList.add(cctv.cctvStreamKey);
+                            // videoController와 chewieController 등록.
+                            var chewieController =
+                                setController(cctv.cctvStreamKey);
+                            return ChewieListItem(
+                              chewieController: chewieController,
+                              index: index,
+                              routes: Routes.cctvReplay,
+                            );
+                          },
+                          separatorBuilder: (BuildContext context, int index) {
+                            return const SizedBox(
+                              height: 10,
+                            );
+                          },
+                        ),
+                      );
+                    } else {
+                      return const NoCCTV();
+                    }
+                  }),
+                ),
+                Container(
+                  height: 10,
+                  width: 400,
+                  decoration: const BoxDecoration(
+                    color: Colors.black,
+                  ),
+                ),
+                ExpansionTile(
+                  title: const Text('CCTV 추가하기'),
+                  children: [
+                    SizedBox(
+                      width: double.infinity,
+                      height: 100,
+                      child: AdSlider(),
+                    ),
+                    Form(
+                      key: _formKey,
+                      child: Column(
+                        children: [
+                          CustomTextFormField(
+                            textController: cctvNameController,
+                            textType: TextInputType.text,
+                            labelText: 'CCTV 별칭',
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'CCTV 별칭을 입력해주세요.';
+                              }
+                              return null;
                             },
                           ),
-                        ),
-                  Container(
-                    height: 10,
-                    width: 400,
-                    decoration: const BoxDecoration(
-                      color: Colors.black,
-                    ),
-                  ),
-                  FutureBuilder(
-                    future: cctvService.getAllcctvList(
-                      context: context,
-                      storeId: widget.storeId,
-                      uid: widget.uid,
-                    ),
-                    builder: ((context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const CircularProgressIndicator();
-                      } else if (snapshot.hasData) {
-                        List<CCTV> cctvList = snapshot.data!;
-                        return SizedBox(
-                          height: 620,
-                          child: ListView.builder(
-                            itemCount: cctvList.length,
-                            itemBuilder: (context, index) {
-                              CCTV cctv = cctvList[index];
-                              urlStringList.add(cctv.cctvStreamKey);
-                              // videoController와 chewieController 등록.
-                              var chewieController =
-                                  setController(cctv.cctvStreamKey);
-                              return ChewieListItem(
-                                chewieController: chewieController,
-                                index: index,
-                                routes: Routes.cctvReplay,
-                              );
+                          ElevatedButton(
+                            onPressed: () {
+                              if (_formKey.currentState?.validate() ?? false) {
+                                cctvService.registerCCTV(
+                                  context: context,
+                                  storeId: widget.storeId,
+                                  uid: Provider.of<UserProvider>(context,
+                                          listen: false)
+                                      .user
+                                      .id!,
+                                  name: cctvNameController.text,
+                                );
+                              }
                             },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.blueAccent,
+                            ),
+                            child: const Text(
+                              'CCTV 추가하기',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w900,
+                              ),
+                            ),
                           ),
-                        );
-                      } else {
-                        return const NoCCTV();
-                      }
-                    }),
-                  ),
-                  Container(
-                    height: 10,
-                    width: 400,
-                    decoration: const BoxDecoration(
-                      color: Colors.black,
+                          const SizedBox(
+                            height: 20,
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  ExpansionTile(
-                    title: const Text('CCTV 추가하기'),
-                    children: [
-                      SizedBox(
-                        width: double.infinity,
-                        height: 100,
-                        child: AdSlider(),
-                      ),
-                      Form(
-                        key: _formKey,
-                        child: Column(
-                          children: [
-                            CustomTextFormField(
-                              textController: cctvNameController,
-                              textType: TextInputType.text,
-                              labelText: 'CCTV 별칭',
-                              validator: (value) {
-                                if (value!.isEmpty) {
-                                  return 'CCTV 별칭을 입력해주세요.';
-                                }
-                                return null;
-                              },
-                            ),
-                            ElevatedButton(
-                              onPressed: () {
-                                if (_formKey.currentState?.validate() ??
-                                    false) {
-                                  cctvService.registerCCTV(
-                                    context: context,
-                                    storeId: widget.storeId,
-                                    uid: Provider.of<UserProvider>(context,
-                                            listen: false)
-                                        .user
-                                        .id!,
-                                    name: cctvNameController.text,
-                                  );
-                                }
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.blueAccent,
-                              ),
-                              child: const Text(
-                                'CCTV 추가하기',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w900,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.7,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        print('cctv 설치방법');
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blueAccent,
-                      ),
-                      child: const Text(
-                        'CCTV 설치 및 연결 방법',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w900,
-                        ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.7,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      print('cctv 설치방법');
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blueAccent,
+                    ),
+                    child: const Text(
+                      'CCTV 설치 및 연결 방법',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w900,
                       ),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
@@ -407,6 +406,11 @@ class ChewieListItem extends StatelessWidget {
                           //     context,
                           //     MaterialPageRoute(
                           //         builder: (context) => const CCTVReplay()));
+                          Navigator.pushNamed(
+                            context,
+                            Routes.cctvReplay,
+                            arguments: 1,
+                          );
                         },
                         icon: const Icon(Icons.replay),
                       ),
