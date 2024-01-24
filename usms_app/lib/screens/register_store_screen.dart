@@ -219,258 +219,253 @@ class _RegisterStoreState extends State<RegisterStore> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: GestureDetector(
-        onTap: () {
-          FocusScope.of(context).unfocus();
-        },
-        child: Scaffold(
-          appBar: AppBar(
-            leading: IconButton(
-              icon: const Icon(Icons.arrow_back_ios_new_rounded),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-            title: const Text(
-              '매장 등록',
-              style: TextStyle(
-                fontWeight: FontWeight.w800,
-              ),
+      home: Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios_new_rounded),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          title: const Text(
+            '매장 등록',
+            style: TextStyle(
+              fontWeight: FontWeight.w800,
             ),
           ),
-          body: SafeArea(
-            child: SingleChildScrollView(
-              child: Form(
-                key: _formKey,
-                child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 50, horizontal: 25),
-                  height: MediaQuery.of(context).size.height,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Column(
-                        children: [
-                          CustomTextFormField(
-                            maxLength: 42,
-                            counterText: '',
-                            textController: _storeNameController,
-                            labelText: '업체명을 입력해주세요.',
-                            textType: TextInputType.text,
-                            validator: (value) {
-                              if (value?.isEmpty ?? true) {
-                                return '업체명을 입력해주세요';
-                              }
-                              return null;
-                            },
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          const SizedBox(
-                            width: double.infinity,
-                            child: Text('사업자 등록 번호 10자리를 입력해주세요.'),
-                          ),
-                          Row(
-                            children: [
-                              Expanded(
-                                flex: 3,
-                                child: CustomTextFormField(
-                                  maxLength: 3,
-                                  onChange: (value) {
-                                    if (value.length == 3) {
-                                      _focusNode1.requestFocus();
-                                    }
-                                  },
-                                  textController: _storeNumController1,
-                                  textType: TextInputType.number,
-                                  validator: (value) {
-                                    if (value?.isEmpty ?? true) {
-                                      return '사업자 등록번호를 입력해주세요';
-                                    }
-                                    if (value!.length != 3) {
-                                      return '3자리의 숫자를 입력해주세요';
-                                    }
-                                    return null;
-                                  },
-                                ),
-                              ),
-                              const SizedBox(
-                                width: 5,
-                              ),
-                              const Icon(
-                                Icons.maximize,
-                                color: Color.fromARGB(255, 145, 140, 149),
-                              ),
-                              const SizedBox(
-                                width: 5,
-                              ),
-                              Expanded(
-                                flex: 2,
-                                child: CustomTextFormField(
-                                  onChange: (value) {
-                                    if (value.length == 2) {
-                                      _focusNode2.requestFocus();
-                                    }
-                                  },
-                                  maxLength: 2,
-                                  focusNode: _focusNode1,
-                                  textController: _storeNumController2,
-                                  textType: TextInputType.number,
-                                  validator: (value) {
-                                    if (value!.isEmpty) {
-                                      return '사업자 등록번호를 입력해주세요';
-                                    }
-                                    if (value.length != 2) {
-                                      return '2자리의 숫자를 입력해주세요';
-                                    }
-                                    return null;
-                                  },
-                                ),
-                              ),
-                              const SizedBox(
-                                width: 5,
-                              ),
-                              Icon(
-                                Icons.maximize,
-                                color: Colors.grey[600],
-                              ),
-                              const SizedBox(
-                                width: 5,
-                              ),
-                              Expanded(
-                                flex: 5,
-                                child: CustomTextFormField(
-                                  focusNode: _focusNode2,
-                                  maxLength: 5,
-                                  textController: _storeNumController3,
-                                  textType: TextInputType.number,
-                                  validator: (value) {
-                                    if (value!.isEmpty) {
-                                      return '사업자 등록번호를 입력해주세요';
-                                    }
-                                    if (value.length != 5) {
-                                      return '5자리의 숫자를 입력해주세요';
-                                    }
-                                    return null;
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Stack(
-                                  alignment: Alignment.topRight,
-                                  children: [
-                                    CustomTextFormField(
-                                      labelText: '업체 주소를 입력해주세요.',
-                                      textController: _addressTextController,
-                                      textType: TextInputType.text,
-                                      isEnabled: false,
-                                      validator: (value) {
-                                        if (value!.isEmpty) {
-                                          return '업체 주소를 입력해주세요';
-                                        }
-                                        return null;
-                                      },
-                                    ),
-                                    IconButton(
-                                      onPressed: () {
-                                        Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                            builder: (context) {
-                                              return KpostalView(
-                                                callback: (Kpostal result) {
-                                                  _addressTextController.text =
-                                                      result.address;
-                                                },
-                                              );
-                                            },
-                                          ),
-                                        );
-                                      },
-                                      icon: const Icon(Icons.search_rounded),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          CustomTextFormField(
-                            labelText: '상세 주소를 입력해주세요.',
-                            textController: _detailAddressController,
-                            textType: TextInputType.text,
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return '상세 주소를 입력해주세요';
-                              }
-                              return null;
-                            },
-                          ),
-                        ],
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '사업자 등록증을 첨부해주세요(PDF, JPG, PNG)',
-                            style: TextStyle(
-                              color: Colors.grey[700],
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          _fileInput(),
-                        ],
-                      ),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.7,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            if (_formKey.currentState?.validate() ?? false) {
-                              formData.fields.addAll([
-                                MapEntry(
-                                    'storeName', _storeNameController.text),
-                                MapEntry('businessLicenseCode',
-                                    '${_storeNumController1.text}-${_storeNumController2.text}-${_storeNumController3.text}'),
-                                MapEntry('storeAddress',
-                                    '${_addressTextController.text} ${_detailAddressController.text}'),
-                              ]);
-                              // requestStore();
-                              storeService.requestStore(
-                                  formData: formData,
-                                  uid: Provider.of<UserProvider>(context,
-                                          listen: false)
-                                      .user
-                                      .id!,
-                                  context: context);
+        ),
+        body: SafeArea(
+          child: SingleChildScrollView(
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+            child: Form(
+              key: _formKey,
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 50, horizontal: 25),
+                height: MediaQuery.of(context).size.height,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Column(
+                      children: [
+                        CustomTextFormField(
+                          maxLength: 42,
+                          counterText: '',
+                          textController: _storeNameController,
+                          labelText: '업체명을 입력해주세요.',
+                          textType: TextInputType.text,
+                          validator: (value) {
+                            if (value?.isEmpty ?? true) {
+                              return '업체명을 입력해주세요';
                             }
+                            return null;
                           },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blueAccent,
-                          ),
-                          child: const Text(
-                            '등록하기',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w900,
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        const SizedBox(
+                          width: double.infinity,
+                          child: Text('사업자 등록 번호 10자리를 입력해주세요.'),
+                        ),
+                        Row(
+                          children: [
+                            Expanded(
+                              flex: 3,
+                              child: CustomTextFormField(
+                                maxLength: 3,
+                                onChange: (value) {
+                                  if (value.length == 3) {
+                                    _focusNode1.requestFocus();
+                                  }
+                                },
+                                textController: _storeNumController1,
+                                textType: TextInputType.number,
+                                validator: (value) {
+                                  if (value?.isEmpty ?? true) {
+                                    return '사업자 등록번호를 입력해주세요';
+                                  }
+                                  if (value!.length != 3) {
+                                    return '3자리의 숫자를 입력해주세요';
+                                  }
+                                  return null;
+                                },
+                              ),
                             ),
+                            const SizedBox(
+                              width: 5,
+                            ),
+                            const Icon(
+                              Icons.maximize,
+                              color: Color.fromARGB(255, 145, 140, 149),
+                            ),
+                            const SizedBox(
+                              width: 5,
+                            ),
+                            Expanded(
+                              flex: 2,
+                              child: CustomTextFormField(
+                                onChange: (value) {
+                                  if (value.length == 2) {
+                                    _focusNode2.requestFocus();
+                                  }
+                                },
+                                maxLength: 2,
+                                focusNode: _focusNode1,
+                                textController: _storeNumController2,
+                                textType: TextInputType.number,
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return '사업자 등록번호를 입력해주세요';
+                                  }
+                                  if (value.length != 2) {
+                                    return '2자리의 숫자를 입력해주세요';
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 5,
+                            ),
+                            Icon(
+                              Icons.maximize,
+                              color: Colors.grey[600],
+                            ),
+                            const SizedBox(
+                              width: 5,
+                            ),
+                            Expanded(
+                              flex: 5,
+                              child: CustomTextFormField(
+                                focusNode: _focusNode2,
+                                maxLength: 5,
+                                textController: _storeNumController3,
+                                textType: TextInputType.number,
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return '사업자 등록번호를 입력해주세요';
+                                  }
+                                  if (value.length != 5) {
+                                    return '5자리의 숫자를 입력해주세요';
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Stack(
+                                alignment: Alignment.topRight,
+                                children: [
+                                  CustomTextFormField(
+                                    labelText: '업체 주소를 입력해주세요.',
+                                    textController: _addressTextController,
+                                    textType: TextInputType.text,
+                                    isEnabled: false,
+                                    validator: (value) {
+                                      if (value!.isEmpty) {
+                                        return '업체 주소를 입력해주세요';
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                  IconButton(
+                                    onPressed: () {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (context) {
+                                            return KpostalView(
+                                              callback: (Kpostal result) {
+                                                _addressTextController.text =
+                                                    result.address;
+                                              },
+                                            );
+                                          },
+                                        ),
+                                      );
+                                    },
+                                    icon: const Icon(Icons.search_rounded),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        CustomTextFormField(
+                          labelText: '상세 주소를 입력해주세요.',
+                          textController: _detailAddressController,
+                          textType: TextInputType.text,
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return '상세 주소를 입력해주세요';
+                            }
+                            return null;
+                          },
+                        ),
+                      ],
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '사업자 등록증을 첨부해주세요(PDF, JPG, PNG)',
+                          style: TextStyle(
+                            color: Colors.grey[700],
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        _fileInput(),
+                      ],
+                    ),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.7,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          if (_formKey.currentState?.validate() ?? false) {
+                            formData.fields.addAll([
+                              MapEntry('storeName', _storeNameController.text),
+                              MapEntry('businessLicenseCode',
+                                  '${_storeNumController1.text}-${_storeNumController2.text}-${_storeNumController3.text}'),
+                              MapEntry('storeAddress',
+                                  '${_addressTextController.text} ${_detailAddressController.text}'),
+                            ]);
+                            // requestStore();
+                            storeService.requestStore(
+                                formData: formData,
+                                uid: Provider.of<UserProvider>(context,
+                                        listen: false)
+                                    .user
+                                    .id!,
+                                context: context);
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blueAccent,
+                        ),
+                        child: const Text(
+                          '등록하기',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w900,
                           ),
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),

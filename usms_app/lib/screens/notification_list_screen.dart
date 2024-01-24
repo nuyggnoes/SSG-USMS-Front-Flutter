@@ -49,6 +49,10 @@ class _NotificationListScreenState extends State<NotificationListScreen>
     '퇴실': false,
     '폭행, 싸움': false,
     '절도, 강도': false,
+    '기물 파손': false,
+    '실신': false,
+    '투기': false,
+    '주취행동': false,
   };
 
   @override
@@ -199,20 +203,20 @@ class _NotificationListScreenState extends State<NotificationListScreen>
                     const SizedBox(
                       height: 20,
                     ),
-                    // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.center,
-                    //   children: filterButtonStates.keys.map((String text) {
-                    //     return buildToggleButton(text);
-                    //   }).toList(),
-                    // ),
-                    GridView.count(
-                      crossAxisCount: 4,
-                      mainAxisSpacing: 8,
-                      crossAxisSpacing: 8,
-                      padding: const EdgeInsets.all(8.0),
-                      children: filterButtonStates.keys.map((String text) {
-                        return buildToggleButton(text);
-                      }).toList(),
+                    SizedBox(
+                      height: 100,
+                      child: GridView.count(
+                        crossAxisCount: 4,
+                        mainAxisSpacing: 8,
+                        crossAxisSpacing: 8,
+                        shrinkWrap: true,
+                        childAspectRatio: 5 / 2,
+                        physics: const NeverScrollableScrollPhysics(),
+                        padding: const EdgeInsets.all(8.0),
+                        children: filterButtonStates.keys.map((String text) {
+                          return buildToggleButton(text);
+                        }).toList(),
+                      ),
                     ),
                   ],
                 ),
@@ -229,7 +233,7 @@ class _NotificationListScreenState extends State<NotificationListScreen>
                           return Column(
                             children: [
                               Expanded(
-                                child: (ListView.separated(
+                                child: ListView.separated(
                                   shrinkWrap: true,
                                   padding: const EdgeInsets.symmetric(
                                       vertical: 10, horizontal: 60),
@@ -248,7 +252,7 @@ class _NotificationListScreenState extends State<NotificationListScreen>
                                       const SizedBox(
                                     height: 20,
                                   ),
-                                )),
+                                ),
                               ),
                             ],
                           );
@@ -275,7 +279,7 @@ class _NotificationListScreenState extends State<NotificationListScreen>
         setState(() {
           // isToggleOn = !isToggleOn;
           filterButtonStates[buttonText] = !filterButtonStates[buttonText]!;
-          print(filterButtonStates[buttonText]);
+          print('$buttonText 의 상태 : ${filterButtonStates[buttonText]}');
         });
       },
       child: Container(

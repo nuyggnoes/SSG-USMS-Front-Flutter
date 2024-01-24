@@ -182,6 +182,7 @@ class _StoreDetailState extends State<StoreDetail2> {
         title: const Text('특정 매장 이름'),
       ),
       body: SingleChildScrollView(
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.manual,
         child: Center(
           child: Padding(
             padding: const EdgeInsets.symmetric(
