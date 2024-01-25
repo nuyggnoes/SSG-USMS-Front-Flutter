@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:usms_app/models/behavior_model.dart';
 import 'package:usms_app/models/word_model.dart';
 import 'package:usms_app/services/cctv_service.dart';
+import 'package:usms_app/services/store_service.dart';
 import 'package:usms_app/services/word_json.dart';
 import 'package:usms_app/widget/word_widget.dart';
 
@@ -16,9 +17,9 @@ class NotificationListScreen extends StatefulWidget {
 class _NotificationListScreenState extends State<NotificationListScreen>
     with TickerProviderStateMixin {
   late final TabController _tabController;
-  final Future<List<WordModel>> words = WordJson.getWords();
-  final Future<List<Behavior>> abnormalBehaviors =
-      CCTVService.getAllBehaviors();
+  // final Future<List<WordModel>> words = WordJson.getWords();
+  // final Future<List<BehaviorModel>> abnormalBehaviors =
+  //     CCTVService.getAllBehaviorsByStore();
   // 매장 알림이면 매장 아이디가 필요한게 아니라 userId만 있으면 되는거 아닌가.
 
   DateTime? _startDate;
@@ -281,51 +282,53 @@ class _NotificationListScreenState extends State<NotificationListScreen>
                             }).toList(),
                           ),
                         ),
-                        Expanded(
-                          child: FutureBuilder(
-                            // future: words,
-                            future: abnormalBehaviors,
-                            builder: (context, snapshot) {
-                              if (snapshot.hasData) {
-                                return Column(
-                                  children: [
-                                    Expanded(
-                                      child: ListView.separated(
-                                        shrinkWrap: true,
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 10, horizontal: 60),
-                                        itemCount: snapshot.data!.length,
-                                        itemBuilder: (context, index) {
-                                          print(
-                                              '길이 : ${snapshot.data!.length}');
-                                          var word = snapshot.data![index];
-                                          return const Word(
-                                            eng: 'word.eng',
-                                            kor: 'word.kor',
-                                            id: 1,
-                                            day: 1,
-                                            isDone: true,
-                                          );
-                                        },
-                                        separatorBuilder: (context, index) =>
-                                            const SizedBox(
-                                          height: 20,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                );
-                              } else if (snapshot.hasError) {
-                                // 에러가 발생한 경우의 처리
-                                return Center(
-                                    child: Text('에러 발생: ${snapshot.error}'));
-                              } else {
-                                // 데이터가 없는 경우의 처리
-                                return const Center(child: Text('진짜 없음'));
-                              }
-                            },
-                          ),
-                        ),
+                        // Expanded(
+                        //   child: FutureBuilder(
+                        //     // future: words,
+                        //     future: StoreService.getAllBehaviorsByStore(),
+                        //     builder: (context, snapshot) {
+                        //       if (snapshot.hasError) {
+                        //         return Center(
+                        //             child: Text('에러 발생: ${snapshot.error}'));
+                        //       } else if (snapshot.hasData) {
+                        //         return Column(
+                        //           children: [
+                        //             Expanded(
+                        //               child: ListView.separated(
+                        //                 shrinkWrap: true,
+                        //                 padding: const EdgeInsets.symmetric(
+                        //                     vertical: 10, horizontal: 60),
+                        //                 itemCount: snapshot.data!.length,
+                        //                 itemBuilder: (context, index) {
+                        //                   print(
+                        //                       '길이 : ${snapshot.data!.length}');
+                        //                   var word = snapshot.data![index];
+                        //                   return const Word(
+                        //                     eng: 'word.eng',
+                        //                     kor: 'word.kor',
+                        //                     id: 1,
+                        //                     day: 1,
+                        //                     isDone: true,
+                        //                   );
+                        //                 },
+                        //                 separatorBuilder: (context, index) =>
+                        //                     const SizedBox(
+                        //                   height: 20,
+                        //                 ),
+                        //               ),
+                        //             ),
+                        //           ],
+                        //         );
+                        //       } else if (!snapshot.hasData ||
+                        //           (snapshot.data as List).isEmpty) {
+                        //         return const Center(
+                        //             child: Text('알림 기록이 없습니다.'));
+                        //       } else {
+                        //         return const CircularProgressIndicator();
+                        //       }
+                        //     },
+                        //   ),
+                        // ),
                       ],
                     ),
                     Column(

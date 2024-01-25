@@ -11,6 +11,7 @@ import 'package:usms_app/screens/secondary_password_screen.dart';
 import 'package:usms_app/screens/set_security_level_screen.dart';
 import 'package:usms_app/screens/store_detail_screen.dart';
 import 'package:usms_app/screens/store_detail_screen2.dart';
+import 'package:usms_app/screens/store_notification_screen.dart';
 import 'package:usms_app/screens/test_screen.dart';
 
 class Routes {
@@ -29,6 +30,8 @@ class Routes {
 
   static const String cctvDetail = '/cctv-detail';
   static const String cctvReplay = '/cctv-replay';
+
+  static const String storeNotification = '/store-notification';
 
   // test
   static const String heroTest = '/hero-test';
@@ -51,6 +54,8 @@ class Routes {
         return CCTVReplay(cctvId: cctvId);
       },
       heroTest: (contest) => const TestScreen(),
+
+      // storeNotification: (context) => const StoreNotification(),
       // storeDetail2: (context) => const StoreDetail2()
     };
   }

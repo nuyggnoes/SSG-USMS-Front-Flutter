@@ -3,13 +3,12 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:provider/provider.dart';
+
 import 'package:usms_app/main.dart';
 import 'package:usms_app/models/user_model.dart';
 import 'package:usms_app/routes.dart';
 import 'package:usms_app/screens/register_screen.dart';
 import 'package:usms_app/services/show_dialog.dart';
-import 'package:usms_app/utils/user_provider.dart';
 
 class UserService {
   static const baseUrl = MyApp.url;
@@ -267,7 +266,10 @@ class UserService {
       'identificaitonCode': code,
     };
     // try {
-    //   response = await dio.get('/api/identification', data: param);
+    //   response = await dio.get(
+    //     '/api/identification',
+    //     queryParameters: param,
+    //   );
     //   if (response.statusCode == 200) {
     //     print('====================response 200=====================');
     //     String jwtToken = response.headers['Authorization']?.first ?? '';

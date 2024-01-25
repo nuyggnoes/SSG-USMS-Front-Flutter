@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -30,35 +28,35 @@ class CCTVService {
     );
     Dio dio = Dio(baseoptions);
 
-    try {
-      response = await dio.get('/api/users/$uid/stores/$storeId/cctvs');
-      if (response.statusCode == 200) {
-        // print(
-        //     '====================StoreGetService response 200=====================');
-        // List<Mape<String, dynamic>> stores
-        List<CCTV> cctvList = CCTV.fromMapToCCTVModel(response.data);
-        return cctvList;
-      }
-    } on DioException catch (e) {
-      if (e.response?.statusCode == 400) {
-        // print("[Error] : [$e]");
-        // Future.microtask(() {
-        //   _showErrorDialog('아이디와 비밀번호가 일치하지 않습니다.', context);
-        // });
-        return null;
-      } else {
-        // Future.microtask(() {
-        //   customShowDialog(
-        //       context: context,
-        //       title: '서버 오류',
-        //       message: 'CCTV 정보를 불러오는데 실패하였습니다.',
-        //       onPressed: () {
-        //         Navigator.pop(context);
-        //       });
-        // });
-        print('서버 오류');
-      }
-    }
+    // try {
+    //   response = await dio.get('/api/users/$uid/stores/$storeId/cctvs');
+    //   if (response.statusCode == 200) {
+    //     // print(
+    //     //     '====================StoreGetService response 200=====================');
+    //     // List<Mape<String, dynamic>> stores
+    //     List<CCTV> cctvList = CCTV.fromMapToCCTVModel(response.data);
+    //     return cctvList;
+    //   }
+    // } on DioException catch (e) {
+    //   if (e.response?.statusCode == 400) {
+    //     // print("[Error] : [$e]");
+    //     // Future.microtask(() {
+    //     //   _showErrorDialog('아이디와 비밀번호가 일치하지 않습니다.', context);
+    //     // });
+    //     return null;
+    //   } else {
+    //     // Future.microtask(() {
+    //     //   customShowDialog(
+    //     //       context: context,
+    //     //       title: '서버 오류',
+    //     //       message: 'CCTV 정보를 불러오는데 실패하였습니다.',
+    //     //       onPressed: () {
+    //     //         Navigator.pop(context);
+    //     //       });
+    //     // });
+    //     print('서버 오류');
+    //   }
+    // }
     return null;
   }
 
@@ -133,54 +131,5 @@ class CCTVService {
             Navigator.pop(context); // 200 이면 2번 호출
           });
     });
-  }
-
-  static Future<List<Behavior>> getAllBehaviors() async {
-    List<Behavior> behaviors = [];
-
-    var jSessionId = await storage.read(key: 'cookie');
-    Response response;
-    var baseoptions = BaseOptions(
-      headers: {
-        "Content-Type": "multipart/form-data;",
-        "cookie": jSessionId,
-      },
-      baseUrl: baseUrl,
-    );
-
-    Dio dio = Dio(baseoptions);
-
-    try {
-      // response = await dio.get('/api/users/$uid/stores/$storeId/accidents');
-      response = await dio.get('/api/users/1/stores/1/accidents');
-      if (response.statusCode == 200) {
-        // print(
-        //     '====================StoreGetService response 200=====================');
-        // List<Mape<String, dynamic>> stores
-        List<CCTV> cctvList = CCTV.fromMapToCCTVModel(response.data);
-        return behaviors;
-      }
-    } on DioException catch (e) {
-      if (e.response?.statusCode == 400) {
-        // print("[Error] : [$e]");
-        // Future.microtask(() {
-        //   _showErrorDialog('아이디와 비밀번호가 일치하지 않습니다.', context);
-        // });
-        return behaviors;
-      } else {
-        // Future.microtask(() {
-        //   customShowDialog(
-        //       context: context,
-        //       title: '서버 오류',
-        //       message: 'CCTV 정보를 불러오는데 실패하였습니다.',
-        //       onPressed: () {
-        //         Navigator.pop(context);
-        //       });
-        // });
-        print('딱 봐도 여긴데');
-        return behaviors;
-      }
-    }
-    return behaviors;
   }
 }
