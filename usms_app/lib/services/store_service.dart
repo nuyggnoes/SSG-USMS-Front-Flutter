@@ -103,41 +103,41 @@ class StoreService {
       'size': 10,
     };
 
-    try {
-      response = await dio.get(
-        '/api/users/$uid/stores',
-        queryParameters: param,
-      );
-      if (response.statusCode == 200) {
-        print('=================StoreGetService response 200=================');
-        // List<Mape<String, dynamic>> stores
-        List<Store> storeList = Store.fromMapToStoreModel(response.data);
-        return storeList;
-      }
-    } on DioException catch (e) {
-      if (e.response?.statusCode == 400) {
-        Future.microtask(() {
-          customShowDialog(
-              context: context,
-              title: '잘못된 요청입니다.',
-              message: e.response!.data['message'],
-              onPressed: () {
-                Navigator.pop(context);
-              });
-        });
-        return null;
-      } else {
-        Future.microtask(() {
-          customShowDialog(
-              context: context,
-              title: '서버 오류',
-              message: '유저 정보를 불러오는데 실패하였습니다.\n ${e.message}',
-              onPressed: () {
-                Navigator.pop(context);
-              });
-        });
-      }
-    }
+    // try {
+    //   response = await dio.get(
+    //     '/api/users/$uid/stores',
+    //     queryParameters: param,
+    //   );
+    //   if (response.statusCode == 200) {
+    //     print('=================StoreGetService response 200=================');
+    //     // List<Mape<String, dynamic>> stores
+    //     List<Store> storeList = Store.fromMapToStoreModel(response.data);
+    //     return storeList;
+    //   }
+    // } on DioException catch (e) {
+    //   if (e.response?.statusCode == 400) {
+    //     Future.microtask(() {
+    //       customShowDialog(
+    //           context: context,
+    //           title: '잘못된 요청입니다.',
+    //           message: e.response!.data['message'],
+    //           onPressed: () {
+    //             Navigator.pop(context);
+    //           });
+    //     });
+    //     return null;
+    //   } else {
+    //     Future.microtask(() {
+    //       customShowDialog(
+    //           context: context,
+    //           title: '서버 오류',
+    //           message: '유저 정보를 불러오는데 실패하였습니다.\n ${e.message}',
+    //           onPressed: () {
+    //             Navigator.pop(context);
+    //           });
+    //     });
+    //   }
+    // }
     return null;
   }
 
@@ -158,38 +158,38 @@ class StoreService {
     );
     Dio dio = Dio(baseoptions);
 
-    try {
-      response = await dio.get('/api/users/$uid/stores/$storeId');
-      if (response.statusCode == 200) {
-        // print(
-        //     '====================StoreGetService response 200=====================');
-        // List<Mape<String, dynamic>> stores
-        Store store = Store.fromMap(response.data);
-        return store;
-      }
-    } on DioException catch (e) {
-      if (e.response?.statusCode == 404) {
-        Future.microtask(() {
-          customShowDialog(
-              context: context,
-              title: 'BAD REQUEST',
-              message: '${e.response!.data['message']}',
-              onPressed: () {
-                Navigator.pop(context);
-              });
-        });
-      } else {
-        Future.microtask(() {
-          customShowDialog(
-              context: context,
-              title: '서버 오류',
-              message: '매장 정보를 불러오는데 실패하였습니다.',
-              onPressed: () {
-                Navigator.pop(context);
-              });
-        });
-      }
-    }
+    // try {
+    //   response = await dio.get('/api/users/$uid/stores/$storeId');
+    //   if (response.statusCode == 200) {
+    //     // print(
+    //     //     '====================StoreGetService response 200=====================');
+    //     // List<Mape<String, dynamic>> stores
+    //     Store store = Store.fromMap(response.data);
+    //     return store;
+    //   }
+    // } on DioException catch (e) {
+    //   if (e.response?.statusCode == 404) {
+    //     Future.microtask(() {
+    //       customShowDialog(
+    //           context: context,
+    //           title: 'BAD REQUEST',
+    //           message: '${e.response!.data['message']}',
+    //           onPressed: () {
+    //             Navigator.pop(context);
+    //           });
+    //     });
+    //   } else {
+    //     Future.microtask(() {
+    //       customShowDialog(
+    //           context: context,
+    //           title: '서버 오류',
+    //           message: '매장 정보를 불러오는데 실패하였습니다.',
+    //           onPressed: () {
+    //             Navigator.pop(context);
+    //           });
+    //     });
+    //   }
+    // }
     return null;
   }
 

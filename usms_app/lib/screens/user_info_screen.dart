@@ -111,62 +111,68 @@ class _MyPageScreenState extends State<MyPageScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          const Icon(
-                            Icons.account_circle_rounded,
-                            size: 80,
-                            color: Colors.grey,
-                          ),
-                          const SizedBox(
-                            width: 15,
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                Provider.of<User>(context).nickname,
-                                style: const TextStyle(
-                                  fontSize: 30,
-                                  fontWeight: FontWeight.w800,
+                  Container(
+                    decoration: BoxDecoration(
+                      color: securityColor.withOpacity(0.5),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            const Icon(
+                              Icons.account_circle_rounded,
+                              size: 80,
+                              color: Colors.grey,
+                            ),
+                            const SizedBox(
+                              width: 15,
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  Provider.of<User>(context).nickname,
+                                  style: const TextStyle(
+                                    fontSize: 30,
+                                    fontWeight: FontWeight.w800,
+                                  ),
                                 ),
-                              ),
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 1, horizontal: 4),
-                                decoration: BoxDecoration(color: securityColor),
-                                child: Row(
-                                  children: [
-                                    securityIcon,
-                                    Text(
-                                      ' Lv. ${Provider.of<User>(context).securityLevel} ',
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.w700),
-                                    ),
-                                  ],
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 1, horizontal: 4),
+                                  decoration:
+                                      BoxDecoration(color: securityColor),
+                                  child: Row(
+                                    children: [
+                                      securityIcon,
+                                      Text(
+                                        ' Lv. ${Provider.of<User>(context).securityLevel} ',
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.w700),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          logoutAction();
-                          // userService.logoutAction(() {
-                          //   Navigator.pushNamedAndRemoveUntil(
-                          //       context, '/', (route) => false);
-                          // });
-                        },
-                        child: Text(
-                          "로그아웃 >",
-                          style: TextStyle(color: Colors.red[400]),
+                              ],
+                            ),
+                          ],
                         ),
-                      ),
-                    ],
+                        // TextButton(
+                        //   onPressed: () {
+                        //     logoutAction();
+                        //     // userService.logoutAction(() {
+                        //     //   Navigator.pushNamedAndRemoveUntil(
+                        //     //       context, '/', (route) => false);
+                        //     // });
+                        //   },
+                        //   child: Text(
+                        //     "로그아웃 >",
+                        //     style: TextStyle(color: Colors.red[400]),
+                        //   ),
+                        // ),
+                      ],
+                    ),
                   ),
                   const SizedBox(
                     height: 20,

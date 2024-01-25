@@ -27,6 +27,7 @@ class UserService {
         'Content-Type': 'application/json; charset=utf-8',
       },
       baseUrl: "http://10.0.2.2:3003",
+      // baseUrl: "https://127.0.0.1:3003",
       // baseUrl: baseUrl,
     );
     Dio dio = Dio(baseoptions);
@@ -39,6 +40,7 @@ class UserService {
     try {
       // response = await dio.post('/api/login', data: param);
       response = await dio.post('/login', data: param);
+      print(param);
       if (response.statusCode == 200) {
         print('==============UserService response 200=================');
         var jSessionId = response.headers['cookie']?.first ?? '';
@@ -61,9 +63,9 @@ class UserService {
           );
         }
         // successLogin(context);
-        Future.microtask(() {
-          Navigator.pushNamed(context, Routes.home);
-        });
+        // Future.microtask(() {
+        Navigator.pushNamed(context, Routes.home);
+        // });
       }
     } on DioException catch (e) {
       if (e.response?.statusCode == 400) {
@@ -101,7 +103,7 @@ class UserService {
           customShowDialog(
               context: context,
               title: '서버 오류',
-              message: e.message!,
+              message: '$e',
               onPressed: () {
                 Navigator.pop(context);
               });
@@ -152,21 +154,19 @@ class UserService {
     try {
       response = await dio.post('/api/identification', data: body);
       print(body);
-      if (response.statusCode == 200) {
-        print('====================response 200=====================');
-        // header에 있는 임시 key값 추출 후 인증번호를 보낼 때 header에 포함시킴
+      if (response.statusCode! ~/ 100 == 2) {
+        print('==================== 본인 인증 번호 발송 성공 =====================');
+        print('response headers : ${response.headers}');
         Map<String, List<String>> headers = response.headers.map;
-        String authenticationKey = headers['x-authentication-key']?.first ?? '';
-        print('인증 키 : $authenticationKey');
-        print('인증 키 type : ${authenticationKey.runtimeType}');
-        await storage.write(
-            key: 'x-authentication-key', value: authenticationKey.toString());
-        // _showDialog('', response.data['message'], 0);
+        String authenticateKey = headers['x-authenticate-key']?.first ?? '';
+        print('인증 키 : $authenticateKey');
+        await storage.write(key: 'x-authenticate-key', value: authenticateKey);
+
         Future.microtask(() {
           customShowDialog(
               context: context,
               title: '',
-              message: response.data['message'],
+              message: '${response.data}',
               onPressed: () {
                 Navigator.pop(context);
               });
@@ -255,16 +255,18 @@ class UserService {
     Dio dio = Dio(baseoptions);
 
     var param = {
-      'identificaitonCode': code,
+      'identificationCode': code,
     };
     try {
       response = await dio.get(
         '/api/identification',
         queryParameters: param,
       );
-      if (response.statusCode == 200) {
-        print('====================response 200=====================');
+      if (response.statusCode == 201) {
+        print('==================== 인증번호로 본인 인증 성공 =====================');
+        print('[response headers ${response.headers}]');
         String jwtToken = response.headers['Authorization']?.first ?? '';
+        print('[jwt Token] : $jwtToken');
         await storage.write(key: 'Authorization', value: jwtToken);
 
         Future.microtask(() {
@@ -307,22 +309,22 @@ class UserService {
         });
       }
     }
-    Future.microtask(() {
-      customShowDialog(
-          context: context,
-          title: '',
-          message: '본인 인증 성공',
-          onPressed: () {
-            Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                builder: (context) => RegisterScreen(
-                    data: data, flag: type, routeCode: routeCode),
-              ),
-              ModalRoute.withName('/'),
-            );
-          });
-    });
+    // Future.microtask(() {
+    //   customShowDialog(
+    //       context: context,
+    //       title: '',
+    //       message: '본인 인증 성공',
+    //       onPressed: () {
+    //         Navigator.pushAndRemoveUntil(
+    //           context,
+    //           MaterialPageRoute(
+    //             builder: (context) => RegisterScreen(
+    //                 data: data, flag: type, routeCode: routeCode),
+    //           ),
+    //           ModalRoute.withName('/'),
+    //         );
+    //       });
+    // });
   }
 
   // 회원가입 요청

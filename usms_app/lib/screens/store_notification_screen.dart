@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:usms_app/models/behavior_model.dart';
 
 import 'package:usms_app/services/store_service.dart';
 import 'package:usms_app/utils/user_provider.dart';
@@ -25,6 +26,8 @@ late Map<String, bool> filterButtonStates;
 List<String> paramList = [];
 
 class _StoreNotificationState extends State<StoreNotification> {
+  late Future<List<BehaviorModel>?> _behaviorsFuture;
+
   @override
   void initState() {
     super.initState();
@@ -41,6 +44,22 @@ class _StoreNotificationState extends State<StoreNotification> {
       '투기': false,
       '주취행동': false,
     };
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _behaviorsFuture = _fetchBehaviors();
+  }
+
+  Future<List<BehaviorModel>?> _fetchBehaviors() async {
+    return await StoreService.getAllBehaviorsByStore(
+      storeId: widget.storeId,
+      userId: Provider.of<UserProvider>(context, listen: false).user.id!,
+      startDate: _startDate.toString().split(" ").first,
+      endDate: _endDate.toString().split(" ").first,
+      behaviorCodes: paramList,
+    );
   }
 
   @override
@@ -154,12 +173,20 @@ class _StoreNotificationState extends State<StoreNotification> {
                     onPressed: () {
                       setState(() {
                         paramList = [];
-                        for (var entry in filterButtonStates.entries) {
-                          if (entry.value == true) {
-                            print('매장별 알림 기록 Category: ${entry.key}');
-                            paramList.add(entry.key);
-                          }
-                        }
+                        // for (var entry in filterButtonStates.entries) {
+                        //   if (entry.value == true) {
+                        //     print('매장별 알림 기록 Category: ${entry.key}');
+                        //     paramList.add(entry.key);
+                        //   }
+                        // }
+                        paramList = filterButtonStates.entries
+                            .where((entry) => entry.value)
+                            .map((entry) => entry.key)
+                            .toList();
+                        print(paramList);
+
+                        // 조회 버튼을 눌렀을 때 데이터 불러오기
+                        _behaviorsFuture = _fetchBehaviors();
                       });
                     },
                     child: const Text(
@@ -189,13 +216,14 @@ class _StoreNotificationState extends State<StoreNotification> {
               ),
               Expanded(
                 child: FutureBuilder(
-                  future: StoreService.getAllBehaviorsByStore(
-                    storeId: widget.storeId,
-                    userId: Provider.of<UserProvider>(context).user.id!,
-                    startDate: _startDate.toString().split(" ").first,
-                    endDate: _endDate.toString().split(" ").first,
-                    behaviorCodes: paramList,
-                  ),
+                  // future: StoreService.getAllBehaviorsByStore(
+                  //   storeId: widget.storeId,
+                  //   userId: Provider.of<UserProvider>(context).user.id!,
+                  //   startDate: _startDate.toString().split(" ").first,
+                  //   endDate: _endDate.toString().split(" ").first,
+                  //   behaviorCodes: paramList,
+                  // ),
+                  future: _behaviorsFuture,
                   builder: (context, snapshot) {
                     if (snapshot.hasError) {
                       return Center(child: Text('에러 발생: ${snapshot.error}'));

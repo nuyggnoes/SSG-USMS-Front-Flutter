@@ -30,7 +30,7 @@ class RegisterScreen extends StatefulWidget {
 class _RegisterScreenState extends State<RegisterScreen> {
   final UserService userService = UserService();
 
-  late String buttonName;
+  String buttonName = '회원가입';
 
   late User user;
   final _formKey = GlobalKey<FormState>();

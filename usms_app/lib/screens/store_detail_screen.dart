@@ -219,7 +219,7 @@ class _StoreDetailState extends State<StoreDetail> {
                           height: 20,
                         ),
                         SizedBox(
-                          height: 400,
+                          height: 350,
                           child: GridView.builder(
                             gridDelegate:
                                 const SliverGridDelegateWithFixedCrossAxisCount(
@@ -249,16 +249,6 @@ class _StoreDetailState extends State<StoreDetail> {
                             },
                           ),
                         ),
-                        Container(
-                          width: 300,
-                          height: 100,
-                          decoration: const BoxDecoration(color: Colors.amber),
-                          child: Center(
-                            child: Text(
-                              testText,
-                            ),
-                          ),
-                        )
 
                         // CustomBoxButton(
                         //   buttonText: 'CCTV 현황',
