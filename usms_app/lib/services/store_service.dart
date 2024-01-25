@@ -81,10 +81,11 @@ class StoreService {
   }
 
   // 특정 회원이 소유한 매장들 조회
-  Future<List<Store>?> getUserStoresById(
+  Future<List<Store>?> getStoresByUserId(
       {required BuildContext context, required int uid}) async {
     var jSessionId = await storage.read(key: 'cookie');
     print('[PROVIDER UID = $uid] ');
+    print('[JSESSION_ID = $jSessionId] ');
 
     Response response;
     var baseoptions = BaseOptions(
@@ -92,8 +93,8 @@ class StoreService {
         'Content-Type': 'application/json; charset=utf-8',
         'cookie': jSessionId,
       },
-      // baseUrl: baseUrl,
-      baseUrl: "http://10.0.2.2:3003",
+      baseUrl: baseUrl,
+      // baseUrl: "http://10.0.2.2:3003",
     );
     Dio dio = Dio(baseoptions);
 
@@ -102,41 +103,41 @@ class StoreService {
       'size': 10,
     };
 
-    // try {
-    //   response = await dio.get(
-    //     '/api/users/$uid/stores',
-    //     queryParameters: param,
-    //   );
-    //   if (response.statusCode == 200) {
-    //     print('=================StoreGetService response 200=================');
-    //     // List<Mape<String, dynamic>> stores
-    //     List<Store> storeList = Store.fromMapToStoreModel(response.data);
-    //     return storeList;
-    //   }
-    // } on DioException catch (e) {
-    //   if (e.response?.statusCode == 400) {
-    //     Future.microtask(() {
-    //       customShowDialog(
-    //           context: context,
-    //           title: '로딩 실패',
-    //           message: e.response!.data['message'],
-    //           onPressed: () {
-    //             Navigator.pop(context);
-    //           });
-    //     });
-    //     return null;
-    //   } else {
-    //     Future.microtask(() {
-    //       customShowDialog(
-    //           context: context,
-    //           title: '서버 오류',
-    //           message: '유저 정보를 불러오는데 실패하였습니다.',
-    //           onPressed: () {
-    //             Navigator.pop(context);
-    //           });
-    //     });
-    //   }
-    // }
+    try {
+      response = await dio.get(
+        '/api/users/$uid/stores',
+        queryParameters: param,
+      );
+      if (response.statusCode == 200) {
+        print('=================StoreGetService response 200=================');
+        // List<Mape<String, dynamic>> stores
+        List<Store> storeList = Store.fromMapToStoreModel(response.data);
+        return storeList;
+      }
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 400) {
+        Future.microtask(() {
+          customShowDialog(
+              context: context,
+              title: '잘못된 요청입니다.',
+              message: e.response!.data['message'],
+              onPressed: () {
+                Navigator.pop(context);
+              });
+        });
+        return null;
+      } else {
+        Future.microtask(() {
+          customShowDialog(
+              context: context,
+              title: '서버 오류',
+              message: '유저 정보를 불러오는데 실패하였습니다.\n ${e.message}',
+              onPressed: () {
+                Navigator.pop(context);
+              });
+        });
+      }
+    }
     return null;
   }
 

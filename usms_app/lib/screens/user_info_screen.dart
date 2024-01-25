@@ -36,6 +36,7 @@ class _MyPageScreenState extends State<MyPageScreen> {
     print('userService.logout()');
     Future.microtask(() {
       Navigator.pop(context);
+      Navigator.pop(context);
     });
   }
 

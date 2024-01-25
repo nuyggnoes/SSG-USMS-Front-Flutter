@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:usms_app/main.dart';
-import 'package:usms_app/models/behavior_model.dart';
 import 'package:usms_app/models/cctv_model.dart';
 import 'package:usms_app/services/show_dialog.dart';
 
@@ -17,6 +16,7 @@ class CCTVService {
     required int uid,
   }) async {
     var jSessionId = await storage.read(key: 'cookie');
+    print(jSessionId);
 
     Response response;
     var baseoptions = BaseOptions(

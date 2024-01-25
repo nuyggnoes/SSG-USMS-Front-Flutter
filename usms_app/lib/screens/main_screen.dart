@@ -75,7 +75,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
           customShowDialog(
               context: context,
               title: '반려',
-              message: '반려상태',
+              message: '${store.storeMessage}',
               onPressed: () {
                 Navigator.pop(context);
               });
@@ -135,7 +135,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                   Column(
                     children: [
                       FutureBuilder(
-                        future: storeService.getUserStoresById(
+                        future: storeService.getStoresByUserId(
                             uid: Provider.of<User>(context).id!,
                             context: context),
                         builder: ((context, snapshot) {
@@ -144,15 +144,16 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                             return const CircularProgressIndicator();
                           } else if (snapshot.hasData) {
                             List<Store> storeList = snapshot.data!;
-                            // 1. 리스트를 한번에 Provider로 업데이트
+                            // 1. 리스트를 한번에 Provider로 업데이트(아직 구현 안함)
                             return SizedBox(
                               height: 400,
                               child: ListView.builder(
                                 itemCount: storeList.length,
                                 itemBuilder: (context, index) {
                                   Store store = storeList[index];
-                                  Provider.of<StoreProvider>(context).updateStore(
-                                      store); //2. ListView를 생성할때 Store 각각을 StoreList.add() 를 통해 업데이트
+                                  //2. ListView를 생성할때 Store 각각을 StoreList.add() 를 통해 업데이트
+                                  Provider.of<StoreProvider>(context)
+                                      .updateStore(store);
                                   return CurrencyCard(
                                     name: store.store_name,
                                     code: store.store_state,

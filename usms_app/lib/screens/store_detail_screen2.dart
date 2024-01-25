@@ -9,6 +9,7 @@ import 'package:usms_app/routes.dart';
 import 'package:usms_app/screens/store_notification_screen.dart';
 
 import 'package:usms_app/services/cctv_service.dart';
+import 'package:usms_app/utils/url.dart';
 import 'package:usms_app/utils/user_provider.dart';
 
 import 'package:usms_app/widget/custom_info_button.dart';
@@ -114,8 +115,8 @@ class _StoreDetailState extends State<StoreDetail2> {
 
   ChewieController setController(String cctvStreamKey) {
     ChewieController chewieController;
-    var videoController =
-        VideoPlayerController.networkUrl(Uri.parse(cctvStreamKey));
+    var videoUrl = '${UrlConfig.mediaUrl}/$cctvStreamKey/index.m3u8';
+    var videoController = VideoPlayerController.networkUrl(Uri.parse(videoUrl));
     // if (!videoController.value.isInitialized) {
     //   videoController.initialize();
 
@@ -288,15 +289,19 @@ class _StoreDetailState extends State<StoreDetail2> {
                           itemCount: cctvList.length,
                           itemBuilder: (context, index) {
                             CCTV cctv = cctvList[index];
-                            urlStringList.add(cctv.cctvStreamKey);
+                            if (cctv.isConnected) {
+                              // 미디어 서버와 연결된 상태
+                              var chewieController =
+                                  setController(cctv.cctvStreamKey);
+                              return ChewieListItem(
+                                chewieController: chewieController,
+                                index: index,
+                                routes: Routes.cctvReplay,
+                              );
+                            }
+                            return null;
+                            // urlStringList.add(cctv.cctvStreamKey);
                             // videoController와 chewieController 등록.
-                            var chewieController =
-                                setController(cctv.cctvStreamKey);
-                            return ChewieListItem(
-                              chewieController: chewieController,
-                              index: index,
-                              routes: Routes.cctvReplay,
-                            );
                           },
                           separatorBuilder: (BuildContext context, int index) {
                             return const SizedBox(
@@ -336,8 +341,6 @@ class _StoreDetailState extends State<StoreDetail2> {
                 // ),
                 InkWell(
                   onTap: () {
-                    // print('hi');
-                    // print('$route');
                     Navigator.push(
                         context,
                         MaterialPageRoute(
