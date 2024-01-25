@@ -17,63 +17,67 @@ class StoreService {
     required FormData formData,
     required int uid,
   }) async {
+    var jSessionId = storage.read(key: 'cookie');
     Response response;
     var baseoptions = BaseOptions(
-      headers: {"Content-Type": "multipart/form-data;"},
+      headers: {
+        "Content-Type": "multipart/form-data;",
+        'cookie': jSessionId,
+      },
       baseUrl: baseUrl,
     );
 
     Dio dio = Dio(baseoptions);
-    // try {
-    //   final response = await dio.post('/api/users/$uid/stores', data: formData);
-    //   if (response.statusCode == 200) {
-    //     print('====================requestStore 200=====================');
-    //     Future.microtask(() {
-    //       customShowDialog(
-    //           context: context,
-    //           title: '매장 생성 성공',
-    //           message: '매장 생성에 성공하였습니다.',
-    //           onPressed: () {
-    //             Navigator.popUntil(context, ModalRoute.withName('/home'));
-    //           });
-    //     });
-    //   }
-    // } on DioException catch (e) {
-    //   if (e.response?.statusCode == 400) {
-    //     Future.microtask(() {
-    //       customShowDialog(
-    //           context: context,
-    //           title: '매장 생성 오류',
-    //           message: '${e.response?.data['message']}',
-    //           onPressed: () {
-    //             Navigator.pop(context);
-    //           });
-    //     });
-    //   } else {
-    //     Future.microtask(() {
-    //       customShowDialog(
-    //           context: context,
-    //           title: '서버 오류',
-    //           message: '${e.message}',
-    //           onPressed: () {
-    //             Navigator.pop(context);
-    //           });
-    //     });
-    //   }
-    // }
-    Future.microtask(() {
-      customShowDialog(
-          context: context,
-          title: '매장 생성 성공',
-          message: '매장 생성에 성공하였습니다.',
-          onPressed: () {
-            // Navigator.popUntil(context, ModalRoute.withName('/'));
-            Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (context) => const HomeScreen()),
-                (route) => false);
-          });
-    });
+    try {
+      final response = await dio.post('/api/users/$uid/stores', data: formData);
+      if (response.statusCode == 200) {
+        print('====================requestStore 200=====================');
+        Future.microtask(() {
+          customShowDialog(
+              context: context,
+              title: '매장 생성 성공',
+              message: '매장 생성에 성공하였습니다.',
+              onPressed: () {
+                Navigator.popUntil(context, ModalRoute.withName('/home'));
+              });
+        });
+      }
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 400) {
+        Future.microtask(() {
+          customShowDialog(
+              context: context,
+              title: '매장 생성 오류',
+              message: '${e.response?.data['message']}',
+              onPressed: () {
+                Navigator.pop(context);
+              });
+        });
+      } else {
+        Future.microtask(() {
+          customShowDialog(
+              context: context,
+              title: '서버 오류',
+              message: '${e.message}',
+              onPressed: () {
+                Navigator.pop(context);
+              });
+        });
+      }
+    }
+    // Future.microtask(() {
+    //   customShowDialog(
+    //       context: context,
+    //       title: '매장 생성 성공',
+    //       message: '매장 생성에 성공하였습니다.',
+    //       onPressed: () {
+    //         // Navigator.popUntil(context, ModalRoute.withName('/'));
+    //         Navigator.pushAndRemoveUntil(
+    //             context,
+    //             MaterialPageRoute(builder: (context) => const HomeScreen()),
+    //             (route) => false);
+    //       });
+    // });
   }
 
   // 특정 회원이 소유한 매장들 조회

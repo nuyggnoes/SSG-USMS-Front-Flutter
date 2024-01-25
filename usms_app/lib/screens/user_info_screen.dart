@@ -5,6 +5,7 @@ import 'package:usms_app/models/user_model.dart';
 import 'package:usms_app/routes.dart';
 
 import 'package:usms_app/services/user_service.dart';
+import 'package:usms_app/utils/user_provider.dart';
 import 'package:usms_app/widget/custom_info_button.dart';
 
 class MyPageScreen extends StatefulWidget {
@@ -17,7 +18,7 @@ class MyPageScreen extends StatefulWidget {
 class _MyPageScreenState extends State<MyPageScreen> {
   final FlutterSecureStorage storage = const FlutterSecureStorage();
   final UserService userService = UserService();
-  late User? user;
+  late User user;
 
   String name = '';
   String phone = '';
@@ -33,28 +34,29 @@ class _MyPageScreenState extends State<MyPageScreen> {
     await storage.delete(key: 'cookie');
     await storage.delete(key: 'userInfo');
     print('userService.logout()');
-    // Navigator
-    // 여기에 추가
-    Navigator.pop(context);
+    Future.microtask(() {
+      Navigator.pop(context);
+    });
   }
 
   @override
   void initState() {
-    try {
-      userService.getUserInfo().then((value) {
-        setState(() {
-          user = value;
-          name = user!.nickname;
-          phone = user!.phoneNumber;
-          username = user!.username;
-          email = user!.email;
-          securityState = user!.securityLevel;
-          getSecurityLevel();
-        });
-      });
-    } catch (e) {
-      print("Error in initState: $e");
-    }
+    // try {
+    //   userService.getUserInfo().then((value) {
+    //     setState(() {
+    //       user = value;
+    //       name = user!.nickname;
+    //       phone = user!.phoneNumber;
+    //       username = user!.username;
+    //       email = user!.email;
+    //       securityState = user!.securityLevel;
+    //       getSecurityLevel();
+    //     });
+    //   });
+    // } catch (e) {
+    //   print("Error in initState: $e");
+    // }
+
     super.initState();
   }
 
@@ -85,6 +87,13 @@ class _MyPageScreenState extends State<MyPageScreen> {
 
   @override
   Widget build(BuildContext context) {
+    user = Provider.of<UserProvider>(context).user;
+    name = user.nickname;
+    phone = user.phoneNumber;
+    username = user.username;
+    email = user.email;
+    securityState = user.securityLevel;
+    getSecurityLevel();
     return Scaffold(
       appBar: AppBar(
         title: const Text('마이페이지'),

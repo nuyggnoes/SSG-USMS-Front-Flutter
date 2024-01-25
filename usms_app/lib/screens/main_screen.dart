@@ -77,7 +77,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
               title: '반려',
               message: '반려상태',
               onPressed: () {
-                print('반려반려');
+                Navigator.pop(context);
               });
         });
         break;

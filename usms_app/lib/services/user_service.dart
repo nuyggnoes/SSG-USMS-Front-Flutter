@@ -37,17 +37,18 @@ class UserService {
       'password': password,
     };
     try {
+      // response = await dio.post('/api/login', data: param);
       response = await dio.post('/login', data: param);
       if (response.statusCode == 200) {
         print('==============UserService response 200=================');
-        var JSESSIONID = response.headers['cookie']?.first ?? '';
+        var jSessionId = response.headers['cookie']?.first ?? '';
         // response.data type : Map<String, dynamic>
         // user = User.fromMap(response.data);
         print('[RESPONSE DATA] : ${response.data}');
-        print('[sessionid] : $JSESSIONID');
+        print('[sessionid] : $jSessionId');
         await storage.write(
           key: 'cookie',
-          value: username,
+          value: jSessionId,
         );
         await storage.write(
           key: 'userInfo',
@@ -66,7 +67,6 @@ class UserService {
       }
     } on DioException catch (e) {
       if (e.response?.statusCode == 400) {
-        print("[Error] : [$e]");
         Future.microtask(() {
           customShowDialog(
               context: context,
@@ -123,7 +123,7 @@ class UserService {
   Future<User?> getUserInfo() async {
     final jsonString = await storage.read(key: 'userInfo');
     User? user;
-    print(jsonString);
+    // print(jsonString);
     if (jsonString != null) {
       final Map<String, dynamic> userMap = jsonDecode(jsonString);
       user = User.fromMap(userMap);
@@ -137,110 +137,102 @@ class UserService {
     required int code,
     required String value,
   }) async {
-    print(
-        '===================userService 본인 인증 번호 발송 ====================================================');
+    print('=============== userService 본인 인증 번호 발송 ==================');
     Response response;
     var baseoptions = BaseOptions(
       baseUrl: baseUrl,
     );
     Dio dio = Dio(baseoptions);
 
-    var param = {
+    var body = {
       'code': code,
       'value': value,
     };
-    // try {
-    //   response = await dio.post('/api/identification', data: param);
-    //   print(param);
-    //   if (response.statusCode == 200) {
-    //     print('====================response 200=====================');
-    //     // header에 있는 임시 key값 추출 후 인증번호를 보낼 때 header에 포함시킴
-    //     Map<String, List<String>> headers = response.headers.map;
-    //     String authenticationKey = headers['x-authentication-key']?.first ?? '';
-    //     await storage.write(
-    //         key: 'x-authentication-key', value: authenticationKey.toString());
-    //     // _showDialog('', response.data['message'], 0);
-    //     Future.microtask(() {
-    //       customShowDialog(
-    //           context: context,
-    //           title: '',
-    //           message: response.data['message'],
-    //           onPressed: () {
-    //             Navigator.pop(context);
-    //           });
-    //     });
-    //     return true;
-    //   }
-    // } on DioException catch (e) {
-    //   print('error Box');
-    //   if (e.response?.statusCode == 400) {
-    //     // 400 에러의 body
-    //     print('[ERR Body] : ${e.response?.data}');
+    print(body);
+    try {
+      response = await dio.post('/api/identification', data: body);
+      print(body);
+      if (response.statusCode == 200) {
+        print('====================response 200=====================');
+        // header에 있는 임시 key값 추출 후 인증번호를 보낼 때 header에 포함시킴
+        Map<String, List<String>> headers = response.headers.map;
+        String authenticationKey = headers['x-authentication-key']?.first ?? '';
+        print('인증 키 : $authenticationKey');
+        print('인증 키 type : ${authenticationKey.runtimeType}');
+        await storage.write(
+            key: 'x-authentication-key', value: authenticationKey.toString());
+        // _showDialog('', response.data['message'], 0);
+        Future.microtask(() {
+          customShowDialog(
+              context: context,
+              title: '',
+              message: response.data['message'],
+              onPressed: () {
+                Navigator.pop(context);
+              });
+        });
+        return true;
+      }
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 400) {
+        // 400 에러의 body
+        print('[ERR Body] : ${e.response?.data}');
 
-    //     var errorCode = e.response?.data['code'];
+        var errorCode = e.response?.data['code'];
 
-    //     switch (errorCode) {
-    //       // 코드 번호 상관없이 Body의 message를 dialog에 띄우는거면 한 줄로 처리해도 되지 않을까
-    //       case 605:
-    //         // 존재하지 않는 요청 code인 경우
-    //         Future.microtask(() {
-    //           customShowDialog(
-    //               context: context,
-    //               title: '실패',
-    //               message: e.response!.data['message'],
-    //               onPressed: () {
-    //                 Navigator.pop(context);
-    //               });
-    //         });
-    //         break;
-    //       case 606:
-    //         // 요청 code에 부적절한 value 양식일 경우
-    //         Future.microtask(() {
-    //           customShowDialog(
-    //               context: context,
-    //               title: '실패',
-    //               message: e.response!.data['message'],
-    //               onPressed: () {
-    //                 Navigator.pop(context);
-    //               });
-    //         });
-    //         break;
-    //       case 607:
-    //         // value 값이 DB에 저장되지 않은 경우
-    //         Future.microtask(() {
-    //           customShowDialog(
-    //               context: context,
-    //               title: '실패',
-    //               message: e.response!.data['message'],
-    //               onPressed: () {
-    //                 Navigator.pop(context);
-    //               });
-    //         });
-    //         break;
-    //     }
-    //     return false;
-    //   } else {
-    //     Future.microtask(() {
-    //       customShowDialog(
-    //           context: context,
-    //           title: '서버 오류',
-    //           message: e.message!,
-    //           onPressed: () {
-    //             Navigator.pop(context);
-    //           });
-    //     });
-    //   }
-    // }
-    Future.microtask(() {
-      customShowDialog(
-          context: context,
-          title: '',
-          message: '인증 번호 발송 성공',
-          onPressed: () {
-            Navigator.pop(context);
-          });
-    });
-    return true; // 나중에 false로 수정
+        switch (errorCode) {
+          // 코드 번호 상관없이 Body의 message를 dialog에 띄우는거면 한 줄로 처리해도 되지 않을까
+          case 605:
+            // 존재하지 않는 요청 code인 경우
+            Future.microtask(() {
+              customShowDialog(
+                  context: context,
+                  title: '605 실패',
+                  message: e.response!.data['message'],
+                  onPressed: () {
+                    Navigator.pop(context);
+                  });
+            });
+            break;
+          case 606:
+            // 요청 code에 부적절한 value 양식일 경우
+            Future.microtask(() {
+              customShowDialog(
+                  context: context,
+                  title: '606 실패',
+                  message: e.response!.data['message'],
+                  onPressed: () {
+                    Navigator.pop(context);
+                  });
+            });
+            break;
+          case 607:
+            // value 값이 DB에 저장되지 않은 경우
+            Future.microtask(() {
+              customShowDialog(
+                  context: context,
+                  title: '607 실패',
+                  message: e.response!.data['message'],
+                  onPressed: () {
+                    Navigator.pop(context);
+                  });
+            });
+            break;
+        }
+        return false;
+      } else {
+        Future.microtask(() {
+          customShowDialog(
+              context: context,
+              title: '인증번호 받기 서버 오류',
+              message: e.message!,
+              onPressed: () {
+                Navigator.pop(context);
+              });
+        });
+      }
+    }
+    return false; // 나중에 false로 수정
   }
 
   // 인증번호로 본인 인증 시도
@@ -265,49 +257,56 @@ class UserService {
     var param = {
       'identificaitonCode': code,
     };
-    // try {
-    //   response = await dio.get(
-    //     '/api/identification',
-    //     queryParameters: param,
-    //   );
-    //   if (response.statusCode == 200) {
-    //     print('====================response 200=====================');
-    //     String jwtToken = response.headers['Authorization']?.first ?? '';
-    //     await storage.write(key: 'Authorization', value: jwtToken);
+    try {
+      response = await dio.get(
+        '/api/identification',
+        queryParameters: param,
+      );
+      if (response.statusCode == 200) {
+        print('====================response 200=====================');
+        String jwtToken = response.headers['Authorization']?.first ?? '';
+        await storage.write(key: 'Authorization', value: jwtToken);
 
-    //     Future.microtask(() {
-    //       customShowDialog(
-    //           context: context,
-    //           title: '',
-    //           message: '본인 인증 성공',
-    //           onPressed: () {
-    //             Navigator.pushAndRemoveUntil(
-    //                 context,
-    //                 MaterialPageRoute(
-    //                     builder: (context) => const RegisterScreen(
-    //                         data: '', flag: null, routeCode: true)),
-    //                 (route) => false);
-    //           });
-    //     });
-    //   }
-    // } on DioException catch (e) {
-    //   if (e.response?.statusCode == 400) {
-    //     print("[ERROR] : [$e]");
-    //     // 400 에러의 body
-    //     print('[ERR Body] : ${e.response?.data}');
-    //     // _showDialog('', e.response?.data['message'], 0);
-    //   } else {
-    //     Future.microtask(() {
-    //       customShowDialog(
-    //           context: context,
-    //           title: '서버 오류',
-    //           message: e.message!,
-    //           onPressed: () {
-    //             Navigator.pop(context);
-    //           });
-    //     });
-    //   }
-    // }
+        Future.microtask(() {
+          customShowDialog(
+              context: context,
+              title: '',
+              message: '본인 인증 성공',
+              onPressed: () {
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const RegisterScreen(
+                            data: '', flag: null, routeCode: true)),
+                    (route) => false);
+              });
+        });
+      }
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 400) {
+        print("[ERROR] : [$e]");
+        print('[ERR Body] : ${e.response?.data}');
+        Future.microtask(() {
+          customShowDialog(
+              context: context,
+              title: '400 오류',
+              message: e.message!,
+              onPressed: () {
+                Navigator.pop(context);
+              });
+        });
+      } else {
+        Future.microtask(() {
+          customShowDialog(
+              context: context,
+              title: '인증번호 입력 서버 오류',
+              message: e.message!,
+              onPressed: () {
+                Navigator.pop(context);
+              });
+        });
+      }
+    }
     Future.microtask(() {
       customShowDialog(
           context: context,
@@ -340,55 +339,55 @@ class UserService {
         'Content-Type': 'application/json; charset=utf-8',
         'Authorization': 'Bearer $jwtToken',
       },
-      // baseUrl: baseUrl,
+      baseUrl: baseUrl,
     );
     Dio dio = Dio(baseoptions);
-    // try {
-    //   response = await dio.post('/api/users', data: user.toJson());
+    try {
+      response = await dio.post('/api/users', data: user.toJson());
 
-    //   if (response.statusCode == 200) {
-    //     Future.microtask(() {
-    //       customShowDialog(
-    //         context: context,
-    //         title: '환영합니다.',
-    //         message: '회원가입 성공',
-    //         onPressed: () {
-    //           Navigator.popUntil(context, ModalRoute.withName('/'));
-    //         },
-    //       );
-    //     });
-    //   }
-    // } on DioException catch (e) {
-    //   if (e.response?.statusCode == 400) {
-    //     print("[ERROR] : [$e]");
-    //     // 400 에러의 body
-    //     print('[ERR Body] : ${e.response?.data}');
+      if (response.statusCode == 200) {
+        Future.microtask(() {
+          customShowDialog(
+            context: context,
+            title: '환영합니다.',
+            message: '회원가입 성공',
+            onPressed: () {
+              Navigator.popUntil(context, ModalRoute.withName('/'));
+            },
+          );
+        });
+      }
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 400) {
+        print("[ERROR] : [$e]");
+        // 400 에러의 body
+        print('[ERR Body] : ${e.response?.data}');
 
-    //     var errorCode = e.response?.data['code'];
-    //     Future.microtask(() {
-    //       customShowDialog(
-    //         context: context,
-    //         title: '회원가입 실패',
-    //         message: '${e.response?.data}',
-    //         onPressed: () {
-    //           Navigator.pop(context);
-    //         },
-    //       );
-    //     });
-    //     return false;
-    //   } else {
-    //     Future.microtask(() {
-    //       customShowDialog(
-    //         context: context,
-    //         title: '서버 오류',
-    //         message: '${e.message}',
-    //         onPressed: () {
-    //           Navigator.pop(context);
-    //         },
-    //       );
-    //     });
-    //   }
-    // }
+        var errorCode = e.response?.data['code'];
+        Future.microtask(() {
+          customShowDialog(
+            context: context,
+            title: '회원가입 실패',
+            message: '${e.response?.data}',
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          );
+        });
+        return false;
+      } else {
+        Future.microtask(() {
+          customShowDialog(
+            context: context,
+            title: '서버 오류',
+            message: '${e.message}',
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          );
+        });
+      }
+    }
     Future.microtask(() {
       customShowDialog(
           context: context,
@@ -417,63 +416,64 @@ class UserService {
       baseUrl: baseUrl,
     );
     Dio dio = Dio(baseoptions);
-    // try {
-    //   response = await dio.patch('/api/users/${user.id}', data: user.toJson());
+    try {
+      response = await dio.patch('/api/users/${user.id}', data: user.toJson());
 
-    //   if (response.statusCode == 200) {
-    //     Future.microtask(() {
-    //       Provider.of<UserProvider>(context).updateUser(user);
-    //     });
-    //     // Future.microtask(() {
-    //     //   customShowDialog(
-    //     //     context: context,
-    //     //     title: '',
-    //     //     message: '회원 정보 수정 완료',
-    //     //     onPressed: () {},
-    //     //   );
-    //     // });
-    //   }
-    // } on DioException catch (e) {
-    //   if (e.response?.statusCode == 400) {
-    //     print("[ERROR] : [$e]");
-    //     // 400 에러의 body
-    //     print('[ERR Body] : ${e.response?.data}');
+      if (response.statusCode == 200) {
+        print('회원정보 수정 200');
+        Future.microtask(() {
+          // Provider.of<UserProvider>(context).updateUser(user);
+        });
+        // Future.microtask(() {
+        //   customShowDialog(
+        //     context: context,
+        //     title: '',
+        //     message: '회원 정보 수정 완료',
+        //     onPressed: () {},
+        //   );
+        // });
+      }
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 400) {
+        print("[ERROR] : [$e]");
+        // 400 에러의 body
+        print('[ERR Body] : ${e.response?.data}');
 
-    //     var errorCode = e.response?.data['code'];
-    //     Future.microtask(() {
-    //       customShowDialog(
-    //         context: context,
-    //         title: '회원가입 실패',
-    //         message: '${e.response?.data}',
-    //         onPressed: () {
-    //           Navigator.pop(context);
-    //         },
-    //       );
-    //     });
-    //     return false;
-    //   } else {
-    //     Future.microtask(() {
-    //       customShowDialog(
-    //         context: context,
-    //         title: '서버 오류',
-    //         message: '${e.message}',
-    //         onPressed: () {
-    //           Navigator.pop(context);
-    //         },
-    //       );
-    //     });
-    //   }
-    // }
-    // Future.microtask(() {
-    //   customShowDialog(
-    //       context: context,
-    //       title: '.',
-    //       message: '회원정보 수정이 완료되었습니다.',
-    //       onPressed: () {
-    //         // Navigator.pop(context);
-    //         onPressed();
-    //       });
-    // });
+        var errorCode = e.response?.data['code'];
+        Future.microtask(() {
+          customShowDialog(
+            context: context,
+            title: '회원가입 실패',
+            message: '${e.response?.data}',
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          );
+        });
+        return false;
+      } else {
+        Future.microtask(() {
+          customShowDialog(
+            context: context,
+            title: '서버 오류',
+            message: '${e.message}',
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          );
+        });
+      }
+    }
+    Future.microtask(() {
+      customShowDialog(
+          context: context,
+          title: '.',
+          message: '회원정보 수정이 완료되었습니다.',
+          onPressed: () {
+            // Navigator.pop(context);
+            onPressed();
+          });
+    });
     onPressed();
   }
 }

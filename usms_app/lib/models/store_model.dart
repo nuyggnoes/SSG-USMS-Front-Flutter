@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class Store with ChangeNotifier {
   int? storeId;
+  String? storeMessage;
   final int user_id;
   final String store_name;
   final String store_address;
@@ -11,6 +12,7 @@ class Store with ChangeNotifier {
 
   Store({
     this.storeId,
+    this.storeMessage,
     required this.user_id,
     required this.store_name,
     required this.store_address,
@@ -44,6 +46,7 @@ class Store with ChangeNotifier {
       store_register_code: map['registrationCode'],
       store_registration_img_id: map['registrationImgId'],
       store_state: map['state'],
+      storeMessage: map['message'],
     );
   }
   static List<Store> fromMapToStoreModel(List<Map<String, dynamic>> list) {
