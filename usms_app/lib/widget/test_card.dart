@@ -30,14 +30,7 @@ class CurrencyCard extends StatelessWidget {
     Color? stateTextColor;
 
     switch (code) {
-      case 1:
-        storeStateText = '';
-        stateTextColor = null;
-        // onTapAction = () {
-        //   Navigator.pushNamed(context, Routes.storeDetail2);
-        // };
-        break;
-      case 2:
+      case 0:
         storeStateText = '승인 요청 중';
         stateTextColor = Colors.black.withOpacity(0.5);
       // onTapAction = () {
@@ -49,7 +42,14 @@ class CurrencyCard extends StatelessWidget {
       //         Navigator.pop(context);
       //       });
       // };
-      case 0:
+      case 1:
+        storeStateText = '';
+        stateTextColor = null;
+        // onTapAction = () {
+        //   Navigator.pushNamed(context, Routes.storeDetail2);
+        // };
+        break;
+      case 2:
         storeStateText = '반려';
         stateTextColor = Colors.red.withOpacity(0.8);
       // onTapAction = () {

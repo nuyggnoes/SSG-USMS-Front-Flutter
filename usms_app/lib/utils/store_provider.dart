@@ -6,8 +6,13 @@ class StoreProvider with ChangeNotifier {
 
   List<Store> get storeList => _storeList;
 
-  void updateStore(Store newStore) {
+  void addStore(Store newStore) {
     _storeList.add(newStore);
+    notifyListeners();
+  }
+
+  void removeStore(Store selectedStore) {
+    _storeList.remove(selectedStore);
     notifyListeners();
   }
 }

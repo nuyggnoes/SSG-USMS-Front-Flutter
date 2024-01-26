@@ -1,56 +1,60 @@
 import 'package:flutter/material.dart';
 
 class Store with ChangeNotifier {
-  int? storeId;
-  String? storeMessage;
-  final int user_id;
-  final String store_name;
-  final String store_address;
-  final String store_register_code;
-  final int store_registration_img_id;
-  final int store_state;
+  int? id;
+  String? adminComment;
+  final int userId;
+  final String name;
+  final String address;
+  final String businessLicenseCode;
+  final String businessLicenseImgId;
+  final int storeState;
 
   Store({
-    this.storeId,
-    this.storeMessage,
-    required this.user_id,
-    required this.store_name,
-    required this.store_address,
-    required this.store_register_code,
-    required this.store_registration_img_id,
-    required this.store_state,
+    this.id,
+    this.adminComment,
+    required this.userId,
+    required this.name,
+    required this.address,
+    required this.businessLicenseCode,
+    required this.businessLicenseImgId,
+    required this.storeState,
   });
 
   Store.fromJson(Map<String, dynamic> json)
-      : storeId = json['storeId'],
-        user_id = json["user_id"],
-        store_name = json['store_name'],
-        store_address = json['store_address'],
-        store_register_code = json['store_register_code'],
-        store_registration_img_id = json['store_registration_img_id'],
-        store_state = json['store_state'];
+      : id = json['id'],
+        userId = json["userId"],
+        name = json['name'],
+        address = json['address'],
+        businessLicenseCode = json['businessLicenseCode'],
+        businessLicenseImgId = json['businessLicenseImgId'],
+        storeState = json['storeState'];
 
   Map<String, dynamic> toJson() => {
-        'user_id': user_id,
-        'store_name': store_name,
-        'store_address': store_address,
-        'store_register_code': store_register_code,
-        'store_registration_img_id': store_registration_img_id,
-        'store_state': store_state,
+        'userId': userId,
+        'name': name,
+        'address': address,
+        'businessLicenseCode': businessLicenseCode,
+        'businessLicenseImgId': businessLicenseImgId,
+        'storeState': storeState,
       };
   factory Store.fromMap(Map<String, dynamic> map) {
     return Store(
-      user_id: map['user_id'],
-      store_name: map['name'],
-      store_address: map['address'],
-      store_register_code: map['registrationCode'],
-      store_registration_img_id: map['registrationImgId'],
-      store_state: map['state'],
-      storeMessage: map['message'],
+      id: map['id'],
+      userId: map['userId'],
+      name: map['name'],
+      address: map['address'],
+      businessLicenseCode: map['businessLicenseCode'],
+      businessLicenseImgId: map['businessLicenseImgId'],
+      storeState: map['storeState'],
+      adminComment: map['adminComment'],
     );
   }
-  static List<Store> fromMapToStoreModel(List<Map<String, dynamic>> list) {
-    List<Store> storeList = list.map((json) => Store.fromMap(json)).toList();
+  static List<Store> fromMapToStoreModel(List<dynamic> list) {
+    List<Store> storeList = list.map((json) {
+      return Store.fromMap(json);
+    }).toList();
+
     return storeList;
   }
 }

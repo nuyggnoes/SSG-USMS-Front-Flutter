@@ -1,6 +1,6 @@
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+
 import 'package:provider/provider.dart';
 import 'package:usms_app/models/cctv_model.dart';
 import 'package:usms_app/screens/no_cctv_screen.dart';
@@ -9,6 +9,7 @@ import 'package:usms_app/routes.dart';
 import 'package:usms_app/screens/store_notification_screen.dart';
 
 import 'package:usms_app/services/cctv_service.dart';
+import 'package:usms_app/services/store_service.dart';
 import 'package:usms_app/utils/url.dart';
 import 'package:usms_app/utils/user_provider.dart';
 
@@ -183,7 +184,7 @@ class _StoreDetailState extends State<StoreDetail2> {
           },
         ),
         centerTitle: true,
-        title: const Text('특정 매장 이름'),
+        title: Text('${widget.storeInfo.name}'),
         actions: [
           IconButton(
             onPressed: () {
@@ -385,14 +386,18 @@ class _StoreDetailState extends State<StoreDetail2> {
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.7,
                   child: ElevatedButton(
-                    onPressed: () {
-                      print('cctv 설치방법');
+                    onPressed: () async {
+                      await StoreService.deleteStore(
+                        context: context,
+                        uid: widget.uid,
+                        storeId: widget.storeId,
+                      );
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blueAccent,
                     ),
                     child: const Text(
-                      'CCTV 설치 및 연결 방법',
+                      '매장 삭제',
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w900,

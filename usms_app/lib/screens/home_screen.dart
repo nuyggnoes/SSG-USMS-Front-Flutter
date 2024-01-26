@@ -34,15 +34,15 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     try {
       userService.getUserInfo().then((value) {
         setState(() {
-          user = value;
-          Provider.of<UserProvider>(context, listen: false).updateUser(value!);
-          uid = user!.id;
           widgetOptions = <Widget>[
             const MainScreen(),
             const NotificationListScreen(),
             const StatisticScreen(),
             const MyPageScreen(),
           ];
+          user = value;
+          Provider.of<UserProvider>(context, listen: false).updateUser(value!);
+          uid = user!.id;
         });
       });
     } catch (e) {
@@ -92,7 +92,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         ),
         body: SafeArea(
           child: widgetOptions.isEmpty
-              ? const CircularProgressIndicator()
+              ? const Center(
+                  child: CircularProgressIndicator(),
+                )
               : Container(
                   child: widgetOptions.elementAt(selectedIndex),
                 ),

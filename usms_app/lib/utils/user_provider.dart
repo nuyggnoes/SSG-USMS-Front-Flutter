@@ -9,7 +9,6 @@ class UserProvider with ChangeNotifier {
     email: '',
     phoneNumber: '',
     securityLevel: 0,
-    is_lock: false,
   );
 
   User get user => _user;

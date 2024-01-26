@@ -27,7 +27,6 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   late Animation<Offset> _offsetAnimation;
   late Animation<double> _opacityAnimation;
   final StoreService storeService = StoreService();
-  late List<Store>? storeList;
 
   @override
   void initState() {
@@ -65,20 +64,33 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
 
   checkStoreState(int storeId) async {
     Store? store = await storeService.getStoreInfo(
-        uid: Provider.of<User>(context).id!,
+        uid: Provider.of<User>(context, listen: false).id!,
         storeId: storeId,
         context: context);
+    print("is this null? => $store");
 
-    switch (store!.store_state) {
+    switch (store!.storeState) {
       case 0:
+        // Future.microtask(() {
+        //   customShowDialog(
+        //       context: context,
+        //       title: '대기',
+        //       message: '승인 대기 상태입니다.',
+        //       onPressed: () {
+        //         Navigator.pop(context);
+        //       });
+        // });
         Future.microtask(() {
-          customShowDialog(
-              context: context,
-              title: '반려',
-              message: '${store.storeMessage}',
-              onPressed: () {
-                Navigator.pop(context);
-              });
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => StoreDetail2(
+                uid: Provider.of<UserProvider>(context, listen: false).user.id,
+                storeId: storeId,
+                storeInfo: store,
+              ),
+            ),
+          );
         });
         break;
       case 1:
@@ -99,10 +111,10 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
         Future.microtask(() {
           customShowDialog(
               context: context,
-              title: '승인요청중',
-              message: '승인 요청중',
+              title: '승인 부적절',
+              message: '${store.adminComment}',
               onPressed: () {
-                print('승인요청중');
+                print('승인 부적절');
               });
         });
         break;
@@ -142,7 +154,12 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
                             return const CircularProgressIndicator();
-                          } else if (snapshot.hasData) {
+                          } else if (snapshot.hasError) {
+                            return Text('에러 발생: ${snapshot.error}');
+                          } else if (snapshot.connectionState ==
+                                  ConnectionState.done &&
+                              snapshot.hasData &&
+                              snapshot.data != null) {
                             List<Store> storeList = snapshot.data!;
                             // 1. 리스트를 한번에 Provider로 업데이트(아직 구현 안함)
                             return SizedBox(
@@ -152,31 +169,34 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                                 itemBuilder: (context, index) {
                                   Store store = storeList[index];
                                   //2. ListView를 생성할때 Store 각각을 StoreList.add() 를 통해 업데이트
-                                  Provider.of<StoreProvider>(context)
-                                      .updateStore(store);
+
                                   return CurrencyCard(
-                                    name: store.store_name,
-                                    code: store.store_state,
+                                    name: store.name,
+                                    code: store.storeState,
                                     amount: '',
                                     icon: Icons.store_mall_directory_rounded,
                                     selectedCardColors: Colors.blue.shade200,
                                     animationController: _animationController,
                                     opacityAnimation: _opacityAnimation,
                                     onTapAction: () {
-                                      checkStoreState(store.storeId!);
+                                      checkStoreState(store.id!);
                                     },
                                   );
                                 },
                               ),
                             );
                           } else {
+                            print('${snapshot.hasData}');
+                            print('${snapshot.data}');
+                            print('else');
                             return Container();
                           }
                         }),
                       ),
+                      // storeState : READY(0), APPROVAL(1), DISAPPROVAL(2), STOPPED(3);
                       CurrencyCard(
                         name: 'GS25 무인매장점',
-                        code: 0, // store_state : 승인(1) / 승인요청중(2) / 반려(0)
+                        code: 0,
                         amount: '',
                         icon: Icons.store_mall_directory_rounded,
                         selectedCardColors: Colors.blue.shade200,

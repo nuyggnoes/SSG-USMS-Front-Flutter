@@ -30,7 +30,7 @@ class RegisterScreen extends StatefulWidget {
 class _RegisterScreenState extends State<RegisterScreen> {
   final UserService userService = UserService();
 
-  String buttonName = '회원가입';
+  String buttonName = '수정';
 
   late User user;
   final _formKey = GlobalKey<FormState>();
@@ -97,6 +97,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // if (widget.routeCode == true && widget.flag != null) {
+    //   _phoneTextEditController.text = widget.flag! ? widget.data : '';
+    //   _emailTextEditController.text = widget.flag! ? '' : widget.data;
+    //   buttonName = '회원가입';
+    // } else if (widget.routeCode == false && widget.flag == null) {
+    //   getUserInfo();
+    //   buttonName = '수정';
+    // }
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -138,7 +146,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       labelText: '휴대폰 번호',
                       isEnabled: widget.flag == false || widget.flag == null,
                       counterText: '',
-                      maxLength: 11,
+                      maxLength: 20,
                       textController: _phoneTextEditController,
                       textType: TextInputType.number,
                       validator: (String? value) {

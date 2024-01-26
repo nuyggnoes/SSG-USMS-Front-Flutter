@@ -3,12 +3,15 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:provider/provider.dart';
+import 'package:usms_app/contants/app_constants.dart';
 
 import 'package:usms_app/main.dart';
 import 'package:usms_app/models/user_model.dart';
 import 'package:usms_app/routes.dart';
 import 'package:usms_app/screens/register_screen.dart';
 import 'package:usms_app/services/show_dialog.dart';
+import 'package:usms_app/utils/user_provider.dart';
 
 class UserService {
   static const baseUrl = MyApp.url;
@@ -22,13 +25,14 @@ class UserService {
     required bool autoLogin,
   }) async {
     Response response;
+
     var baseoptions = BaseOptions(
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
       },
-      baseUrl: "http://10.0.2.2:3003",
+      // baseUrl: "http://10.0.2.2:3003",
       // baseUrl: "https://127.0.0.1:3003",
-      // baseUrl: baseUrl,
+      baseUrl: baseUrl,
     );
     Dio dio = Dio(baseoptions);
 
@@ -38,23 +42,28 @@ class UserService {
       'password': password,
     };
     try {
-      // response = await dio.post('/api/login', data: param);
-      response = await dio.post('/login', data: param);
+      response = await dio.post('/api/login', data: param);
+      // response = await dio.post('/login', data: param);
       print(param);
       if (response.statusCode == 200) {
+        String? jSessionId;
         print('==============UserService response 200=================');
-        var jSessionId = response.headers['cookie']?.first ?? '';
-        // response.data type : Map<String, dynamic>
-        // user = User.fromMap(response.data);
+        print('[response.headers : ${response.headers}]');
+
+        var setCookieHeader = response.headers['set-cookie']!.first;
+        print('[set-cookie : $setCookieHeader]');
+
         print('[RESPONSE DATA] : ${response.data}');
+        print('[RESPONSE DATA(User)] : ${response.data["user"]}');
         print('[sessionid] : $jSessionId');
+        print('[USERINFO] : ${jsonEncode(response.data)}');
         await storage.write(
           key: 'cookie',
-          value: jSessionId,
+          value: setCookieHeader,
         );
         await storage.write(
           key: 'userInfo',
-          value: jsonEncode(response.data),
+          value: jsonEncode(response.data["user"]),
         );
         if (autoLogin) {
           await storage.write(
@@ -124,8 +133,8 @@ class UserService {
   // 유저 정보
   Future<User?> getUserInfo() async {
     final jsonString = await storage.read(key: 'userInfo');
+    print('[유저 정보] : $jsonString');
     User? user;
-    // print(jsonString);
     if (jsonString != null) {
       final Map<String, dynamic> userMap = jsonDecode(jsonString);
       user = User.fromMap(userMap);
@@ -139,7 +148,6 @@ class UserService {
     required int code,
     required String value,
   }) async {
-    print('=============== userService 본인 인증 번호 발송 ==================');
     Response response;
     var baseoptions = BaseOptions(
       baseUrl: baseUrl,
@@ -150,23 +158,25 @@ class UserService {
       'code': code,
       'value': value,
     };
-    print(body);
+
     try {
       response = await dio.post('/api/identification', data: body);
-      print(body);
       if (response.statusCode! ~/ 100 == 2) {
         print('==================== 본인 인증 번호 발송 성공 =====================');
         print('response headers : ${response.headers}');
         Map<String, List<String>> headers = response.headers.map;
-        String authenticateKey = headers['x-authenticate-key']?.first ?? '';
+
+        String authenticateKey =
+            headers[AppConstants.xAuthenticateKey]?.first ?? '';
         print('인증 키 : $authenticateKey');
-        await storage.write(key: 'x-authenticate-key', value: authenticateKey);
+        await storage.write(
+            key: AppConstants.xAuthenticateKey, value: authenticateKey);
 
         Future.microtask(() {
           customShowDialog(
               context: context,
-              title: '',
-              message: '${response.data}',
+              title: '인증번호 발송',
+              message: '인증번호가 성공적으로 발송되었습니다.',
               onPressed: () {
                 Navigator.pop(context);
               });
@@ -244,11 +254,11 @@ class UserService {
     required String code,
   }) async {
     print('[인증번호] : $code');
-    var xKey = await storage.read(key: 'x-authenticate-key');
+    var xKey = await storage.read(key: AppConstants.xAuthenticateKey);
     Response response;
     var baseoptions = BaseOptions(
       headers: {
-        'x-authenticate-key': '$xKey',
+        AppConstants.xAuthenticateKey: '$xKey',
       },
       baseUrl: baseUrl,
     );
@@ -265,9 +275,11 @@ class UserService {
       if (response.statusCode == 201) {
         print('==================== 인증번호로 본인 인증 성공 =====================');
         print('[response headers ${response.headers}]');
-        String jwtToken = response.headers['Authorization']?.first ?? '';
+        String jwtToken =
+            response.headers[AppConstants.jwtAuthorizationKey]?.first ?? '';
         print('[jwt Token] : $jwtToken');
-        await storage.write(key: 'Authorization', value: jwtToken);
+        await storage.write(
+            key: AppConstants.jwtAuthorizationKey, value: jwtToken);
 
         Future.microtask(() {
           customShowDialog(
@@ -278,8 +290,8 @@ class UserService {
                 Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const RegisterScreen(
-                            data: '', flag: null, routeCode: true)),
+                        builder: (context) => RegisterScreen(
+                            data: data, flag: type, routeCode: routeCode)),
                     (route) => false);
               });
         });
@@ -309,22 +321,6 @@ class UserService {
         });
       }
     }
-    // Future.microtask(() {
-    //   customShowDialog(
-    //       context: context,
-    //       title: '',
-    //       message: '본인 인증 성공',
-    //       onPressed: () {
-    //         Navigator.pushAndRemoveUntil(
-    //           context,
-    //           MaterialPageRoute(
-    //             builder: (context) => RegisterScreen(
-    //                 data: data, flag: type, routeCode: routeCode),
-    //           ),
-    //           ModalRoute.withName('/'),
-    //         );
-    //       });
-    // });
   }
 
   // 회원가입 요청
@@ -335,11 +331,11 @@ class UserService {
   }) async {
     print(user.toJson());
     Response response;
-    var jwtToken = await storage.read(key: 'Authorization');
+    var jwtToken = await storage.read(key: AppConstants.jwtAuthorizationKey);
     var baseoptions = BaseOptions(
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
-        'Authorization': 'Bearer $jwtToken',
+        AppConstants.jwtAuthorizationKey: '$jwtToken',
       },
       baseUrl: baseUrl,
     );
@@ -347,7 +343,7 @@ class UserService {
     try {
       response = await dio.post('/api/users', data: user.toJson());
 
-      if (response.statusCode == 200) {
+      if (response.statusCode! ~/ 100 == 2) {
         Future.microtask(() {
           customShowDialog(
             context: context,
@@ -390,15 +386,15 @@ class UserService {
         });
       }
     }
-    Future.microtask(() {
-      customShowDialog(
-          context: context,
-          title: '환영합니다.',
-          message: '회원가입 성공',
-          onPressed: () {
-            onPressed();
-          });
-    });
+    // Future.microtask(() {
+    //   customShowDialog(
+    //       context: context,
+    //       title: '환영합니다.',
+    //       message: '회원가입 성공',
+    //       onPressed: () {
+    //         onPressed();
+    //       });
+    // });
   }
 
   // 회원정보 수정

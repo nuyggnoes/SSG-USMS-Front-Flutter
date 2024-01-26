@@ -65,7 +65,6 @@ class _RegisterStoreState extends State<RegisterStore> {
       } else {
         filePath = result.files.single.path;
 
-        var dio = Dio();
         var file = await MultipartFile.fromFile(filePath!);
 
         setState(() {
@@ -74,7 +73,7 @@ class _RegisterStoreState extends State<RegisterStore> {
             'file_size': '${file.length}',
           });
         });
-        formData.files.add(MapEntry('file', file));
+        formData.files.add(MapEntry('businessLicenseImg', file));
         formData.fields.addAll([
           MapEntry('storeName', _storeNameController.text),
           MapEntry('businessLicenseCode',
@@ -84,45 +83,6 @@ class _RegisterStoreState extends State<RegisterStore> {
         ]);
       }
     }
-    // if (result != null) {
-    //   PlatformFile pickedFile = result.files.first;
-
-    //   int maxSizeInBytes = 125 * 1024 * 1024; // 125MB
-    //   if (pickedFile.size > maxSizeInBytes) {
-    //     print('파일용량 초과');
-    //     _showDialog();
-    //   } else {
-    //     filePaths = result.paths; //파일들의 경로 리스트
-
-    //     // 파일 경로를 통해 formData 생성
-    //     // formData = FormData();
-    //     setState(() {
-    //       for (var i = 0; i < filePaths.length; i++) {
-    //         var file = MultipartFile.fromFileSync(filePaths[i]!);
-    //         fileList.add(
-    //           {
-    //             'file': '${file.filename}',
-    //             'file_size': '${file.length}',
-    //           },
-    //         );
-    //         print('파일 : ${file.filename}');
-    //         print('파일 크기 : ${file.length}');
-    //         formData.files.add(MapEntry('key', file));
-    //       }
-    //     });
-    //     // formData.fields.addAll([
-    //     //   MapEntry('storeName', _storeNameController.text),
-    //     //   MapEntry('businessLicenseCode',
-    //     //       '${_storeNumController1.text}-${_storeNumController2.text}-${_storeNumController3.text}'),
-    //     //   MapEntry('storeAddress',
-    //     //       '${_addressTextController.text} ${_detailAddressController.text}'),
-    //     // ]);
-
-    //     // 업로드 요청
-    //   }
-    // } else {
-    //   // 아무런 파일도 선택되지 않음.
-    // }
   }
 
   Widget buildFileList() {
@@ -141,12 +101,19 @@ class _RegisterStoreState extends State<RegisterStore> {
         itemCount: fileList.length,
         itemBuilder: (context, index) {
           Map<String, String> map = fileList[index];
+          String fileName;
+          if (map['file']!.length > 5) {
+            fileName = "${map['file']!.substring(0, 5)} ...";
+          } else {
+            fileName = map['file']!;
+          }
+
           return ListTile(
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  '${map['file']}',
+                  fileName,
                   style: const TextStyle(color: Colors.grey, fontSize: 13),
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,
@@ -168,39 +135,6 @@ class _RegisterStoreState extends State<RegisterStore> {
         },
       );
     }
-  }
-
-  requestStore() async {
-    print(
-        '${_storeNumController1.text}-${_storeNumController2.text}-${_storeNumController3.text}');
-    formData.fields.addAll([
-      MapEntry('storeName', _storeNameController.text),
-      MapEntry('businessLicenseCode',
-          '${_storeNumController1.text}-${_storeNumController2.text}-${_storeNumController3.text}'),
-      MapEntry('storeAddress',
-          '${_addressTextController.text} ${_detailAddressController.text}'),
-    ]);
-    Response response;
-    var baseoptions = BaseOptions(
-      headers: {"Content-Type": "multipart/form-data;"},
-      baseUrl: "https://usms.serveftp.com",
-    );
-
-    Dio dio = Dio(baseoptions);
-    // try {
-    //   // 업로드 요청
-    //   final response = await dio.post('/api/users/1/stores', data: formData);
-    //   if (response.statusCode == 200) {
-    //     print('====================response 200=====================');
-    //   }
-    //   // 여기에서 응답 처리 로직 추가
-    // } on DioException catch (e) {
-    //   if (e.response?.statusCode == 400) {
-    //     print("[Error] : [$e]");
-    //   }
-    // } catch (e) {
-    //   print("[Server ERR] : $e");
-    // }
   }
 
   @override
@@ -434,17 +368,9 @@ class _RegisterStoreState extends State<RegisterStore> {
                     SizedBox(
                       width: MediaQuery.of(context).size.width * 0.7,
                       child: ElevatedButton(
-                        onPressed: () {
+                        onPressed: () async {
                           if (_formKey.currentState?.validate() ?? false) {
-                            formData.fields.addAll([
-                              MapEntry('storeName', _storeNameController.text),
-                              MapEntry('businessLicenseCode',
-                                  '${_storeNumController1.text}-${_storeNumController2.text}-${_storeNumController3.text}'),
-                              MapEntry('storeAddress',
-                                  '${_addressTextController.text} ${_detailAddressController.text}'),
-                            ]);
-                            // requestStore();
-                            storeService.requestStore(
+                            await storeService.requestStore(
                                 formData: formData,
                                 uid: Provider.of<UserProvider>(context,
                                         listen: false)
