@@ -12,7 +12,7 @@ class StoreService {
   static const baseUrl = MyApp.url;
   static const storage = FlutterSecureStorage();
 
-  // 매장 등록
+  // 매장 생성
   requestStore({
     required BuildContext context,
     required FormData formData,
@@ -48,7 +48,7 @@ class StoreService {
         Store newStore = Store.fromMap(response.data);
 
         Future.microtask(() {
-          Provider.of<StoreProvider>(context, listen: false).addStore(newStore);
+          // Provider.of<StoreProvider>(context, listen: false).addStore(newStore);
           customShowDialog(
               context: context,
               title: '매장 생성 성공',

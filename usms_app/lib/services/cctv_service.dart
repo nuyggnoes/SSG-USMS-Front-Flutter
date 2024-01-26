@@ -81,7 +81,7 @@ class CCTVService {
     var body = {
       'name': name,
     };
-    print('$baseUrl/api/users/$uid/stores/$storeId/cctvs');
+    print('cctv 생성 post url : $baseUrl/api/users/$uid/stores/$storeId/cctvs');
 
     Dio dio = Dio(baseoptions);
     try {

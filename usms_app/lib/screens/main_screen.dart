@@ -170,23 +170,35 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                             return SizedBox(
                               height: 400,
                               child: ListView.builder(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 30),
                                 itemCount: storeList.length,
                                 itemBuilder: (context, index) {
                                   Store store = storeList[index];
                                   // setStoreProvider(store);
                                   //2. ListView를 생성할때 Store 각각을 StoreList.add() 를 통해 업데이트
 
-                                  return CurrencyCard(
-                                    name: store.name,
-                                    code: store.storeState,
-                                    amount: '',
-                                    icon: Icons.store_mall_directory_rounded,
-                                    selectedCardColors: Colors.blue.shade200,
-                                    animationController: _animationController,
-                                    opacityAnimation: _opacityAnimation,
-                                    onTapAction: () {
-                                      checkStoreState(store.id!);
-                                    },
+                                  return Column(
+                                    children: [
+                                      CurrencyCard(
+                                        name: store.name,
+                                        code: store.storeState,
+                                        amount: '',
+                                        icon:
+                                            Icons.store_mall_directory_rounded,
+                                        selectedCardColors:
+                                            Colors.blue.shade200,
+                                        animationController:
+                                            _animationController,
+                                        opacityAnimation: _opacityAnimation,
+                                        onTapAction: () {
+                                          checkStoreState(store.id!);
+                                        },
+                                      ),
+                                      const SizedBox(
+                                        height: 30,
+                                      ),
+                                    ],
                                   );
                                 },
                               ),
