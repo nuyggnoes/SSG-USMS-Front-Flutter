@@ -44,8 +44,8 @@ class StoreService {
       response = await dio.post('/api/users/$uid/stores', data: formData);
       if (response.statusCode! ~/ 100 == 2) {
         print('====================requestStore 200=====================');
-        print(response.data);
-        Store newStore = response.data;
+        // print(response.data);
+        Store newStore = Store.fromMap(response.data);
 
         Future.microtask(() {
           Provider.of<StoreProvider>(context, listen: false).addStore(newStore);
@@ -227,8 +227,22 @@ class StoreService {
       response = await dio.delete('/api/users/$uid/stores/$storeId');
       if (response.statusCode! ~/ 100 == 2) {
         print('=============StoreDelete response 200=============');
+        // Response response;
+        // var baseoptions = BaseOptions(
+        //   headers: {
+        //     'Content-Type': 'application/json; charset=utf-8',
+        //     'cookie': jSessionId,
+        //   },
+        //   baseUrl: baseUrl,
+        // );
+        // Dio dio = Dio(baseoptions);
+        // response = await dio.get('/api/users/$uid/stores/$storeId');
+        // Store selectedStore = Store.fromMap(response.data);
+
         // List<Mape<String, dynamic>> stores
         Future.microtask(() {
+          // Provider.of<StoreProvider>(context, listen: false)
+          // .removeStore(selectedStore);
           customShowDialog(
               context: context,
               title: '매장 삭제 완료',

@@ -284,6 +284,7 @@ class _StoreDetailState extends State<StoreDetail2> {
                       return const CircularProgressIndicator();
                     } else if (snapshot.hasData) {
                       List<CCTV> cctvList = snapshot.data!;
+
                       return SizedBox(
                         height: 620,
                         child: ListView.separated(

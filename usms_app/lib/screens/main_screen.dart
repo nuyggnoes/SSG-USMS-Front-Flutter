@@ -62,6 +62,10 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
     super.dispose();
   }
 
+  setStoreProvider(Store storeProviders) {
+    Provider.of<StoreProvider>(context).addStore(storeProviders);
+  }
+
   checkStoreState(int storeId) async {
     Store? store = await storeService.getStoreInfo(
         uid: Provider.of<User>(context, listen: false).id!,
@@ -161,6 +165,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                               snapshot.hasData &&
                               snapshot.data != null) {
                             List<Store> storeList = snapshot.data!;
+                            // setStoreProvider(snapshot.data!);
                             // 1. 리스트를 한번에 Provider로 업데이트(아직 구현 안함)
                             return SizedBox(
                               height: 400,
@@ -168,6 +173,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                                 itemCount: storeList.length,
                                 itemBuilder: (context, index) {
                                   Store store = storeList[index];
+                                  // setStoreProvider(store);
                                   //2. ListView를 생성할때 Store 각각을 StoreList.add() 를 통해 업데이트
 
                                   return CurrencyCard(

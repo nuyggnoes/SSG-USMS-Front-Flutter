@@ -67,13 +67,13 @@ class CCTVService {
     required int uid,
     required String name,
   }) async {
-    print('$storeId, $uid, $name');
+    print('매장id: $storeId, 유저id: $uid, CCTV별칭: $name');
 
     var jSessionId = await storage.read(key: 'cookie');
     Response response;
     var baseoptions = BaseOptions(
       headers: {
-        "Content-Type": "multipart/form-data;",
+        "Content-Type": "application/json; charset=utf-8",
         "cookie": jSessionId,
       },
       baseUrl: baseUrl,
@@ -81,55 +81,51 @@ class CCTVService {
     var body = {
       'name': name,
     };
+    print('$baseUrl/api/users/$uid/stores/$storeId/cctvs');
 
     Dio dio = Dio(baseoptions);
-    // try {
-    //   final response =
-    //       await dio.post('/api/users/$uid/stores/$storeId/cctvs', data: body);
-    //   if (response.statusCode == 200) {
-    //     print('====================requestStore 200=====================');
-    //     Future.microtask(() {
-    //       customShowDialog(
-    //           context: context,
-    //           title: 'CCTV 생성 성공',
-    //           message: 'CCTV 생성에 성공하였습니다.',
-    //           onPressed: () {
-    //             Navigator.popUntil(context, ModalRoute.withName('/home'));
-    //           });
-    //     });
-    //   }
-    // } on DioException catch (e) {
-    //   if (e.response?.statusCode == 400) {
-    //     Future.microtask(() {
-    //       customShowDialog(
-    //           context: context,
-    //           title: '매장 생성 오류',
-    //           message: '${e.response?.data['message']}',
-    //           onPressed: () {
-    //             Navigator.pop(context);
-    //           });
-    //     });
-    //   } else {
-    //     Future.microtask(() {
-    //       customShowDialog(
-    //           context: context,
-    //           title: '서버 오류',
-    //           message: 'CCTV 명 : $name\n StoreId : $storeId\n UserId : $uid',
-    //           onPressed: () {
-    //             Navigator.pop(context);
-    //           });
-    //     });
-    //   }
-    // }
-    Future.microtask(() {
-      customShowDialog(
-          context: context,
-          title: 'CCTV 추가',
-          message: 'CCTV 명 : $name\n StoreId : $storeId\n UserId : $uid',
-          onPressed: () {
-            Navigator.pop(context); // 400 이면 1번 호출
-            Navigator.pop(context); // 200 이면 2번 호출
-          });
-    });
+    try {
+      response =
+          await dio.post('/api/users/$uid/stores/$storeId/cctvs', data: body);
+      if (response.statusCode! ~/ 100 == 2) {
+        print('====================requestStore 200=====================');
+        Future.microtask(() {
+          customShowDialog(
+              context: context,
+              title: 'CCTV 생성 성공',
+              message: 'CCTV 생성에 성공하였습니다.',
+              onPressed: () {
+                Navigator.popUntil(context, ModalRoute.withName('/home'));
+              });
+        });
+      }
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 400) {
+        print('cctv 생성 오류 ${e.response}');
+        Future.microtask(() {
+          customShowDialog(
+              context: context,
+              title: '',
+              message: '${e.response}',
+              onPressed: () {
+                Navigator.pop(context);
+                Navigator.pop(context);
+              });
+        });
+      } else {
+        Future.microtask(() {
+          print('cctv 생성 오류 $e');
+          customShowDialog(
+              context: context,
+              title: '서버 오류',
+              // message:
+              //     'CCTV 명 : $name\n StoreId : $storeId\n UserId : $uid \n ${e.message}',
+              message: '$e',
+              onPressed: () {
+                Navigator.pop(context);
+              });
+        });
+      }
+    }
   }
 }
