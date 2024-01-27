@@ -15,8 +15,17 @@ class StoreProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void removeStore(Store selectedStore) {
-    _storeList.remove(selectedStore);
+  // void removeStore(Store selectedStore) {
+  //   _storeList.remove(selectedStore);
+  //   for (var store in _storeList) {
+  //     print('[이름 : ${store.name}]');
+  //   }
+  //   notifyListeners();
+  // }
+
+  void removeStore(int storeId) {
+    _storeList.removeWhere((store) => store.id == storeId);
+
     notifyListeners();
   }
 

@@ -212,9 +212,6 @@ class StoreService {
     required int uid,
     required int storeId,
   }) async {
-    Store? storeDeleted =
-        await getStoreInfo(context: context, uid: uid, storeId: storeId);
-    print(storeDeleted);
     var jSessionId = await storage.read(key: 'cookie');
 
     Response response;
@@ -227,49 +224,48 @@ class StoreService {
     );
     Dio dio = Dio(baseoptions);
 
-    // try {
-    //   response = await dio.delete('/api/users/$uid/stores/$storeId');
-    //   if (response.statusCode! ~/ 100 == 2) {
-    //     print('=============StoreDelete response 200=============');
+    try {
+      response = await dio.delete('/api/users/$uid/stores/$storeId');
+      if (response.statusCode! ~/ 100 == 2) {
+        print('=============StoreDelete response 200=============');
 
-    //     // List<Mape<String, dynamic>> stores
-    //     Future.microtask(() {
-    //       // Provider.of<StoreProvider>(context, listen: false)
-    //       //     .removeStore(selectedStore);
-
-    //       customShowDialog(
-    //           context: context,
-    //           title: '매장 삭제 완료',
-    //           message: '매장 삭제가 성공적으로 완료되었습니다.',
-    //           onPressed: () {
-    //             Navigator.pop(context);
-    //             Navigator.pop(context);
-    //           });
-    //     });
-    //   }
-    // } on DioException catch (e) {
-    //   if (e.response?.statusCode == 404) {
-    //     Future.microtask(() {
-    //       customShowDialog(
-    //           context: context,
-    //           title: 'BAD REQUEST',
-    //           message: '${e.response!.data['message']}',
-    //           onPressed: () {
-    //             Navigator.pop(context);
-    //           });
-    //     });
-    //   } else {
-    //     Future.microtask(() {
-    //       customShowDialog(
-    //           context: context,
-    //           title: '오류 메시지',
-    //           message: '매장 삭제 실패 : ${e.response}',
-    //           onPressed: () {
-    //             Navigator.pop(context);
-    //           });
-    //     });
-    //   }
-    // }
+        // List<Mape<String, dynamic>> stores
+        Future.microtask(() {
+          Provider.of<StoreProvider>(context, listen: false)
+              .removeStore(storeId);
+          customShowDialog(
+              context: context,
+              title: '매장 삭제 완료',
+              message: '매장 삭제가 성공적으로 완료되었습니다.',
+              onPressed: () {
+                Navigator.pop(context);
+                Navigator.pop(context);
+              });
+        });
+      }
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 404) {
+        Future.microtask(() {
+          customShowDialog(
+              context: context,
+              title: 'BAD REQUEST',
+              message: '${e.response!.data['message']}',
+              onPressed: () {
+                Navigator.pop(context);
+              });
+        });
+      } else {
+        Future.microtask(() {
+          customShowDialog(
+              context: context,
+              title: '오류 메시지',
+              message: '매장 삭제 실패 : ${e.response}',
+              onPressed: () {
+                Navigator.pop(context);
+              });
+        });
+      }
+    }
   }
 
   // 매장별 이상 행동 조회
