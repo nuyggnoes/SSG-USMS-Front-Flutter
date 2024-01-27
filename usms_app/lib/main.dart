@@ -11,7 +11,7 @@ import 'package:usms_app/api/firebase_api.dart';
 import 'package:usms_app/routes.dart';
 
 import 'package:usms_app/screens/cctv_replay_screen.dart';
-import 'package:usms_app/screens/test_screen.dart';
+
 import 'package:usms_app/utils/store_provider.dart';
 import 'package:usms_app/utils/user_provider.dart';
 
@@ -95,11 +95,8 @@ class MyApp extends StatelessWidget {
               );
             // 다른 라우트들에 대한 처리 추가
             // ...
-            default:
-              // 기본적으로 알 수 없는 경로에 대한 처리
-              return MaterialPageRoute(
-                  builder: (context) => const TestScreen());
           }
+          return null;
         },
       ),
     );

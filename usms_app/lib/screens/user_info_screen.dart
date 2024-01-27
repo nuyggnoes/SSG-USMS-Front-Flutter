@@ -264,6 +264,12 @@ class _MyPageScreenState extends State<MyPageScreen> {
                           route: Routes.secondaryPassword,
                           icon: Icons.password_rounded,
                         ),
+                        CustomInfoButton(
+                          buttonText: 'Provider 테스트 화면',
+                          parentContext: context,
+                          route: Routes.provider,
+                          icon: Icons.science,
+                        ),
                         InkWell(
                           onTap: () {
                             showDialog(

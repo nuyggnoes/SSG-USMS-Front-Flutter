@@ -114,13 +114,13 @@ class CCTVService {
         });
       } else {
         Future.microtask(() {
-          print('cctv 생성 오류 $e');
+          print('cctv 생성 오류 ${e.response}');
           customShowDialog(
               context: context,
               title: '서버 오류',
               // message:
               //     'CCTV 명 : $name\n StoreId : $storeId\n UserId : $uid \n ${e.message}',
-              message: '$e',
+              message: '${e.response}',
               onPressed: () {
                 Navigator.pop(context);
               });

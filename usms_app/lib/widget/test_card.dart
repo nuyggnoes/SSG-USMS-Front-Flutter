@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 class CurrencyCard extends StatelessWidget {
@@ -11,6 +13,21 @@ class CurrencyCard extends StatelessWidget {
   final AnimationController animationController;
   final Animation<double> opacityAnimation;
   void Function()? onTapAction;
+
+  List<IconData> randomIconData = [
+    Icons.store_mall_directory_rounded,
+    Icons.storefront_outlined,
+    Icons.apartment_rounded,
+  ];
+
+  Color getRandomColor() {
+    Random random = Random();
+    int red = random.nextInt(256); // 0부터 255까지의 랜덤한 빨강 값
+    int green = random.nextInt(256); // 0부터 255까지의 랜덤한 초록 값
+    int blue = random.nextInt(256); // 0부터 255까지의 랜덤한 파랑 값
+
+    return Color.fromARGB(255, red, green, blue);
+  }
 
   CurrencyCard({
     super.key,
@@ -71,10 +88,9 @@ class CurrencyCard extends StatelessWidget {
           child: GestureDetector(
             onTap: onTapAction,
             child: Container(
-              // 컨테이너 밖으로 튀어나온 아이콘 잘라줌
               clipBehavior: Clip.hardEdge,
               decoration: BoxDecoration(
-                color: selectedCardColors,
+                color: getRandomColor(),
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Padding(
@@ -133,7 +149,7 @@ class CurrencyCard extends StatelessWidget {
                         child: Transform.translate(
                           offset: const Offset(1, 13),
                           child: Icon(
-                            icon,
+                            randomIconData[Random().nextInt(3)],
                             color: Colors.white,
                             size: 70,
                           ),

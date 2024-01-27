@@ -332,7 +332,7 @@ class _StoreDetailState extends State<StoreDetail2> {
                 CustomInfoButton(
                   buttonText: 'CCTV 설치 및 연결 방법',
                   parentContext: context,
-                  route: Routes.payInfo,
+                  route: Routes.cctvManual,
                   icon: Icons.collections_bookmark_rounded,
                 ),
                 // CustomInfoButton(

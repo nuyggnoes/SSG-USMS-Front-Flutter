@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:usms_app/models/store_model.dart';
 import 'package:usms_app/models/user_model.dart';
 import 'package:usms_app/routes.dart';
+import 'package:usms_app/screens/register_store_screen.dart';
 import 'package:usms_app/screens/store_detail_screen2.dart';
 import 'package:usms_app/services/show_dialog.dart';
 import 'package:usms_app/services/store_service.dart';
@@ -67,7 +68,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   }
 
   checkStoreState(int storeId) async {
-    Store? store = await storeService.getStoreInfo(
+    Store? store = await StoreService.getStoreInfo(
         uid: Provider.of<User>(context, listen: false).id!,
         storeId: storeId,
         context: context);
@@ -125,8 +126,15 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
     }
   }
 
+  double listViewHeightCalculation(int storeListLength) {
+    double cardHeight = 150.0;
+    double totalHeight = cardHeight * storeListLength;
+    return totalHeight;
+  }
+
   @override
   Widget build(BuildContext context) {
+    var height = 150.0;
     return Scaffold(
       appBar: AppBar(
         title: const Text(''),
@@ -168,16 +176,18 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                             // setStoreProvider(snapshot.data!);
                             // 1. 리스트를 한번에 Provider로 업데이트(아직 구현 안함)
                             return SizedBox(
-                              height: 400,
+                              height:
+                                  listViewHeightCalculation(storeList.length),
                               child: ListView.builder(
+                                shrinkWrap: true,
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 30),
                                 itemCount: storeList.length,
                                 itemBuilder: (context, index) {
+                                  height = height * storeList.length;
                                   Store store = storeList[index];
                                   // setStoreProvider(store);
                                   //2. ListView를 생성할때 Store 각각을 StoreList.add() 를 통해 업데이트
-
                                   return Column(
                                     children: [
                                       CurrencyCard(
@@ -196,7 +206,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                                         },
                                       ),
                                       const SizedBox(
-                                        height: 30,
+                                        height: 20,
                                       ),
                                     ],
                                   );
@@ -211,6 +221,46 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                           }
                         }),
                       ),
+                      //================================================================
+                      Consumer<StoreProvider>(
+                        builder: (context, storeProvider, _) {
+                          List<Store> storeList = storeProvider.storeList;
+                          return SizedBox(
+                            height: listViewHeightCalculation(storeList.length),
+                            child: ListView.builder(
+                              shrinkWrap: true,
+                              padding: const EdgeInsets.symmetric(vertical: 30),
+                              itemCount: storeList.length,
+                              itemBuilder: (context, index) {
+                                height = height * storeList.length;
+                                Store store = storeList[index];
+                                // setStoreProvider(store);
+                                //2. ListView를 생성할때 Store 각각을 StoreList.add() 를 통해 업데이트
+                                return Column(
+                                  children: [
+                                    CurrencyCard(
+                                      name: store.name,
+                                      code: store.storeState,
+                                      amount: '',
+                                      icon: Icons.store_mall_directory_rounded,
+                                      selectedCardColors: Colors.blue.shade200,
+                                      animationController: _animationController,
+                                      opacityAnimation: _opacityAnimation,
+                                      onTapAction: () {
+                                        checkStoreState(store.id!);
+                                      },
+                                    ),
+                                    const SizedBox(
+                                      height: 20,
+                                    ),
+                                  ],
+                                );
+                              },
+                            ),
+                          );
+                        },
+                      ),
+                      // =========================================================================
                       // storeState : READY(0), APPROVAL(1), DISAPPROVAL(2), STOPPED(3);
                       CurrencyCard(
                         name: 'GS25 무인매장점',
