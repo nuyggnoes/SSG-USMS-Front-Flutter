@@ -414,64 +414,53 @@ class UserService {
       baseUrl: baseUrl,
     );
     Dio dio = Dio(baseoptions);
-    try {
-      response = await dio.patch('/api/users/${user.id}', data: user.toJson());
+    // try {
+    //   response = await dio.patch('/api/users/${user.id}', data: user.toJson());
 
-      if (response.statusCode == 200) {
-        print('회원정보 수정 200');
-        Future.microtask(() {
-          // Provider.of<UserProvider>(context).updateUser(user);
-        });
-        // Future.microtask(() {
-        //   customShowDialog(
-        //     context: context,
-        //     title: '',
-        //     message: '회원 정보 수정 완료',
-        //     onPressed: () {},
-        //   );
-        // });
-      }
-    } on DioException catch (e) {
-      if (e.response?.statusCode == 400) {
-        print("[ERROR] : [$e]");
-        // 400 에러의 body
-        print('[ERR Body] : ${e.response?.data}');
+    //   if (response.statusCode == 200) {
+    //     print('회원정보 수정 200');
+    //     Future.microtask(() {
+    //       // Provider.of<UserProvider>(context).updateUser(user);
+    //     });
+    //     // Future.microtask(() {
+    //     //   customShowDialog(
+    //     //     context: context,
+    //     //     title: '',
+    //     //     message: '회원 정보 수정 완료',
+    //     //     onPressed: () {},
+    //     //   );
+    //     // });
+    //   }
+    // } on DioException catch (e) {
+    //   if (e.response?.statusCode == 400) {
+    //     print("[ERROR] : [$e]");
+    //     // 400 에러의 body
+    //     print('[ERR Body] : ${e.response?.data}');
 
-        var errorCode = e.response?.data['code'];
-        Future.microtask(() {
-          customShowDialog(
-            context: context,
-            title: '회원가입 실패',
-            message: '${e.response?.data}',
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          );
-        });
-        return false;
-      } else {
-        Future.microtask(() {
-          customShowDialog(
-            context: context,
-            title: '서버 오류',
-            message: '${e.message}',
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          );
-        });
-      }
-    }
-    Future.microtask(() {
-      customShowDialog(
-          context: context,
-          title: '.',
-          message: '회원정보 수정이 완료되었습니다.',
-          onPressed: () {
-            // Navigator.pop(context);
-            onPressed();
-          });
-    });
-    onPressed();
+    //     var errorCode = e.response?.data['code'];
+    //     Future.microtask(() {
+    //       customShowDialog(
+    //         context: context,
+    //         title: '회원가입 실패',
+    //         message: '${e.response?.data}',
+    //         onPressed: () {
+    //           Navigator.pop(context);
+    //         },
+    //       );
+    //     });
+    //     return false;
+    //   } else {
+    //     Future.microtask(() {
+    //       customShowDialog(
+    //         context: context,
+    //         title: '서버 오류',
+    //         message: '${e.message}',
+    //         onPressed: () {
+    //           Navigator.pop(context);
+    //         },
+    //       );
+    //     });
+    //   }
+    // }
   }
 }

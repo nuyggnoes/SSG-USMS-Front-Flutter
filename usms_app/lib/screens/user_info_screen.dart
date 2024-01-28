@@ -5,6 +5,7 @@ import 'package:usms_app/models/user_model.dart';
 import 'package:usms_app/routes.dart';
 
 import 'package:usms_app/services/user_service.dart';
+import 'package:usms_app/utils/store_provider.dart';
 import 'package:usms_app/utils/user_provider.dart';
 import 'package:usms_app/widget/custom_info_button.dart';
 
@@ -112,9 +113,9 @@ class _MyPageScreenState extends State<MyPageScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    decoration: BoxDecoration(
-                      color: securityColor.withOpacity(0.5),
-                    ),
+                    decoration: const BoxDecoration(
+                        // color: securityColor.withOpacity(0.5),
+                        ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -141,13 +142,17 @@ class _MyPageScreenState extends State<MyPageScreen> {
                                 Container(
                                   padding: const EdgeInsets.symmetric(
                                       vertical: 1, horizontal: 4),
-                                  decoration:
-                                      BoxDecoration(color: securityColor),
+                                  decoration: BoxDecoration(
+                                    color: securityColor.withOpacity(0.8),
+                                    borderRadius: const BorderRadius.all(
+                                      Radius.circular(5),
+                                    ),
+                                  ),
                                   child: Row(
                                     children: [
                                       securityIcon,
                                       Text(
-                                        ' Lv. ${Provider.of<User>(context).securityLevel} ',
+                                        '보안 Lv. ${Provider.of<User>(context).securityLevel} ',
                                         style: const TextStyle(
                                             fontWeight: FontWeight.w700),
                                       ),
@@ -158,19 +163,6 @@ class _MyPageScreenState extends State<MyPageScreen> {
                             ),
                           ],
                         ),
-                        // TextButton(
-                        //   onPressed: () {
-                        //     logoutAction();
-                        //     // userService.logoutAction(() {
-                        //     //   Navigator.pushNamedAndRemoveUntil(
-                        //     //       context, '/', (route) => false);
-                        //     // });
-                        //   },
-                        //   child: Text(
-                        //     "로그아웃 >",
-                        //     style: TextStyle(color: Colors.red[400]),
-                        //   ),
-                        // ),
                       ],
                     ),
                   ),
@@ -216,9 +208,9 @@ class _MyPageScreenState extends State<MyPageScreen> {
                                   color: Colors.grey[600],
                                 ),
                               ),
-                              const Text(
-                                '0개',
-                                style: TextStyle(
+                              Text(
+                                '${Provider.of<StoreProvider>(context).storeList.length}개',
+                                style: const TextStyle(
                                     fontWeight: FontWeight.w800, fontSize: 30),
                               ),
                             ],

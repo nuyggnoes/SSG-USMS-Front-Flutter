@@ -36,7 +36,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         setState(() {
           widgetOptions = <Widget>[
             const MainScreen(),
-            const NotificationListScreen(),
+            const NotificationListScreen(
+              storeId: 30,
+            ),
             const StatisticScreen(),
             const MyPageScreen(),
           ];

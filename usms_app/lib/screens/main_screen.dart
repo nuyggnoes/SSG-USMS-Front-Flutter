@@ -228,6 +228,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                           return SizedBox(
                             height: listViewHeightCalculation(storeList.length),
                             child: ListView.builder(
+                              physics: const NeverScrollableScrollPhysics(),
                               shrinkWrap: true,
                               padding: const EdgeInsets.symmetric(vertical: 30),
                               itemCount: storeList.length,

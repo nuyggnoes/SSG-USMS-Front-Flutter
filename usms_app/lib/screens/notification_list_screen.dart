@@ -8,8 +8,8 @@ import 'package:usms_app/services/word_json.dart';
 import 'package:usms_app/widget/word_widget.dart';
 
 class NotificationListScreen extends StatefulWidget {
-  const NotificationListScreen({super.key});
-
+  const NotificationListScreen({super.key, required this.storeId});
+  final int storeId;
   @override
   State<NotificationListScreen> createState() => _NotificationListScreenState();
 }
@@ -20,7 +20,6 @@ class _NotificationListScreenState extends State<NotificationListScreen>
   // final Future<List<WordModel>> words = WordJson.getWords();
   // final Future<List<BehaviorModel>> abnormalBehaviors =
   //     CCTVService.getAllBehaviorsByStore();
-  // 매장 알림이면 매장 아이디가 필요한게 아니라 userId만 있으면 되는거 아닌가.
 
   DateTime? _startDate;
   DateTime? _endDate;
@@ -67,7 +66,12 @@ class _NotificationListScreenState extends State<NotificationListScreen>
     return Scaffold(
       appBar: AppBar(
         title: const Text('지난 알림 목록'),
-        leading: const Icon(Icons.notifications),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_new_rounded),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: SafeArea(
         child: Center(
@@ -96,7 +100,7 @@ class _NotificationListScreenState extends State<NotificationListScreen>
                 unselectedLabelColor: Colors.black54,
                 tabs: const <Widget>[
                   Tab(
-                    text: "개인 알림 기록",
+                    text: "매장 알림 기록",
                   ),
                   Tab(
                     text: "업주 긴급 알림",

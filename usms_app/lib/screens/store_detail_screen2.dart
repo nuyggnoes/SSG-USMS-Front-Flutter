@@ -6,6 +6,7 @@ import 'package:usms_app/models/cctv_model.dart';
 import 'package:usms_app/screens/no_cctv_screen.dart';
 
 import 'package:usms_app/routes.dart';
+import 'package:usms_app/screens/notification_list_screen.dart';
 import 'package:usms_app/screens/store_notification_screen.dart';
 
 import 'package:usms_app/services/cctv_service.dart';
@@ -317,13 +318,6 @@ class _StoreDetailState extends State<StoreDetail2> {
                     }
                   }),
                 ),
-                Container(
-                  height: 5,
-                  width: 400,
-                  decoration: const BoxDecoration(
-                    color: Colors.grey,
-                  ),
-                ),
 
                 const SizedBox(
                   height: 20,
@@ -344,11 +338,11 @@ class _StoreDetailState extends State<StoreDetail2> {
                 InkWell(
                   onTap: () {
                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => StoreNotification(
-                                  storeId: widget.storeId,
-                                )));
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              NotificationListScreen(storeId: widget.storeId)),
+                    );
                   },
                   child: Container(
                     padding: const EdgeInsets.symmetric(

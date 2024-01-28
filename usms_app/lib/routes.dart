@@ -19,22 +19,22 @@ class Routes {
   static const String login = '/';
   static const String identityVerification = '/identity-verification';
   static const String registerUser = '/register-user';
+
   static const String home = '/home';
+  // store
   static const String registerStore = '/register-store';
   static const String storeDetail = '/store-detail';
   static const String storeDetail2 = '/home/store-detail2';
-
-  static const String payInfo = '/pay-info';
-
-  static const String securitySetting = '/security-setting';
-  static const String secondaryPassword = '/secondary-password';
-
+  static const String storeNotification = '/store-notification';
+  // cctv
   static const String cctvDetail = '/cctv-detail';
   static const String cctvReplay = '/cctv-replay';
   static const String cctvManual = '/cctv-manual';
 
-  static const String storeNotification = '/store-notification';
+  static const String securitySetting = '/security-setting';
+  static const String secondaryPassword = '/secondary-password';
 
+  static const String payInfo = '/pay-info';
   // test
   static const String heroTest = '/hero-test';
   static const String provider = '/provider';

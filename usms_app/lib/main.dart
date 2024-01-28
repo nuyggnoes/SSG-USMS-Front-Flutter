@@ -88,13 +88,10 @@ class MyApp extends StatelessWidget {
         onGenerateRoute: (settings) {
           switch (settings.name) {
             case Routes.cctvReplay:
-              // settings.arguments를 통해 전달된 값을 얻어옴
               final int cctvId = settings.arguments as int;
               return MaterialPageRoute(
                 builder: (context) => CCTVReplay(cctvId: cctvId),
               );
-            // 다른 라우트들에 대한 처리 추가
-            // ...
           }
           return null;
         },

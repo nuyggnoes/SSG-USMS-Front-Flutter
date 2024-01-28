@@ -259,13 +259,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   user: user,
                                   onPressed: _pagePopAction);
                             } else {
+                              user = User(
+                                username: _usernameController.text,
+                                password: _passwordTextEditController.text,
+                                email: _emailTextEditController.text,
+                                nickname: _nameController.text,
+                                phoneNumber: _phoneTextEditController.text,
+                              );
                               // 회원정보 수정 요청
                               userService.editUserInfo(
                                   context: context,
-                                  user: Provider.of<UserProvider>(
-                                    context,
-                                    listen: false,
-                                  ).user,
+                                  user: user,
                                   onPressed: () {
                                     Navigator.pop(context);
                                   });
