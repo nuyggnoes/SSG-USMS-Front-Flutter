@@ -11,6 +11,7 @@ import 'package:usms_app/api/firebase_api.dart';
 import 'package:usms_app/routes.dart';
 
 import 'package:usms_app/screens/cctv_replay_screen.dart';
+import 'package:usms_app/utils/cctv_provider.dart';
 
 import 'package:usms_app/utils/store_provider.dart';
 import 'package:usms_app/utils/user_provider.dart';
@@ -52,6 +53,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) => StoreProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => CCTVProvider(),
         ),
       ],
       child: MaterialApp(
