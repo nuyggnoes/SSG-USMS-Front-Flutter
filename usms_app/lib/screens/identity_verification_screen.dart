@@ -12,9 +12,8 @@ import 'package:usms_app/services/user_service.dart';
   - 회원정보 수정 ?
  */
 class VerificationScreen extends StatefulWidget {
-  const VerificationScreen({super.key});
-  static const route = '/identity-verification';
-
+  const VerificationScreen({super.key, required this.flagId});
+  final int flagId;
   @override
   State<VerificationScreen> createState() => _VerificationScreenState();
 }
@@ -308,13 +307,17 @@ class _VerificationScreenState extends State<VerificationScreen>
                           if (codeForm.currentState?.validate() ?? false) {
                             codeForm.currentState!.save();
                             // requestVerification(_code);
-                            userService.requestVerification(
-                              context: context,
-                              data: _authenticationMethod,
-                              type: methodState,
-                              routeCode: true,
-                              code: _code,
-                            );
+                            // JWT 토큰으로 유저정보(아이디)를 가져오는데
+                            // email이 중복 가능이면 유저정보를 List로 가져와야함
+                            if (widget.flagId == 1) {
+                              userService.requestVerification(
+                                context: context,
+                                data: _authenticationMethod,
+                                type: methodState,
+                                routeCode: true,
+                                code: _code,
+                              );
+                            }
                           }
                         },
                         style: ButtonStyle(

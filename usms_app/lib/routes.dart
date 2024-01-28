@@ -42,7 +42,10 @@ class Routes {
   static Map<String, WidgetBuilder> get routes {
     return {
       login: (context) => const Login(),
-      identityVerification: (context) => const VerificationScreen(),
+      identityVerification: (context) {
+        int flagId = ModalRoute.of(context)!.settings.arguments as int;
+        return VerificationScreen(flagId: flagId);
+      },
       registerUser: (context) =>
           const RegisterScreen(data: '', flag: null, routeCode: false),
       home: (context) => const HomeScreen(),

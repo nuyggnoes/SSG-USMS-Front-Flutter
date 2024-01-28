@@ -224,7 +224,8 @@ class _LoginState extends State<Login> {
                         onPressed: () {
                           print('아이디 찾기');
                           Navigator.pushNamed(
-                              context, Routes.identityVerification);
+                              context, Routes.identityVerification,
+                              arguments: 0);
                         },
                         child: const Text(
                           '아이디 찾기 ',
@@ -261,7 +262,8 @@ class _LoginState extends State<Login> {
                       TextButton(
                         onPressed: () {
                           Navigator.pushNamed(
-                              context, Routes.identityVerification);
+                              context, Routes.identityVerification,
+                              arguments: 1);
                         },
                         child: const Text(
                           '회원가입',
