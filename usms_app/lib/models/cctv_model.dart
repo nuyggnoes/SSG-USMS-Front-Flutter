@@ -31,15 +31,15 @@ class CCTV {
       };
   factory CCTV.fromMap(Map<String, dynamic> map) {
     return CCTV(
-      cctvId: map['cctvId'],
+      cctvId: map['id'],
       cctvName: map['cctvName'],
       storeId: map['storeId'],
       cctvStreamKey: map['cctvStreamKey'],
-      isExpire: map['isExpire'],
+      isExpire: map['expired'],
       isConnected: map['isConnected'],
     );
   }
-  static List<CCTV> fromMapToCCTVModel(List<Map<String, dynamic>> list) {
+  static List<CCTV> fromMapToCCTVModel(List<dynamic> list) {
     List<CCTV> storeList = list.map((json) => CCTV.fromMap(json)).toList();
     return storeList;
   }

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:usms_app/models/cctv_model.dart';
 
 class CCTVReplay extends StatefulWidget {
-  const CCTVReplay({super.key, required this.cctvId});
-  final int cctvId;
+  const CCTVReplay({super.key, required this.cctv});
+  final CCTV cctv;
 
   @override
   State<CCTVReplay> createState() => _CalendarScreenState();
@@ -17,7 +18,7 @@ class _CalendarScreenState extends State<CCTVReplay> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('CCTV 다시보기 ${widget.cctvId}'),
+        title: Text('${widget.cctv.cctvName} CCTV 다시보기'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new_rounded),
           onPressed: () {

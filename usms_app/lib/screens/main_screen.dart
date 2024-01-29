@@ -76,15 +76,17 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
 
     switch (store!.storeState) {
       case 0:
-        // Future.microtask(() {
-        //   customShowDialog(
-        //       context: context,
-        //       title: '대기',
-        //       message: '승인 대기 상태입니다.',
-        //       onPressed: () {
-        //         Navigator.pop(context);
-        //       });
-        // });
+        Future.microtask(() {
+          customShowDialog(
+              context: context,
+              title: '승인 대기',
+              message: '해당 매장은 관리자 승인 대기 상태입니다.',
+              onPressed: () {
+                Navigator.pop(context);
+              });
+        });
+        break;
+      case 1:
         Future.microtask(() {
           Navigator.push(
             context,
@@ -96,20 +98,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
               ),
             ),
           );
-        });
-        break;
-      case 1:
-        Future.microtask(() {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => StoreDetail2(
-                uid: Provider.of<UserProvider>(context).user.id,
-                storeId: storeId,
-                storeInfo: store,
-              ),
-            ),
-          );
+          print('승인된 매장');
         });
         break;
       case 2:
@@ -173,8 +162,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                               snapshot.hasData &&
                               snapshot.data != null) {
                             List<Store> storeList = snapshot.data!;
-                            // setStoreProvider(snapshot.data!);
-                            // 1. 리스트를 한번에 Provider로 업데이트(아직 구현 안함)
+
                             return SizedBox(
                               height:
                                   listViewHeightCalculation(storeList.length),
@@ -214,9 +202,6 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                               ),
                             );
                           } else {
-                            print('${snapshot.hasData}');
-                            print('${snapshot.data}');
-                            print('else');
                             return Container();
                           }
                         }),

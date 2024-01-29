@@ -8,6 +8,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 // api
 import 'package:usms_app/api/firebase_api.dart';
+import 'package:usms_app/models/cctv_model.dart';
 import 'package:usms_app/routes.dart';
 
 import 'package:usms_app/screens/cctv_replay_screen.dart';
@@ -89,16 +90,16 @@ class MyApp extends StatelessWidget {
         navigatorKey: navigatorKey,
         initialRoute: Routes.login,
         routes: Routes.routes,
-        onGenerateRoute: (settings) {
-          switch (settings.name) {
-            case Routes.cctvReplay:
-              final int cctvId = settings.arguments as int;
-              return MaterialPageRoute(
-                builder: (context) => CCTVReplay(cctvId: cctvId),
-              );
-          }
-          return null;
-        },
+        // onGenerateRoute: (settings) {
+        //   switch (settings.name) {
+        //     case Routes.cctvReplay:
+        //       final CCTV cctv = settings.arguments as CCTV;
+        //       return MaterialPageRoute(
+        //         builder: (context) => CCTVReplay(cctv: cctv),
+        //       );
+        //   }
+        //   return null;
+        // },
       ),
     );
   }

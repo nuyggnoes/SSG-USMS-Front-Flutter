@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:usms_app/models/cctv_model.dart';
 import 'package:usms_app/screens/cctv_%20manual_screen.dart';
 import 'package:usms_app/screens/cctv_detail_screen.dart';
 import 'package:usms_app/screens/cctv_replay_screen.dart';
@@ -56,8 +57,8 @@ class Routes {
       secondaryPassword: (context) => const SecondaryPasswordScreen(),
       cctvDetail: (context) => const CCTVScreen(),
       cctvReplay: (context) {
-        final int cctvId = ModalRoute.of(context)!.settings.arguments as int;
-        return CCTVReplay(cctvId: cctvId);
+        final CCTV cctv = ModalRoute.of(context)!.settings.arguments as CCTV;
+        return CCTVReplay(cctv: cctv);
       },
       cctvManual: (context) => const CCTVManual(),
       provider: (context) => const ProviderTest(),
