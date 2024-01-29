@@ -277,7 +277,7 @@ class CCTVService {
         // #EXTINF 행의 다음 줄에 .ts 파일의 URL이 있다고 가정
         if (i + 1 < lines.length) {
           String tsUrl = lines[i + 1].trim();
-          tsUrls.add(tsUrl);
+          // tsUrls.add(tsUrl);
         }
       } else if (line.endsWith('.ts')) {
         // .ts 파일의 URL이 바로 해당 줄에 나와 있는 경우

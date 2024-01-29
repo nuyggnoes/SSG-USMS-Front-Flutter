@@ -12,11 +12,14 @@ import 'package:usms_app/screens/register_screen.dart';
 import 'package:usms_app/screens/register_store_screen.dart';
 import 'package:usms_app/screens/secondary_password_screen.dart';
 import 'package:usms_app/screens/set_security_level_screen.dart';
+import 'package:usms_app/screens/splash_screen.dart';
 import 'package:usms_app/screens/store_detail_screen.dart';
 import 'package:usms_app/screens/store_detail_screen2.dart';
 import 'package:usms_app/screens/store_notification_screen.dart';
 
 class Routes {
+  static const String splash = '/spash';
+
   static const String login = '/';
   static const String identityVerification = '/identity-verification';
   static const String registerUser = '/register-user';
@@ -42,6 +45,7 @@ class Routes {
 
   static Map<String, WidgetBuilder> get routes {
     return {
+      splash: (context) => const SplashScreen(),
       login: (context) => const Login(),
       identityVerification: (context) {
         int flagId = ModalRoute.of(context)!.settings.arguments as int;

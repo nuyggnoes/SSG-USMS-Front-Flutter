@@ -121,18 +121,18 @@ class _StoreDetailState extends State<StoreDetail2> {
     var baseUrl =
         'https://usms.serveftp.com/video/hls/live/${cctv.cctvStreamKey}';
     if (cctv.isConnected) {
-      var tsUrls = await CCTVService.getCCTVLiveStream(
-          context: context, streamKey: cctv.cctvStreamKey);
-      print(tsUrls);
-      print('isConnected true');
-      print(tsUrls[0]);
+      // var tsUrls = await CCTVService.getCCTVLiveStream(
+      //     context: context, streamKey: cctv.cctvStreamKey);
+      // print(tsUrls);
+      // print('isConnected true');
+      // print(tsUrls[0]);
 
       // var videoUrl =
       //     'https://usms.serveftp.com/video/hls/live/${cctv.cctvStreamKey}/index.m3u8';
-      var videoController =
-          // VideoPlayerController.networkUrl(Uri.parse('$baseUrl/${tsUrls[0]}'));
-          VideoPlayerController.networkUrl(Uri.parse(
-              'https://usms-media.serveftp.com/video/hls/live/f6cddf98-777c-4bd5-9289-ce298bdd6140/index.m3u8'));
+
+      var videoController = VideoPlayerController.networkUrl(Uri.parse(
+          'https://usms-media.serveftp.com/video/hls/live/0e798b6c-2b80-47d6-beae-95435399fb7d/index.m3u8'));
+
       videoList.add(videoController);
       // 'https://usms.serveftp.com/video/hls/live/${cctv.cctvStreamKey}/index.m3u8'));
       // 'https://usms-media.serveftp.com/video/hls/live/f6cddf98-777c-4bd5-9289-ce298bdd6140/index.m3u8';
@@ -141,16 +141,16 @@ class _StoreDetailState extends State<StoreDetail2> {
 
       if (!videoController.value.isInitialized) {
         print('비디오 초기화 전');
-        await videoController.initialize();
-        print('비디오 초기화 완료');
-
-        var chewieController = ChewieController(
-          videoPlayerController: videoController,
-          autoPlay: true,
-          aspectRatio: 16 / 9,
-        );
-        chewieList.add(chewieController);
-        return chewieController;
+        videoController.initialize().then((value) {
+          var chewieController = ChewieController(
+            videoPlayerController: videoController,
+            autoPlay: true,
+            aspectRatio: 16 / 9,
+          );
+          chewieList.add(chewieController);
+          print('비디오 초기화 완료');
+          return chewieController;
+        });
       }
       // while (!videoController.value.isInitialized) {
       //   videoController.initialize();
