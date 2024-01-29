@@ -1,5 +1,6 @@
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
+import 'package:get/utils.dart';
 
 import 'package:provider/provider.dart';
 import 'package:usms_app/models/cctv_model.dart';
@@ -51,8 +52,6 @@ class _StoreDetailState extends State<StoreDetail2> {
   final _formKey = GlobalKey<FormState>();
   final cctvNameController = TextEditingController();
 
-  CCTV cctv = CCTV(cctvName: 'cctvName1', storeId: 1);
-
   @override
   void initState() {
     super.initState();
@@ -62,60 +61,57 @@ class _StoreDetailState extends State<StoreDetail2> {
     // setVideoPlayer();
   }
 
-  String testText = '';
-
-  Future<void> setVideoPlayer() async {
-    for (var i = 0; i < urlStringList.length; i++) {
-      try {
-        videoList.add(
-          VideoPlayerController.networkUrl(Uri.parse(urlStringList[i])),
-        );
-      } catch (e) {
-        print('URL에서 비디오 로드 중 오류 발생: $e');
-        // 다음 URL로 계속 진행하거나 필요에 따라 다르게 처리할 수 있습니다.
-      }
-      // videoList.add(
-      //   VideoPlayerController.networkUrl(Uri.parse(urlStringList[i])),
-      // );
-    }
-    for (var i = 0; i < videoList.length; i++) {
-      ChewieController chewieController;
-      if (!videoList[i].value.isInitialized) {
-        try {
-          await videoList[i].initialize();
-          // 이벤트 리스너 추가
-          chewieController = ChewieController(
-            videoPlayerController: videoList[i],
-            autoPlay: false,
-            aspectRatio: 16 / 9,
-          );
-          chewieList.add(chewieController);
-        } catch (e) {
-          print('URL에 대한 비디오 플레이어 초기화 중 오류 발생: ${urlStringList[i]}');
-          var errorChewie =
-              ChewieController(videoPlayerController: videoList[i]);
-          chewieList.add(errorChewie);
-          print('URL에 대한 비디오 플레이어 초기화 중 오류 발생: ${videoList[i]}');
-        }
-        // await videoList[i].initialize();
-        // // add EventListener
-        // var chewieController = ChewieController(
-        //   videoPlayerController: videoList[i],
-        //   autoPlay: false,
-        //   aspectRatio: 16 / 9,
-        // );
-        // chewieList.add(
-        //   // ChewieController(
-        //   //   videoPlayerController: videoList[i],
-        //   //   autoPlay: false,
-        //   //   aspectRatio: 16 / 9,
-        //   // ),
-        //   chewieController,
-        // );
-      }
-    }
-    setState(() {});
-  }
+  // Future<void> setVideoPlayer() async {
+  //   for (var i = 0; i < urlStringList.length; i++) {
+  //     try {
+  //       videoList.add(
+  //         VideoPlayerController.networkUrl(Uri.parse(urlStringList[i])),
+  //       );
+  //     } catch (e) {
+  //       print('URL에서 비디오 로드 중 오류 발생: $e');
+  //       // 다음 URL로 계속 진행하거나 필요에 따라 다르게 처리할 수 있습니다.
+  //     }
+  //     // videoList.add(
+  //     //   VideoPlayerController.networkUrl(Uri.parse(urlStringList[i])),
+  //     // );
+  //   }
+  //   for (var i = 0; i < videoList.length; i++) {
+  //     ChewieController chewieController;
+  //     if (!videoList[i].value.isInitialized) {
+  //       try {
+  //         await videoList[i].initialize();
+  //         // 이벤트 리스너 추가
+  //         chewieController = ChewieController(
+  //           videoPlayerController: videoList[i],
+  //           autoPlay: false,
+  //           aspectRatio: 16 / 9,
+  //         );
+  //         chewieList.add(chewieController);
+  //       } catch (e) {
+  //         print('URL에 대한 비디오 플레이어 초기화 중 오류 발생: ${urlStringList[i]}');
+  //         var errorChewie =
+  //             ChewieController(videoPlayerController: videoList[i]);
+  //         chewieList.add(errorChewie);
+  //         print('URL에 대한 비디오 플레이어 초기화 중 오류 발생: ${videoList[i]}');
+  //       }
+  //       // await videoList[i].initialize();
+  //       // // add EventListener
+  //       // var chewieController = ChewieController(
+  //       //   videoPlayerController: videoList[i],
+  //       //   autoPlay: false,
+  //       //   aspectRatio: 16 / 9,
+  //       // );
+  //       // chewieList.add(
+  //       //   // ChewieController(
+  //       //   //   videoPlayerController: videoList[i],
+  //       //   //   autoPlay: false,
+  //       //   //   aspectRatio: 16 / 9,
+  //       //   // ),
+  //       //   chewieController,
+  //       // );
+  //     }
+  //   }
+  // }
 
   Future<ChewieController?> setController(CCTV cctv) async {
     var baseUrl =
@@ -147,7 +143,6 @@ class _StoreDetailState extends State<StoreDetail2> {
             autoPlay: true,
             aspectRatio: 16 / 9,
           );
-          chewieList.add(chewieController);
           print('비디오 초기화 완료');
           return chewieController;
         });
@@ -181,6 +176,7 @@ class _StoreDetailState extends State<StoreDetail2> {
 
   @override
   void dispose() {
+    print('dispose()');
     for (var i = 0; i < chewieList.length; i++) {
       videoList[i].dispose();
       chewieList[i].dispose();
@@ -212,14 +208,14 @@ class _StoreDetailState extends State<StoreDetail2> {
   }
 
   double listViewHeightCalculation(int storeListLength) {
-    double cardHeight = 320.0;
+    double cardHeight = 300.0;
     double totalHeight = cardHeight * storeListLength;
     return totalHeight;
   }
 
   @override
   Widget build(BuildContext context) {
-    var height = 150;
+    var height = 300.0;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -365,22 +361,29 @@ class _StoreDetailState extends State<StoreDetail2> {
                         future: setControllers(cctvList),
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
-                              ConnectionState.done) {
+                              ConnectionState.waiting) {
+                            return const CircularProgressIndicator();
+                          } else if (snapshot.hasError) {
+                            print('에러 발생: ${snapshot.error}');
+                            return Text('에러발생 : ${snapshot.error}');
+                          } else if (snapshot.hasData) {
                             print('snapshot : ${snapshot.data}');
                             List<ChewieController?> chewieControllers =
                                 snapshot.data ?? [];
                             print('chewieControllerList : $chewieControllers');
                             return SizedBox(
-                              height:
-                                  listViewHeightCalculation(cctvList.length),
+                              height: 600,
+                              // listViewHeightCalculation(cctvList.length),
                               child: ListView.separated(
                                 itemCount: cctvList.length,
                                 itemBuilder: (context, index) {
-                                  height = height * cctvList.length;
+                                  height = 300.0;
                                   CCTV cctv = cctvList[index];
-
                                   ChewieController? chewieController =
                                       chewieControllers[index];
+                                  print(
+                                      '=================$height================');
+
                                   return ChewieListItem(
                                     cctv: cctv,
                                     chewieController: chewieController,
@@ -410,15 +413,7 @@ class _StoreDetailState extends State<StoreDetail2> {
                 ),
                 // f6cddf98-777c-4bd5-9289-ce298bdd6140
                 // 0e798b6c-2b80-47d6-beae-95435399fb7d
-                TextButton(
-                  onPressed: () async {
-                    var a = await CCTVService.getCCTVLiveStream(
-                        context: context,
-                        streamKey: 'f6cddf98-777c-4bd5-9289-ce298bdd6140');
-                    print('a = $a');
-                  },
-                  child: const Text('테스트 버튼'),
-                ),
+
                 //================================================================
                 // Consumer<CCTVProvider>(
                 //   builder: (context, cctvProvider, _) {
@@ -617,7 +612,7 @@ class ChewieListItem extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            cctv.isConnected
+            cctv.isConnected && chewieController != null
                 ? SizedBox(
                     height: 220,
                     width: double.infinity,

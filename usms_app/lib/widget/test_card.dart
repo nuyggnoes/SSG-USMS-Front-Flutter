@@ -90,8 +90,8 @@ class CurrencyCard extends StatelessWidget {
             child: Container(
               clipBehavior: Clip.hardEdge,
               decoration: BoxDecoration(
-                // color: getRandomColor(),
-                color: Colors.blueAccent,
+                color: getRandomColor(),
+                // color: Colors.blueAccent,
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Padding(

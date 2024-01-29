@@ -88,7 +88,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
         navigatorKey: navigatorKey,
-        initialRoute: Routes.splash,
+        initialRoute: Routes.login,
         routes: Routes.routes,
         // onGenerateRoute: (settings) {
         //   switch (settings.name) {
