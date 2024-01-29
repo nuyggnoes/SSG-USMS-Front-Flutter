@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'package:usms_app/main.dart';
@@ -103,6 +104,8 @@ class FirebaseApi {
     _checkNotificationPermission();
     await _firebaseMessaging.requestPermission();
     final fcmToken = await _firebaseMessaging.getToken();
+    FlutterSecureStorage storage = const FlutterSecureStorage();
+    storage.write(key: 'token', value: fcmToken);
     // 여기서 받은 토큰을 백엔드 서버로 전송
     // 채널 아이디와 채널 이름도 같이 전송??
     print('My Token : $fcmToken');

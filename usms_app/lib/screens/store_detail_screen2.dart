@@ -378,28 +378,91 @@ class _StoreDetailState extends State<StoreDetail2> {
                     ),
                   ),
                 ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.7,
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      await StoreService.deleteStore(
+                InkWell(
+                  onTap: () {
+                    showDialog(
                         context: context,
-                        uid: widget.uid,
-                        storeId: widget.storeId,
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blueAccent,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: const Text('매장 삭제'),
+                            content: const Text('정말 매장을 삭제하시겠습니까?'),
+                            actions: <Widget>[
+                              TextButton(
+                                child: const Text('취소'),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                              TextButton(
+                                child: const Text('확인'),
+                                onPressed: () async {
+                                  await StoreService.deleteStore(
+                                    context: context,
+                                    uid: widget.uid,
+                                    storeId: widget.storeId,
+                                  );
+                                },
+                              )
+                            ],
+                          );
+                        });
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 10,
+                      horizontal: 10,
                     ),
-                    child: const Text(
-                      '매장 삭제',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w900,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      border: Border(
+                        bottom: BorderSide(
+                          color: Colors.grey.shade400,
+                          width: 2,
+                        ),
                       ),
+                    ),
+                    height: 70,
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.delete,
+                              color: Colors.grey,
+                            ),
+                            SizedBox(
+                              width: 25,
+                            ),
+                            Text('매장 삭제'),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
                 ),
+                // SizedBox(
+                //   width: MediaQuery.of(context).size.width * 0.7,
+                //   child: ElevatedButton(
+                //     onPressed: () async {
+                //       await StoreService.deleteStore(
+                //         context: context,
+                //         uid: widget.uid,
+                //         storeId: widget.storeId,
+                //       );
+                //     },
+                //     style: ElevatedButton.styleFrom(
+                //       backgroundColor: Colors.blueAccent,
+                //     ),
+                //     child: const Text(
+                //       '매장 삭제',
+                //       style: TextStyle(
+                //         color: Colors.white,
+                //         fontWeight: FontWeight.w900,
+                //       ),
+                //     ),
+                //   ),
+                // ),
               ],
             ),
           ),

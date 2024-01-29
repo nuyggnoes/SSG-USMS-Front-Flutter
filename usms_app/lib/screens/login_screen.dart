@@ -190,15 +190,13 @@ class _LoginState extends State<Login> {
                             children: [
                               Row(
                                 children: [
-                                  Container(
-                                    child: Checkbox(
-                                      value: _AutoLoginChecked,
-                                      onChanged: (value) {
-                                        setState(() {
-                                          _AutoLoginChecked = value!;
-                                        });
-                                      },
-                                    ),
+                                  Checkbox(
+                                    value: _AutoLoginChecked,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _AutoLoginChecked = value!;
+                                      });
+                                    },
                                   ),
                                   const Text(
                                     '자동 로그인',
@@ -222,7 +220,6 @@ class _LoginState extends State<Login> {
                     children: [
                       TextButton(
                         onPressed: () {
-                          print('아이디 찾기');
                           Navigator.pushNamed(
                               context, Routes.identityVerification,
                               arguments: 0);
@@ -240,7 +237,6 @@ class _LoginState extends State<Login> {
                       ),
                       TextButton(
                         onPressed: () {
-                          print('비밀번호 찾기');
                           Navigator.push(
                             context,
                             MaterialPageRoute(
