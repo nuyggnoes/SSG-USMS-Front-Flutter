@@ -1,3 +1,4 @@
+import 'package:chewie/chewie.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -205,5 +206,61 @@ class CCTVService {
         });
       }
     }
+  }
+
+  // 실시간 CCTV 조회
+  // static Future<ChewieController> getCCTVLiveStream({
+  static Future<String> getCCTVLiveStream({
+    required BuildContext context,
+    required String streamKey,
+  }) async {
+    Future<ChewieController> futureChewieController;
+    var jSessionId = await storage.read(key: 'cookie');
+    Response response;
+
+    var baseoptions = BaseOptions(
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+        'cookie': jSessionId,
+      },
+      baseUrl: baseUrl,
+    );
+    Dio dio = Dio(baseoptions);
+    // "https://usms.serveftp.com/video/hls/live/$streamKey/index.m3u8";
+    try {
+      response = await dio.get('/video/hls/live/$streamKey/index.m3u8');
+      if (response.statusCode! ~/ 100 == 2) {
+        print('=============CCTVLive response 200=============');
+        print(response.data);
+        return response.data;
+
+        // List<Mape<String, dynamic>> stores
+      }
+    } on DioException catch (e) {
+      if (e.response!.statusCode! ~/ 100 == 4) {
+        Future.microtask(() {
+          customShowDialog(
+              context: context,
+              title: '실시간 CCTV 조회 실패',
+              message: '${e.response!.data['message']}',
+              onPressed: () {
+                Navigator.pop(context);
+              });
+        });
+        return 'status 400';
+      } else {
+        Future.microtask(() {
+          customShowDialog(
+              context: context,
+              title: '오류 메시지',
+              message: '실시간 CCTV 조회 실패 : ${e.response}',
+              onPressed: () {
+                Navigator.pop(context);
+              });
+        });
+        return 'status 500';
+      }
+    }
+    return 'no';
   }
 }

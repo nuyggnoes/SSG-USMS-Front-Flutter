@@ -117,31 +117,43 @@ class _StoreDetailState extends State<StoreDetail2> {
     setState(() {});
   }
 
-  ChewieController? setController(String cctvStreamKey) {
-    ChewieController? chewieController;
-    // var videoUrl = '${UrlConfig.mediaUrl}/$cctvStreamKey/index.m3u8';
-    // /video/hls/live/$cctvStreamKey/index.m3u8
-    // var videoController = VideoPlayerController.networkUrl(Uri.parse(videoUrl));
-    // // if (!videoController.value.isInitialized) {
-    // //   videoController.initialize();
+  Future<ChewieController?> setController(CCTV cctv) async {
+    if (cctv.isConnected) {
+      var url = await CCTVService.getCCTVLiveStream(
+          context: context, streamKey: cctv.cctvStreamKey);
+      print(url);
+      print('isConnected true');
+      // var videoUrl =
+      //     'https://usms.serveftp.com/video/hls/live/${cctv.cctvStreamKey}/index.m3u8';
+      var videoController = VideoPlayerController.networkUrl(Uri.parse(
+          'https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8'));
 
-    // //   chewieController = ChewieController(
-    // //     videoPlayerController: videoController,
-    // //     autoPlay: false,
-    // //     aspectRatio: 16 / 9,
-    // //   );
-    // // }
-    // while (!videoController.value.isInitialized) {
-    //   videoController.initialize();
-    // }
-    // chewieController = ChewieController(
-    //   videoPlayerController: videoController,
-    //   autoPlay: false,
-    //   aspectRatio: 16 / 9,
-    // );
-    print('setController');
+      print('videoController Uri.parse');
 
-    return chewieController;
+      if (!videoController.value.isInitialized) {
+        await videoController.initialize();
+        print('비디오 초기화 완료!');
+
+        var chewieController = ChewieController(
+          videoPlayerController: videoController,
+          autoPlay: false,
+          aspectRatio: 16 / 9,
+        );
+        return chewieController;
+      }
+      // while (!videoController.value.isInitialized) {
+      //   videoController.initialize();
+      // }
+      // chewieController = ChewieController(
+      //   videoPlayerController: videoController,
+      //   autoPlay: false,
+      //   aspectRatio: 16 / 9,
+      // );
+    } else {
+      print('isConnected false');
+      return null;
+    }
+    return null;
   }
 
   @override
@@ -303,35 +315,89 @@ class _StoreDetailState extends State<StoreDetail2> {
                       print('snapshot.hasData');
                       List<CCTV> cctvList = snapshot.data!;
 
-                      return SizedBox(
-                        height: listViewHeightCalculation(cctvList.length),
-                        child: ListView.separated(
-                          itemCount: cctvList.length,
-                          itemBuilder: (context, index) {
-                            height = height * cctvList.length;
-                            CCTV cctv = cctvList[index];
-                            var chewieController =
-                                setController(cctv.cctvStreamKey);
-                            return ChewieListItem(
-                              cctv: cctv,
-                              chewieController: chewieController,
-                              index: index,
-                              routes: Routes.cctvReplay,
-                              uid: widget.uid,
-                              storeId: widget.storeId,
-                            );
-                          },
-                          separatorBuilder: (BuildContext context, int index) {
-                            return const SizedBox(
-                              height: 10,
-                            );
-                          },
+                      // return SizedBox(
+                      //   height: listViewHeightCalculation(cctvList.length),
+                      //   child: ListView.separated(
+                      //     itemCount: cctvList.length,
+                      //     itemBuilder: (context, index) {
+                      //       height = height * cctvList.length;
+                      //       CCTV cctv = cctvList[index];
+                      //       var chewieController = setController(cctv);
+                      //       return ChewieListItem(
+                      //         cctv: cctv,
+                      //         chewieController: chewieController!,
+                      //         index: index,
+                      //         routes: Routes.cctvReplay,
+                      //         uid: widget.uid,
+                      //         storeId: widget.storeId,
+                      //       );
+                      //     },
+                      //     separatorBuilder: (BuildContext context, int index) {
+                      //       return const SizedBox(
+                      //         height: 10,
+                      //       );
+                      //     },
+                      //   ),
+                      // );
+                      return FutureBuilder<List<ChewieController?>>(
+                        future: Future.wait(
+                          cctvList.map((cctv) => setController(cctv)).toList(),
                         ),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.done) {
+                            print('snapshot : ${snapshot.data}');
+                            List<ChewieController?> chewieControllers =
+                                snapshot.data ?? [];
+                            print('chewieControllerList : $chewieControllers');
+                            return SizedBox(
+                              height:
+                                  listViewHeightCalculation(cctvList.length),
+                              child: ListView.separated(
+                                itemCount: cctvList.length,
+                                itemBuilder: (context, index) {
+                                  height = height * cctvList.length;
+                                  CCTV cctv = cctvList[index];
+
+                                  ChewieController? chewieController =
+                                      chewieControllers[index];
+                                  return ChewieListItem(
+                                    cctv: cctv,
+                                    chewieController: chewieController,
+                                    index: index,
+                                    routes: Routes.cctvReplay,
+                                    uid: widget.uid,
+                                    storeId: widget.storeId,
+                                  );
+                                },
+                                separatorBuilder:
+                                    (BuildContext context, int index) {
+                                  return const SizedBox(
+                                    height: 10,
+                                  );
+                                },
+                              ),
+                            );
+                          } else {
+                            return const CircularProgressIndicator();
+                          }
+                        },
                       );
                     } else {
                       return const NoCCTV();
                     }
                   }),
+                ),
+                // f6cddf98-777c-4bd5-9289-ce298bdd6140
+                // 0e798b6c-2b80-47d6-beae-95435399fb7d
+                TextButton(
+                  onPressed: () async {
+                    var a = await CCTVService.getCCTVLiveStream(
+                        context: context,
+                        streamKey: 'f6cddf98-777c-4bd5-9289-ce298bdd6140');
+                    print('a = $a');
+                  },
+                  child: const Text('테스트 버튼'),
                 ),
                 //================================================================
                 // Consumer<CCTVProvider>(

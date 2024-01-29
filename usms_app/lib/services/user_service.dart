@@ -26,6 +26,9 @@ class UserService {
   }) async {
     Response response;
 
+    var myToken = await storage.read(key: 'token');
+    print('MY TOKEN: $myToken');
+
     var baseoptions = BaseOptions(
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
@@ -36,11 +39,12 @@ class UserService {
     );
     Dio dio = Dio(baseoptions);
 
-    // dio.interceptors.add(CustomInterceptor(storage: storage));
     var param = {
       'username': username,
       'password': password,
+      'token': myToken,
     };
+
     try {
       response = await dio.post('/api/login', data: param);
       // response = await dio.post('/login', data: param);
@@ -386,15 +390,6 @@ class UserService {
         });
       }
     }
-    // Future.microtask(() {
-    //   customShowDialog(
-    //       context: context,
-    //       title: '환영합니다.',
-    //       message: '회원가입 성공',
-    //       onPressed: () {
-    //         onPressed();
-    //       });
-    // });
   }
 
   // 회원정보 수정
@@ -462,5 +457,63 @@ class UserService {
     //     });
     //   }
     // }
+  }
+
+  // JWT로 아이디 찾기
+  Future<void> findUserId({
+    required BuildContext context,
+    required Function onPressed,
+  }) async {
+    Response response;
+    var jwtToken = await storage.read(key: AppConstants.jwtAuthorizationKey);
+    var baseoptions = BaseOptions(
+      headers: {
+        // 'Content-Type': 'application/json; charset=utf-8',
+        AppConstants.jwtAuthorizationKey: '$jwtToken',
+      },
+      baseUrl: baseUrl,
+    );
+    Dio dio = Dio(baseoptions);
+    try {
+      response = await dio.get('/api/user');
+
+      if (response.statusCode! ~/ 100 == 2) {
+        Future.microtask(() {
+          customShowDialog(
+            context: context,
+            title: '아이디 찾기',
+            message: '인증된 수단으로 가입된 아이디 : ${response.data}',
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          );
+        });
+      }
+    } on DioException catch (e) {
+      if (e.response!.statusCode! ~/ 100 == 4) {
+        print('[ERR Body] : ${e.response?.data}');
+        Future.microtask(() {
+          customShowDialog(
+            context: context,
+            title: '본인인증 실패',
+            message: '${e.response?.data['message']}',
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          );
+        });
+      } else {
+        Future.microtask(() {
+          customShowDialog(
+            context: context,
+            title: '서버 오류',
+            message: '${e.message}',
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          );
+        });
+      }
+    }
   }
 }

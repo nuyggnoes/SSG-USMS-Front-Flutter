@@ -259,7 +259,7 @@ class _MyPageScreenState extends State<MyPageScreen> {
                         CustomInfoButton(
                           buttonText: 'Provider 테스트 화면',
                           parentContext: context,
-                          route: Routes.provider,
+                          route: Routes.storeDetail,
                           icon: Icons.science,
                         ),
                         InkWell(
