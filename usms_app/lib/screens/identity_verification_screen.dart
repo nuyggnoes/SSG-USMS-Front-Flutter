@@ -309,15 +309,14 @@ class _VerificationScreenState extends State<VerificationScreen>
                             // requestVerification(_code);
                             // JWT 토큰으로 유저정보(아이디)를 가져오는데
                             // email이 중복 가능이면 유저정보를 List로 가져와야함
-                            if (widget.flagId == 1) {
-                              userService.requestVerification(
-                                context: context,
-                                data: _authenticationMethod,
-                                type: methodState,
-                                routeCode: true,
-                                code: _code,
-                              );
-                            }
+                            userService.requestVerification(
+                              context: context,
+                              data: _authenticationMethod,
+                              type: methodState,
+                              routeCode: true,
+                              code: _code,
+                              flagId: widget.flagId,
+                            );
                           }
                         },
                         style: ButtonStyle(

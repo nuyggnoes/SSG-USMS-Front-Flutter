@@ -118,27 +118,38 @@ class _StoreDetailState extends State<StoreDetail2> {
   }
 
   Future<ChewieController?> setController(CCTV cctv) async {
+    var baseUrl =
+        'https://usms.serveftp.com/video/hls/live/${cctv.cctvStreamKey}';
     if (cctv.isConnected) {
-      var url = await CCTVService.getCCTVLiveStream(
+      var tsUrls = await CCTVService.getCCTVLiveStream(
           context: context, streamKey: cctv.cctvStreamKey);
-      print(url);
+      print(tsUrls);
       print('isConnected true');
+      print(tsUrls[0]);
+
       // var videoUrl =
       //     'https://usms.serveftp.com/video/hls/live/${cctv.cctvStreamKey}/index.m3u8';
-      var videoController = VideoPlayerController.networkUrl(Uri.parse(
-          'https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8'));
+      var videoController =
+          // VideoPlayerController.networkUrl(Uri.parse('$baseUrl/${tsUrls[0]}'));
+          VideoPlayerController.networkUrl(Uri.parse(
+              'https://usms-media.serveftp.com/video/hls/live/f6cddf98-777c-4bd5-9289-ce298bdd6140/index.m3u8'));
+      videoList.add(videoController);
+      // 'https://usms.serveftp.com/video/hls/live/${cctv.cctvStreamKey}/index.m3u8'));
+      // 'https://usms-media.serveftp.com/video/hls/live/f6cddf98-777c-4bd5-9289-ce298bdd6140/index.m3u8';
 
       print('videoController Uri.parse');
 
       if (!videoController.value.isInitialized) {
+        print('비디오 초기화 전');
         await videoController.initialize();
-        print('비디오 초기화 완료!');
+        print('비디오 초기화 완료');
 
         var chewieController = ChewieController(
           videoPlayerController: videoController,
-          autoPlay: false,
+          autoPlay: true,
           aspectRatio: 16 / 9,
         );
+        chewieList.add(chewieController);
         return chewieController;
       }
       // while (!videoController.value.isInitialized) {
@@ -156,12 +167,20 @@ class _StoreDetailState extends State<StoreDetail2> {
     return null;
   }
 
+  Future<List<ChewieController?>> setControllers(List<CCTV> cctvList) async {
+    print('setControllers');
+    print('cctvList : $cctvList');
+    List<ChewieController?> controllers = [];
+    for (CCTV cctv in cctvList) {
+      ChewieController? controller = await setController(cctv);
+      print('controller들 : $controller');
+      controllers.add(controller);
+    }
+    return controllers;
+  }
+
   @override
   void dispose() {
-    // _videoController.dispose();
-    // _chewieController.dispose();
-    // _controller.dispose();
-    // _chewieController2.dispose();
     for (var i = 0; i < chewieList.length; i++) {
       videoList[i].dispose();
       chewieList[i].dispose();
@@ -340,9 +359,10 @@ class _StoreDetailState extends State<StoreDetail2> {
                       //   ),
                       // );
                       return FutureBuilder<List<ChewieController?>>(
-                        future: Future.wait(
-                          cctvList.map((cctv) => setController(cctv)).toList(),
-                        ),
+                        // future: Future.wait(
+                        //   cctvList.map((cctv) => setController(cctv)),
+                        // ),
+                        future: setControllers(cctvList),
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.done) {
@@ -442,10 +462,6 @@ class _StoreDetailState extends State<StoreDetail2> {
                 // ),
                 const SizedBox(
                   height: 30,
-                ),
-
-                const SizedBox(
-                  height: 20,
                 ),
                 // 버튼들
                 CustomInfoButton(
@@ -566,28 +582,6 @@ class _StoreDetailState extends State<StoreDetail2> {
                     ),
                   ),
                 ),
-                // SizedBox(
-                //   width: MediaQuery.of(context).size.width * 0.7,
-                //   child: ElevatedButton(
-                //     onPressed: () async {
-                //       await StoreService.deleteStore(
-                //         context: context,
-                //         uid: widget.uid,
-                //         storeId: widget.storeId,
-                //       );
-                //     },
-                //     style: ElevatedButton.styleFrom(
-                //       backgroundColor: Colors.blueAccent,
-                //     ),
-                //     child: const Text(
-                //       '매장 삭제',
-                //       style: TextStyle(
-                //         color: Colors.white,
-                //         fontWeight: FontWeight.w900,
-                //       ),
-                //     ),
-                //   ),
-                // ),
               ],
             ),
           ),
@@ -617,10 +611,6 @@ class ChewieListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // bool isConnected = true;
-    // if (chewieController.videoPlayerController.value.errorDescription != null) {
-    //   isConnected = false;
-    // }
     return Card(
       child: SizedBox(
         height: 300,
@@ -666,10 +656,6 @@ class ChewieListItem extends StatelessWidget {
                       ),
                       IconButton(
                         onPressed: () {
-                          // Navigator.push(
-                          //     context,
-                          //     MaterialPageRoute(
-                          //         builder: (context) => const CCTVReplay()));
                           Navigator.pushNamed(
                             context,
                             Routes.cctvReplay,
@@ -703,51 +689,3 @@ class ChewieListItem extends StatelessWidget {
     );
   }
 }
-
-// class CustomBoxButton extends StatelessWidget {
-//   final buttonText;
-//   final MaterialPageRoute route;
-//   final BuildContext parentContext;
-
-//   const CustomBoxButton({
-//     super.key,
-//     required this.buttonText,
-//     required this.route,
-//     required this.parentContext,
-//   });
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return InkWell(
-//       onTap: () {
-//         Navigator.push(context, route);
-//       },
-//       child: Container(
-//         padding: const EdgeInsets.symmetric(
-//           vertical: 10,
-//           horizontal: 10,
-//         ),
-//         decoration: BoxDecoration(
-//           color: Colors.white,
-//           border: Border(
-//             bottom: BorderSide(
-//               color: Colors.grey.shade400,
-//               width: 2,
-//             ),
-//           ),
-//         ),
-//         height: 70,
-//         child: Row(
-//           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//           children: [
-//             Text('$buttonText'),
-//             Icon(
-//               Icons.arrow_forward_ios_rounded,
-//               color: Colors.grey.shade400,
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }

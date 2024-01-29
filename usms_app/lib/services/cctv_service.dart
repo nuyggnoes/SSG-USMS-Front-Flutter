@@ -210,11 +210,10 @@ class CCTVService {
 
   // 실시간 CCTV 조회
   // static Future<ChewieController> getCCTVLiveStream({
-  static Future<String> getCCTVLiveStream({
+  static Future<List<String>> getCCTVLiveStream({
     required BuildContext context,
     required String streamKey,
   }) async {
-    Future<ChewieController> futureChewieController;
     var jSessionId = await storage.read(key: 'cookie');
     Response response;
 
@@ -232,7 +231,9 @@ class CCTVService {
       if (response.statusCode! ~/ 100 == 2) {
         print('=============CCTVLive response 200=============');
         print(response.data);
-        return response.data;
+        var m3u8Content = response.data;
+        List<String> tsUrls = extractTsUrlsFromM3u8(m3u8Content);
+        return tsUrls;
 
         // List<Mape<String, dynamic>> stores
       }
@@ -242,12 +243,12 @@ class CCTVService {
           customShowDialog(
               context: context,
               title: '실시간 CCTV 조회 실패',
-              message: '${e.response!.data['message']}',
+              message: '${e.response!.data}',
               onPressed: () {
                 Navigator.pop(context);
               });
         });
-        return 'status 400';
+        return [];
       } else {
         Future.microtask(() {
           customShowDialog(
@@ -258,9 +259,32 @@ class CCTVService {
                 Navigator.pop(context);
               });
         });
-        return 'status 500';
       }
     }
-    return 'no';
+    return [];
+  }
+
+  static List<String> extractTsUrlsFromM3u8(String m3u8Content) {
+    List<String> tsUrls = [];
+
+    // 각 줄을 분리하여 반복
+    List<String> lines = m3u8Content.split('\n');
+    for (int i = 0; i < lines.length; i++) {
+      String line = lines[i].trim();
+
+      // #EXTINF 또는 .ts 파일의 URL 패턴을 확인
+      if (line.startsWith('#EXTINF')) {
+        // #EXTINF 행의 다음 줄에 .ts 파일의 URL이 있다고 가정
+        if (i + 1 < lines.length) {
+          String tsUrl = lines[i + 1].trim();
+          tsUrls.add(tsUrl);
+        }
+      } else if (line.endsWith('.ts')) {
+        // .ts 파일의 URL이 바로 해당 줄에 나와 있는 경우
+        tsUrls.add(line);
+      }
+    }
+
+    return tsUrls;
   }
 }

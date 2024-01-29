@@ -67,7 +67,7 @@ class UserService {
         );
         await storage.write(
           key: 'userInfo',
-          value: jsonEncode(response.data["user"]),
+          value: jsonEncode(response.data),
         );
         if (autoLogin) {
           await storage.write(
@@ -256,6 +256,7 @@ class UserService {
     required bool type,
     required bool routeCode,
     required String code,
+    required int flagId,
   }) async {
     print('[인증번호] : $code');
     var xKey = await storage.read(key: AppConstants.xAuthenticateKey);
@@ -291,12 +292,16 @@ class UserService {
               title: '',
               message: '본인 인증 성공',
               onPressed: () {
-                Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => RegisterScreen(
-                            data: data, flag: type, routeCode: routeCode)),
-                    (route) => false);
+                if (flagId == 1) {
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => RegisterScreen(
+                              data: data, flag: type, routeCode: routeCode)),
+                      (route) => false);
+                } else {
+                  findUserId(context: context);
+                }
               });
         });
       }
@@ -462,7 +467,6 @@ class UserService {
   // JWT로 아이디 찾기
   Future<void> findUserId({
     required BuildContext context,
-    required Function onPressed,
   }) async {
     Response response;
     var jwtToken = await storage.read(key: AppConstants.jwtAuthorizationKey);
@@ -484,6 +488,9 @@ class UserService {
             title: '아이디 찾기',
             message: '인증된 수단으로 가입된 아이디 : ${response.data}',
             onPressed: () {
+              // Navigator.pop(context);
+              Navigator.pop(context);
+              Navigator.pop(context);
               Navigator.pop(context);
             },
           );
