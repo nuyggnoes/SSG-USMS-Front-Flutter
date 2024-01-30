@@ -8,8 +8,13 @@ import 'package:usms_app/utils/user_provider.dart';
 import 'package:usms_app/widget/behavior_widget.dart';
 
 class StoreNotification extends StatefulWidget {
-  const StoreNotification({super.key, required this.storeId});
+  const StoreNotification({
+    super.key,
+    required this.storeId,
+    required this.cctv,
+  });
   final storeId;
+  final cctv;
 
   @override
   State<StoreNotification> createState() => _StoreNotificationState();
@@ -24,6 +29,7 @@ DateTime? _endDate;
 late Map<String, bool> filterButtonStates;
 
 List<String> paramList = [];
+List<BehaviorModel> behaviors = [];
 
 class _StoreNotificationState extends State<StoreNotification> {
   late Future<List<BehaviorModel>?> _behaviorsFuture;
@@ -54,6 +60,7 @@ class _StoreNotificationState extends State<StoreNotification> {
 
   Future<List<BehaviorModel>?> _fetchBehaviors() async {
     return await StoreService.getAllBehaviorsByStore(
+      context: context,
       storeId: widget.storeId,
       userId: Provider.of<UserProvider>(context, listen: false).user.id!,
       startDate: _startDate.toString().split(" ").first,
@@ -185,7 +192,6 @@ class _StoreNotificationState extends State<StoreNotification> {
                             .toList();
                         print(paramList);
 
-                        // 조회 버튼을 눌렀을 때 데이터 불러오기
                         _behaviorsFuture = _fetchBehaviors();
                       });
                     },
@@ -235,10 +241,12 @@ class _StoreNotificationState extends State<StoreNotification> {
                         itemCount: snapshot.data!.length,
                         itemBuilder: (context, index) {
                           var notification = snapshot.data![index];
-                          return Behavior(
-                              time: notification.time,
-                              cctvName: notification.cctvName,
-                              behaviorCode: notification.behaviorCode);
+                          return null;
+                          // return Behavior(
+                          //   time: notification.time,
+                          //   cctvName: notification.cctvName,
+                          //   behaviorCode: notification.behaviorCode,
+                          // );
                         },
                         separatorBuilder: (context, index) => const SizedBox(
                           height: 20,

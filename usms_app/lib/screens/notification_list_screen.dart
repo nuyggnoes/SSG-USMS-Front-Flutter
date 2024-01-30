@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:usms_app/models/behavior_model.dart';
-import 'package:usms_app/models/word_model.dart';
-import 'package:usms_app/services/cctv_service.dart';
-import 'package:usms_app/services/store_service.dart';
-import 'package:usms_app/services/word_json.dart';
-import 'package:usms_app/widget/word_widget.dart';
+import 'package:usms_app/models/cctv_model.dart';
 
 class NotificationListScreen extends StatefulWidget {
-  const NotificationListScreen({super.key, required this.storeId});
+  const NotificationListScreen({
+    super.key,
+    required this.storeId,
+    required this.cctvList,
+  });
   final int storeId;
+  final List<CCTV> cctvList;
+
   @override
   State<NotificationListScreen> createState() => _NotificationListScreenState();
 }
@@ -59,6 +60,7 @@ class _NotificationListScreenState extends State<NotificationListScreen>
     '투기': false,
     '주취행동': false,
   };
+
   int tabBarIndex = 0;
 
   @override

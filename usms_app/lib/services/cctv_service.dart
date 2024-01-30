@@ -1,4 +1,3 @@
-import 'package:chewie/chewie.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -262,6 +261,15 @@ class CCTVService {
       }
     }
     return [];
+  }
+
+  // cctv 다시보기 조회
+  static getCCTVReplay({
+    required DateTime date,
+    required int index,
+  }) async {
+    print('DateTime date : $date');
+    print('TimeStamp date : ${date.microsecondsSinceEpoch}');
   }
 
   static List<String> extractTsUrlsFromM3u8(String m3u8Content) {

@@ -270,6 +270,7 @@ class StoreService {
 
   // 매장별 이상 행동 조회
   static Future<List<BehaviorModel>?> getAllBehaviorsByStore({
+    required BuildContext context,
     required int storeId,
     required int userId,
     required String startDate,
@@ -329,38 +330,41 @@ class StoreService {
 
     print(param);
 
-    // try {
-    //   // response = await dio.get('/api/users/$uid/stores/$storeId/accidents');
-    //   response = await dio.get('/api/users/$userId/stores/$storeId/accidents',
-    //       queryParameters: param);
-    //   if (response.statusCode == 200) {
-    //     // print(
-    //     //     '====================StoreGetService response 200=====================');
-    //     // List<Mape<String, dynamic>> stores
-    //     // List<CCTV> cctvList = CCTV.fromMapToCCTVModel(response.data);
-    //     return behaviors;
-    //   }
-    // } on DioException catch (e) {
-    //   if (e.response?.statusCode == 400) {
-    //     // print("[Error] : [$e]");
-    //     // Future.microtask(() {
-    //     //   _showErrorDialog('아이디와 비밀번호가 일치하지 않습니다.', context);
-    //     // });
-    //     return null;
-    //   } else {
-    //     // Future.microtask(() {
-    //     //   customShowDialog(
-    //     //       context: context,
-    //     //       title: '서버 오류',
-    //     //       message: 'CCTV 정보를 불러오는데 실패하였습니다.',
-    //     //       onPressed: () {
-    //     //         Navigator.pop(context);
-    //     //       });
-    //     // });
-    //     print('서버 없음');
-    //     return null;
-    //   }
-    // }
+    try {
+      response = await dio.get('/api/users/$userId/stores/$storeId/accidents',
+          queryParameters: param);
+      if (response.statusCode! ~/ 100 == 2) {
+        print('==========GetBehavior response 200===========');
+        // List<Mape<String, dynamic>> stores
+        return behaviors;
+      }
+    } on DioException catch (e) {
+      if (e.response!.statusCode! ~/ 100 == 4) {
+        // print("[Error] : [$e]");
+        Future.microtask(() {
+          customShowDialog(
+              context: context,
+              title: '이상행동 조회를 실패하였습니다.',
+              message: '${e.response!.data['message']}',
+              onPressed: () {
+                Navigator.pop(context);
+              });
+        });
+        return null;
+      } else {
+        Future.microtask(() {
+          customShowDialog(
+              context: context,
+              title: '서버 오류',
+              message: '$e',
+              onPressed: () {
+                Navigator.pop(context);
+              });
+        });
+        print('서버 없음');
+        return null;
+      }
+    }
     return null;
   }
 

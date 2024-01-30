@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:usms_app/models/cctv_model.dart';
+import 'package:usms_app/services/cctv_service.dart';
 
 class CCTVReplay extends StatefulWidget {
   const CCTVReplay({super.key, required this.cctv});
@@ -61,6 +62,11 @@ class _CalendarScreenState extends State<CCTVReplay> {
                 elevation: 1,
                 expandedHeaderPadding: const EdgeInsets.all(0),
                 expansionCallback: (int index, bool isExpanded) {
+                  print('$index번 패널의 상태 : $isExpanded');
+                  if (isExpanded) {
+                    CCTVService.getCCTVReplay(date: selectedDate, index: index)
+                        .then({});
+                  }
                   setState(() {
                     _data[index].isExpanded = isExpanded;
                   });

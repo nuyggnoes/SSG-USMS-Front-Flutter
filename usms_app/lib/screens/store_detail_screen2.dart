@@ -38,7 +38,7 @@ class StoreDetail2 extends StatefulWidget {
 
 class _StoreDetailState extends State<StoreDetail2> {
   final CCTVService cctvService = CCTVService();
-  late List<CCTV> cctvList;
+  final List<CCTV> cctvList = [];
 
   final List<String> urlStringList = [
     'https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8',
@@ -382,7 +382,7 @@ class _StoreDetailState extends State<StoreDetail2> {
                                   ChewieController? chewieController =
                                       chewieControllers[index];
                                   print(
-                                      '=================$height================');
+                                      '=================chwieListItem 직전================');
 
                                   return ChewieListItem(
                                     cctv: cctv,
@@ -476,8 +476,10 @@ class _StoreDetailState extends State<StoreDetail2> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) =>
-                              NotificationListScreen(storeId: widget.storeId)),
+                          builder: (context) => NotificationListScreen(
+                                storeId: widget.storeId,
+                                cctvList: cctvList,
+                              )),
                     );
                   },
                   child: Container(
@@ -606,6 +608,7 @@ class ChewieListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('chewieListItem build');
     return Card(
       child: SizedBox(
         height: 300,
@@ -654,7 +657,7 @@ class ChewieListItem extends StatelessWidget {
                           Navigator.pushNamed(
                             context,
                             Routes.cctvReplay,
-                            arguments: 1,
+                            arguments: cctv,
                           );
                         },
                         icon: const Icon(Icons.replay),
