@@ -3,6 +3,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
 import 'package:usms_app/models/user_model.dart';
 import 'package:usms_app/routes.dart';
+import 'package:usms_app/screens/video_screen.dart';
 
 import 'package:usms_app/services/user_service.dart';
 import 'package:usms_app/utils/store_provider.dart';
@@ -315,6 +316,49 @@ class _MyPageScreenState extends State<MyPageScreen> {
                                       width: 25,
                                     ),
                                     Text('로그아웃'),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const VideoPlayerScreen(),
+                              ),
+                            );
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 10,
+                              horizontal: 10,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              border: Border(
+                                bottom: BorderSide(
+                                  color: Colors.grey.shade400,
+                                  width: 2,
+                                ),
+                              ),
+                            ),
+                            height: 70,
+                            child: const Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.logout_rounded,
+                                      color: Colors.grey,
+                                    ),
+                                    SizedBox(
+                                      width: 25,
+                                    ),
+                                    Text('비디오테스트'),
                                   ],
                                 ),
                               ],

@@ -36,6 +36,15 @@ class _CalendarScreenState extends State<CCTVReplay> {
             onDateChanged: (DateTime date) {
               setState(() {
                 selectedDate = date;
+                // 다시보기 api 요청
+                //widget.cctv.cctvStreamKey
+                CCTVService.getCCTVReplay(
+                  context: context,
+                  date: selectedDate,
+                  // index: index,
+                  cctv: widget.cctv,
+                ).then({});
+                // 각 패널에 영상 넣기
               });
               // 다시보기 cctv 조회
             },
@@ -64,8 +73,11 @@ class _CalendarScreenState extends State<CCTVReplay> {
                 expansionCallback: (int index, bool isExpanded) {
                   print('$index번 패널의 상태 : $isExpanded');
                   if (isExpanded) {
-                    CCTVService.getCCTVReplay(date: selectedDate, index: index)
-                        .then({});
+                    // CCTVService.getCCTVReplay(
+                    //   context: context,
+                    //   date: selectedDate,
+                    //   index: index,
+                    // ).then({});
                   }
                   setState(() {
                     _data[index].isExpanded = isExpanded;

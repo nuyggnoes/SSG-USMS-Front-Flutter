@@ -40,14 +40,8 @@ class _StoreDetailState extends State<StoreDetail2> {
   final CCTVService cctvService = CCTVService();
   List<CCTV> cctvList = [];
 
-  final List<String> urlStringList = [
-    'https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8',
-    'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
-    'https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8',
-    'https://strange-streaming'
-  ];
   final List<VideoPlayerController> videoList = [];
-  final List<ChewieController> chewieList = [];
+  final List<ChewieController?> chewieList = [];
 
   final _formKey = GlobalKey<FormState>();
   final cctvNameController = TextEditingController();
@@ -55,85 +49,18 @@ class _StoreDetailState extends State<StoreDetail2> {
   @override
   void initState() {
     super.initState();
-    // 특정 회원의 특정 매장의 CCTV 정보를 가져온 후
-    // 특정 매장에 cctv 정보가 없으면 페이지 상태 변화
-
-    // setVideoPlayer();
   }
 
-  // Future<void> setVideoPlayer() async {
-  //   for (var i = 0; i < urlStringList.length; i++) {
-  //     try {
-  //       videoList.add(
-  //         VideoPlayerController.networkUrl(Uri.parse(urlStringList[i])),
-  //       );
-  //     } catch (e) {
-  //       print('URL에서 비디오 로드 중 오류 발생: $e');
-  //       // 다음 URL로 계속 진행하거나 필요에 따라 다르게 처리할 수 있습니다.
-  //     }
-  //     // videoList.add(
-  //     //   VideoPlayerController.networkUrl(Uri.parse(urlStringList[i])),
-  //     // );
-  //   }
-  //   for (var i = 0; i < videoList.length; i++) {
-  //     ChewieController chewieController;
-  //     if (!videoList[i].value.isInitialized) {
-  //       try {
-  //         await videoList[i].initialize();
-  //         // 이벤트 리스너 추가
-  //         chewieController = ChewieController(
-  //           videoPlayerController: videoList[i],
-  //           autoPlay: false,
-  //           aspectRatio: 16 / 9,
-  //         );
-  //         chewieList.add(chewieController);
-  //       } catch (e) {
-  //         print('URL에 대한 비디오 플레이어 초기화 중 오류 발생: ${urlStringList[i]}');
-  //         var errorChewie =
-  //             ChewieController(videoPlayerController: videoList[i]);
-  //         chewieList.add(errorChewie);
-  //         print('URL에 대한 비디오 플레이어 초기화 중 오류 발생: ${videoList[i]}');
-  //       }
-  //       // await videoList[i].initialize();
-  //       // // add EventListener
-  //       // var chewieController = ChewieController(
-  //       //   videoPlayerController: videoList[i],
-  //       //   autoPlay: false,
-  //       //   aspectRatio: 16 / 9,
-  //       // );
-  //       // chewieList.add(
-  //       //   // ChewieController(
-  //       //   //   videoPlayerController: videoList[i],
-  //       //   //   autoPlay: false,
-  //       //   //   aspectRatio: 16 / 9,
-  //       //   // ),
-  //       //   chewieController,
-  //       // );
-  //     }
-  //   }
-  // }
-
   Future<ChewieController?> setController(CCTV cctv) async {
-    var baseUrl =
-        'https://usms.serveftp.com/video/hls/live/${cctv.cctvStreamKey}';
     if (cctv.isConnected) {
-      // var tsUrls = await CCTVService.getCCTVLiveStream(
-      //     context: context, streamKey: cctv.cctvStreamKey);
-      // print(tsUrls);
-      // print('isConnected true');
-      // print(tsUrls[0]);
-
-      // var videoUrl =
-      //     'https://usms.serveftp.com/video/hls/live/${cctv.cctvStreamKey}/index.m3u8';
-
+      print('isConnected true');
       var videoController = VideoPlayerController.networkUrl(Uri.parse(
           'https://usms-media.serveftp.com/video/hls/live/0e798b6c-2b80-47d6-beae-95435399fb7d/index.m3u8'));
 
       videoList.add(videoController);
+      print('videoList : $videoList');
       // 'https://usms.serveftp.com/video/hls/live/${cctv.cctvStreamKey}/index.m3u8'));
       // 'https://usms-media.serveftp.com/video/hls/live/f6cddf98-777c-4bd5-9289-ce298bdd6140/index.m3u8';
-
-      print('videoController Uri.parse');
 
       if (!videoController.value.isInitialized) {
         print('비디오 초기화 전');
@@ -147,14 +74,6 @@ class _StoreDetailState extends State<StoreDetail2> {
           return chewieController;
         });
       }
-      // while (!videoController.value.isInitialized) {
-      //   videoController.initialize();
-      // }
-      // chewieController = ChewieController(
-      //   videoPlayerController: videoController,
-      //   autoPlay: false,
-      //   aspectRatio: 16 / 9,
-      // );
     } else {
       print('isConnected false');
       return null;
@@ -165,21 +84,24 @@ class _StoreDetailState extends State<StoreDetail2> {
   Future<List<ChewieController?>> setControllers(List<CCTV> cctvList) async {
     print('setControllers');
     print('cctvList : $cctvList');
-    List<ChewieController?> controllers = [];
+
     for (CCTV cctv in cctvList) {
       ChewieController? controller = await setController(cctv);
-      print('controller들 : $controller');
-      controllers.add(controller);
+      print('${cctv.cctvName} controller : $controller');
+      chewieList.add(controller);
     }
-    return controllers;
+    return chewieList;
   }
 
   @override
   void dispose() {
     print('dispose()');
     for (var i = 0; i < chewieList.length; i++) {
+      print('dispose for()');
       videoList[i].dispose();
-      chewieList[i].dispose();
+      if (chewieList[i] != null) {
+        chewieList[i]!.dispose();
+      }
     }
     super.dispose();
   }
@@ -364,8 +286,8 @@ class _StoreDetailState extends State<StoreDetail2> {
                               ConnectionState.waiting) {
                             return const CircularProgressIndicator();
                           } else if (snapshot.hasError) {
-                            print('에러 발생: ${snapshot.error}');
-                            return Text('에러발생 : ${snapshot.error}');
+                            print('컨트롤러 에러 발생: ${snapshot.error}');
+                            return Text('컨트롤러 에러발생 : ${snapshot.error}');
                           } else if (snapshot.hasData) {
                             print('snapshot : ${snapshot.data}');
                             List<ChewieController?> chewieControllers =

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class Behavior extends StatelessWidget {
+class Region extends StatelessWidget {
   final String cctvName;
   final String behavior;
-  final DateTime time;
+  final String date;
 
-  const Behavior({
+  const Region({
     super.key,
-    required this.time,
+    required this.date,
     required this.cctvName,
     required this.behavior,
   });
@@ -34,7 +34,7 @@ class Behavior extends StatelessWidget {
               ),
               Column(
                 children: [
-                  Text(time.toString()),
+                  Text(date),
                   Text(cctvName.toString()),
                   Text(behavior),
                 ],

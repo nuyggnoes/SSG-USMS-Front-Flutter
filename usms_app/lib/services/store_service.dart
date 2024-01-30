@@ -12,6 +12,18 @@ import 'package:usms_app/utils/store_provider.dart';
 class StoreService {
   static const baseUrl = MyApp.url;
   static const storage = FlutterSecureStorage();
+  static Map<String, int> switchStringToCode = {
+    '입실': 0,
+    '퇴실': 1,
+    '폭행, 싸움': 2,
+    '절도, 강도': 3,
+    '기물 파손': 4,
+    '실신': 5,
+    '투기': 6,
+    '주취행동': 7,
+  };
+  static Map<int, String> reversedMap = Map.fromEntries(
+      switchStringToCode.entries.map((e) => MapEntry(e.value, e.key)));
 
   // 매장 생성
   requestStore({
@@ -278,16 +290,6 @@ class StoreService {
     required String endDate,
     required List<String> behaviorCodes,
   }) async {
-    Map<String, int> switchStringToCode = {
-      '입실': 0,
-      '퇴실': 1,
-      '폭행, 싸움': 2,
-      '절도, 강도': 3,
-      '기물 파손': 4,
-      '실신': 5,
-      '투기': 6,
-      '주취행동': 7,
-    };
     List<int> codeList = [];
     for (String code in behaviorCodes) {
       if (switchStringToCode.containsKey(code)) {
@@ -463,6 +465,7 @@ class StoreService {
         List<RegionNotification> regionNotificationList =
             RegionNotification.fromMapToRegionModel(response.data);
         print('responseData to List => $regionNotificationList');
+
         return regionNotificationList;
       }
     } on DioException catch (e) {

@@ -1,18 +1,18 @@
 class RegionNotification {
   String? region;
-  int? behaviorCode;
+  int behaviorCode;
   String? startDate;
   String? endDate;
-  String? date;
-  int? count;
+  String date;
+  int count;
 
   RegionNotification({
-    this.date,
-    this.count,
+    required this.date,
+    required this.count,
     this.startDate,
     this.endDate,
     this.region,
-    this.behaviorCode,
+    required this.behaviorCode,
   });
 
   // Map<String, dynamic> toJson() => {
@@ -23,7 +23,7 @@ class RegionNotification {
   factory RegionNotification.fromMap(Map<String, dynamic> map) {
     return RegionNotification(
       region: map['region'],
-      behaviorCode: map['behaviorCode'],
+      behaviorCode: map['behavior'],
       date: map['date'],
       count: map['count'],
     );

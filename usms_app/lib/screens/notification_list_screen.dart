@@ -4,9 +4,11 @@ import 'package:provider/provider.dart';
 import 'package:usms_app/models/behavior_model.dart';
 import 'package:usms_app/models/cctv_model.dart';
 import 'package:usms_app/models/region_notification_model.dart';
+
 import 'package:usms_app/services/store_service.dart';
 import 'package:usms_app/utils/user_provider.dart';
 import 'package:usms_app/widget/behavior_widget.dart';
+import 'package:usms_app/widget/region_widget.dart';
 
 class NotificationListScreen extends StatefulWidget {
   const NotificationListScreen({
@@ -92,17 +94,6 @@ class _NotificationListScreenState extends State<NotificationListScreen>
   void dispose() {
     super.dispose();
     _tabController.dispose();
-  }
-
-  ListView makeListView(int cnt) {
-    return ListView(
-      children: List.generate(
-        cnt,
-        (index) => ListTile(
-          title: Text('Item ${index + 1}'),
-        ),
-      ),
-    );
   }
 
   bool isToggleOn = false;
@@ -359,10 +350,21 @@ class _NotificationListScreenState extends State<NotificationListScreen>
                                     child: Text('매장 알림 기록이 없습니다.'),
                                   );
                                 }
-                                print(snapshot.data);
-                                for (var cctv in widget.cctvList) {
-                                  print(cctv);
+                                List<int> cctvIds = [];
+                                List<String> cctvNames;
+                                List<int> behaviorIds = [];
+
+                                for (var snap in snapshot.data!) {
+                                  cctvIds.add(snap.cctvId!);
+                                  behaviorIds.add(snap.behaviorCode);
                                 }
+                                cctvNames = CCTV.cctvIdTocctvName(
+                                    cctvIds, widget.cctvList);
+                                List<String?> behaviorNames =
+                                    behaviorIds.map((id) {
+                                  return StoreService.reversedMap[id];
+                                }).toList();
+
                                 return ListView.separated(
                                   shrinkWrap: true,
                                   padding: const EdgeInsets.symmetric(
@@ -372,8 +374,9 @@ class _NotificationListScreenState extends State<NotificationListScreen>
                                     var notification = snapshot.data![index];
                                     return Behavior(
                                       time: notification.eventTimestamp,
-                                      cctvName: notification.cctvId.toString(),
-                                      behaviorCode: notification.behaviorCode,
+                                      // cctvName: notification.cctvId.toString(),
+                                      cctvName: cctvNames[index],
+                                      behavior: behaviorNames[index]!,
                                     );
                                   },
                                   separatorBuilder: (context, index) =>
@@ -424,7 +427,16 @@ class _NotificationListScreenState extends State<NotificationListScreen>
                                     child: Text('지역 알림 기록이 없습니다.'),
                                   );
                                 }
-                                print(snapshot.data);
+                                List<int> behaviorIds = [];
+
+                                for (var snap in snapshot.data!) {
+                                  behaviorIds.add(snap.behaviorCode);
+                                }
+                                List<String?> behaviorNames =
+                                    behaviorIds.map((id) {
+                                  return StoreService.reversedMap[id];
+                                }).toList();
+
                                 return ListView.separated(
                                   shrinkWrap: true,
                                   padding: const EdgeInsets.symmetric(
@@ -432,12 +444,11 @@ class _NotificationListScreenState extends State<NotificationListScreen>
                                   itemCount: snapshot.data!.length,
                                   itemBuilder: (context, index) {
                                     var notification = snapshot.data![index];
-                                    return null;
-                                    // return Behavior(
-                                    //   time: notification.time,
-                                    //   cctvName: notification.cctvName,
-                                    //   behaviorCode: notification.behaviorCode,
-                                    // );
+                                    return Region(
+                                      date: notification.date,
+                                      cctvName: notification.count.toString(),
+                                      behavior: behaviorNames[index]!,
+                                    );
                                   },
                                   separatorBuilder: (context, index) =>
                                       const SizedBox(

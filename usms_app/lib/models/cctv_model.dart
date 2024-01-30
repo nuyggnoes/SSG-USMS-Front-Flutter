@@ -43,4 +43,20 @@ class CCTV {
     List<CCTV> storeList = list.map((json) => CCTV.fromMap(json)).toList();
     return storeList;
   }
+
+  static List<String> cctvIdTocctvName(
+    List<int> cctvIdList,
+    List<CCTV> cctvList,
+  ) {
+    List<String> cctvNames = [];
+    for (int cctvId in cctvIdList) {
+      CCTV? cctv = cctvList.firstWhere((cctv) => cctv.cctvId == cctvId);
+
+      // CCTV가 존재하면 이름을 cctvNames에 추가
+      cctvNames.add(cctv.cctvName);
+    }
+    print(cctvNames);
+
+    return cctvNames;
+  }
 }

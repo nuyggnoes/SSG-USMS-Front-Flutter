@@ -265,11 +265,64 @@ class CCTVService {
 
   // cctv 다시보기 조회
   static getCCTVReplay({
+    required BuildContext context,
+    required CCTV cctv,
     required DateTime date,
-    required int index,
+    // required int index,
   }) async {
     print('DateTime date : $date');
     print('TimeStamp date : ${date.microsecondsSinceEpoch}');
+
+    var jSessionId = await storage.read(key: 'cookie');
+    Response response;
+
+    var baseoptions = BaseOptions(
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+        'cookie': jSessionId,
+      },
+      baseUrl: baseUrl,
+    );
+    Dio dio = Dio(baseoptions);
+    var timestamp = date.microsecondsSinceEpoch;
+    print(timestamp);
+
+    // try {
+    //   response = await dio.get(
+    //       '/video/hls/replay/${cctv.cctvStreamKey}/${cctv.cctvStreamKey}-{timestamp}.m3u8');
+    //   if (response.statusCode! ~/ 100 == 2) {
+    //     print('=============CCTVLive response 200=============');
+    //     print(response.data);
+    //     var m3u8Content = response.data;
+    //     List<String> tsUrls = extractTsUrlsFromM3u8(m3u8Content);
+    //     return tsUrls;
+
+    //     // List<Mape<String, dynamic>> stores
+    //   }
+    // } on DioException catch (e) {
+    //   if (e.response!.statusCode! ~/ 100 == 4) {
+    //     Future.microtask(() {
+    //       customShowDialog(
+    //           context: context,
+    //           title: '실시간 CCTV 조회 실패',
+    //           message: '${e.response!.data}',
+    //           onPressed: () {
+    //             Navigator.pop(context);
+    //           });
+    //     });
+    //     return [];
+    //   } else {
+    //     Future.microtask(() {
+    //       customShowDialog(
+    //           context: context,
+    //           title: '오류 메시지',
+    //           message: '실시간 CCTV 조회 실패 : ${e.response}',
+    //           onPressed: () {
+    //             Navigator.pop(context);
+    //           });
+    //     });
+    //   }
+    // }
   }
 
   static List<String> extractTsUrlsFromM3u8(String m3u8Content) {
