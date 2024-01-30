@@ -4,6 +4,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
 import 'package:usms_app/main.dart';
 import 'package:usms_app/models/behavior_model.dart';
+import 'package:usms_app/models/region_notification_model.dart';
 import 'package:usms_app/models/store_model.dart';
 import 'package:usms_app/services/show_dialog.dart';
 import 'package:usms_app/utils/store_provider.dart';
@@ -269,7 +270,7 @@ class StoreService {
   }
 
   // 매장별 이상 행동 조회
-  static Future<List<BehaviorModel>?> getAllBehaviorsByStore({
+  static Future<List<StoreNotification>> getAllBehaviorsByStore({
     required BuildContext context,
     required int storeId,
     required int userId,
@@ -295,7 +296,7 @@ class StoreService {
     }
     print('파라미터 코드 리스트 : $codeList');
 
-    List<BehaviorModel> behaviors = [];
+    List<StoreNotification> behaviors = [];
     print('storeId : $storeId, userId : $userId');
     print(
         'startDate : $startDate, endDate : $endDate, BehaviorCode : $behaviorCodes');
@@ -304,7 +305,7 @@ class StoreService {
     Response response;
     var baseoptions = BaseOptions(
       headers: {
-        "Content-Type": "multipart/form-data;",
+        'Content-Type': 'application/json; charset=utf-8',
         "cookie": jSessionId,
       },
       baseUrl: baseUrl,
@@ -331,12 +332,34 @@ class StoreService {
     print(param);
 
     try {
-      response = await dio.get('/api/users/$userId/stores/$storeId/accidents',
-          queryParameters: param);
+      response = await dio.get(
+        '/api/users/$userId/stores/$storeId/cctvs/accidents',
+        queryParameters: param,
+      );
       if (response.statusCode! ~/ 100 == 2) {
-        print('==========GetBehavior response 200===========');
+        print('==========매장알림 response 200===========');
         // List<Mape<String, dynamic>> stores
-        return behaviors;
+        var list = [
+          StoreNotification(
+            eventTimestamp:
+                DateTime.fromMicrosecondsSinceEpoch(1702352316 * 1000),
+            cctvId: 3,
+            behaviorCode: 0,
+          ),
+          StoreNotification(
+            eventTimestamp:
+                DateTime.fromMicrosecondsSinceEpoch(170235237754 * 1000),
+            cctvId: 4,
+            behaviorCode: 5,
+          ),
+          StoreNotification(
+            eventTimestamp:
+                DateTime.fromMicrosecondsSinceEpoch(17025223316 * 1000),
+            cctvId: 3,
+            behaviorCode: 1,
+          ),
+        ];
+        return list;
       }
     } on DioException catch (e) {
       if (e.response!.statusCode! ~/ 100 == 4) {
@@ -345,27 +368,131 @@ class StoreService {
           customShowDialog(
               context: context,
               title: '이상행동 조회를 실패하였습니다.',
-              message: '${e.response!.data['message']}',
-              onPressed: () {
-                Navigator.pop(context);
-              });
-        });
-        return null;
-      } else {
-        Future.microtask(() {
-          customShowDialog(
-              context: context,
-              title: '서버 오류',
               message: '$e',
               onPressed: () {
                 Navigator.pop(context);
               });
         });
-        print('서버 없음');
+        return [];
+      } else {
+        Future.microtask(() {
+          customShowDialog(
+              context: context,
+              title: '매장 알림 조회 서버 오류',
+              message: '$e',
+              onPressed: () {
+                Navigator.pop(context);
+              });
+        });
+        print('서버 없음 : $e');
+        return [];
+      }
+    }
+    return [];
+  }
+
+  // 지역 알림 조회
+  static Future<List<RegionNotification>?> getRegionNotificationByStore({
+    required BuildContext context,
+    required int storeId,
+    required int userId,
+    required String startDate,
+    required String endDate,
+    required List<String> behaviorCodes,
+  }) async {
+    Map<String, int> switchStringToCode = {
+      '입실': 0,
+      '퇴실': 1,
+      '폭행, 싸움': 2,
+      '절도, 강도': 3,
+      '기물 파손': 4,
+      '실신': 5,
+      '투기': 6,
+      '주취행동': 7,
+    };
+    List<int> codeList = [];
+    for (String code in behaviorCodes) {
+      if (switchStringToCode.containsKey(code)) {
+        codeList.add(switchStringToCode[code]!);
+      }
+    }
+    print('파라미터 코드 리스트 : $codeList');
+
+    print('storeId : $storeId, userId : $userId');
+    print(
+        'startDate : $startDate, endDate : $endDate, BehaviorCode : $behaviorCodes');
+
+    var jSessionId = await storage.read(key: 'cookie');
+    Response response;
+    var baseoptions = BaseOptions(
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+        "cookie": jSessionId,
+      },
+      baseUrl: baseUrl,
+    );
+
+    Dio dio = Dio(baseoptions);
+
+    Map<String, dynamic> param = {
+      'offset': 0,
+      'size': 20,
+    };
+
+    if (startDate != 'null') {
+      param['startDate'] = startDate;
+    }
+
+    if (endDate != 'null') {
+      param['endDate'] = endDate;
+    }
+
+    print(param);
+
+    print('지역 알림 : /api/users/$userId/stores/$storeId/accidents/region');
+
+    try {
+      response = await dio.get(
+        '/api/users/$userId/stores/$storeId/accidents/region',
+        queryParameters: param,
+      );
+      if (response.statusCode! ~/ 100 == 2) {
+        print('==========지역알림 200===========');
+        // List<Mape<String, dynamic>> stores
+
+        List<RegionNotification> regionNotificationList =
+            RegionNotification.fromMapToRegionModel(response.data);
+        print('responseData to List => $regionNotificationList');
+        return regionNotificationList;
+      }
+    } on DioException catch (e) {
+      if (e.response!.statusCode! ~/ 100 == 4) {
+        // print("[Error] : [$e]");
+        Future.microtask(() {
+          customShowDialog(
+              context: context,
+              title: '지역 알림 조회를 실패하였습니다.',
+              message: '$e',
+              onPressed: () {
+                Navigator.pop(context);
+              });
+        });
+        return [];
+      } else {
+        Future.microtask(() {
+          customShowDialog(
+              context: context,
+              title: '지역 알림 조회 서버 오류',
+              message: '$e',
+              onPressed: () {
+                Navigator.pop(context);
+              });
+        });
+        print('지역 알림 조회 서버 오류');
         return null;
       }
     }
-    return null;
+    return [];
   }
 
   // provider 써보기

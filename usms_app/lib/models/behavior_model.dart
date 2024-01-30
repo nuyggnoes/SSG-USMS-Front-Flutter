@@ -1,4 +1,4 @@
-class BehaviorModel {
+class StoreNotification {
   int? id;
   int? cctvId;
   String? startDate;
@@ -8,7 +8,7 @@ class BehaviorModel {
   final String cctvName = '';
   final DateTime eventTimestamp;
 
-  BehaviorModel({
+  StoreNotification({
     required this.eventTimestamp,
     this.behaviorCodeList,
     this.id,
@@ -23,8 +23,8 @@ class BehaviorModel {
         'startDate': startDate,
         'endDate': endDate,
       };
-  factory BehaviorModel.fromMap(Map<String, dynamic> map) {
-    return BehaviorModel(
+  factory StoreNotification.fromMap(Map<String, dynamic> map) {
+    return StoreNotification(
       id: map['id'],
       cctvId: map['cctvId'],
       eventTimestamp: map['eventTimestamp'],

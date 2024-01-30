@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:usms_app/models/behavior_model.dart';
 import 'package:usms_app/models/cctv_model.dart';
+import 'package:usms_app/models/region_notification_model.dart';
+import 'package:usms_app/services/store_service.dart';
+import 'package:usms_app/utils/user_provider.dart';
 
 class NotificationListScreen extends StatefulWidget {
   const NotificationListScreen({
@@ -19,16 +24,67 @@ class _NotificationListScreenState extends State<NotificationListScreen>
     with TickerProviderStateMixin {
   late final TabController _tabController;
   // final Future<List<WordModel>> words = WordJson.getWords();
-  // final Future<List<BehaviorModel>> abnormalBehaviors =
+  // final Future<List<StoreNotification>> abnormalBehaviors =
   //     CCTVService.getAllBehaviorsByStore();
+  late Future<List<StoreNotification>?> _behaviorsFuture;
+  late Future<List<RegionNotification>?> _regionFuture;
+  late Map<String, bool> filterButtonStates;
 
   DateTime? _startDate;
   DateTime? _endDate;
+  List<String> paramList = [];
+  List<StoreNotification> behaviors = [];
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    _startDate = null;
+    _endDate = null;
+    paramList = [];
+    filterButtonStates = {
+      '입실': false,
+      '퇴실': false,
+      '폭행, 싸움': false,
+      '절도, 강도': false,
+      '기물 파손': false,
+      '실신': false,
+      '투기': false,
+      '주취행동': false,
+    };
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _behaviorsFuture = _fetchBehaviors();
+    _regionFuture = _fetchRegions();
+  }
+
+  Future<List<StoreNotification>?> _fetchBehaviors() async {
+    var returnValue = await StoreService.getAllBehaviorsByStore(
+      context: context,
+      storeId: widget.storeId,
+      userId: Provider.of<UserProvider>(context, listen: false).user.id!,
+      startDate: _startDate.toString().split(" ").first,
+      endDate: _endDate.toString().split(" ").first,
+      behaviorCodes: paramList,
+    );
+    print('allbehasviorByStore : $returnValue');
+    return returnValue;
+  }
+
+  Future<List<RegionNotification>?> _fetchRegions() async {
+    var returnValue = await StoreService.getRegionNotificationByStore(
+      context: context,
+      storeId: widget.storeId,
+      userId: Provider.of<UserProvider>(context, listen: false).user.id!,
+      startDate: _startDate.toString().split(" ").first,
+      endDate: _endDate.toString().split(" ").first,
+      behaviorCodes: paramList,
+    );
+    print('RegionReturnValue : $returnValue');
+    return returnValue;
   }
 
   @override
@@ -49,17 +105,6 @@ class _NotificationListScreenState extends State<NotificationListScreen>
   }
 
   bool isToggleOn = false;
-
-  Map<String, bool> filterButtonStates = {
-    '입실': false,
-    '퇴실': false,
-    '폭행, 싸움': false,
-    '절도, 강도': false,
-    '기물 파손': false,
-    '실신': false,
-    '투기': false,
-    '주취행동': false,
-  };
 
   int tabBarIndex = 0;
 
@@ -212,6 +257,16 @@ class _NotificationListScreenState extends State<NotificationListScreen>
                             ),
                           ),
                           onPressed: () {
+                            paramList = filterButtonStates.entries
+                                .where((entry) => entry.value)
+                                .map((entry) => entry.key)
+                                .toList();
+                            if (tabBarIndex == 0) {
+                              _behaviorsFuture = _fetchBehaviors();
+                            } else if (tabBarIndex == 1) {
+                              _regionFuture = _fetchRegions();
+                            }
+                            print('paramList : $paramList');
                             String startDateString;
                             String endtDateString;
                             startDateString =
@@ -269,7 +324,7 @@ class _NotificationListScreenState extends State<NotificationListScreen>
                 child: TabBarView(
                   physics: const NeverScrollableScrollPhysics(),
                   controller: _tabController,
-                  children: <Widget>[
+                  children: [
                     Column(
                       children: [
                         SizedBox(
@@ -288,75 +343,111 @@ class _NotificationListScreenState extends State<NotificationListScreen>
                             }).toList(),
                           ),
                         ),
-                        // Expanded(
-                        //   child: FutureBuilder(
-                        //     // future: words,
-                        //     future: StoreService.getAllBehaviorsByStore(),
-                        //     builder: (context, snapshot) {
-                        //       if (snapshot.hasError) {
-                        //         return Center(
-                        //             child: Text('에러 발생: ${snapshot.error}'));
-                        //       } else if (snapshot.hasData) {
-                        //         return Column(
-                        //           children: [
-                        //             Expanded(
-                        //               child: ListView.separated(
-                        //                 shrinkWrap: true,
-                        //                 padding: const EdgeInsets.symmetric(
-                        //                     vertical: 10, horizontal: 60),
-                        //                 itemCount: snapshot.data!.length,
-                        //                 itemBuilder: (context, index) {
-                        //                   print(
-                        //                       '길이 : ${snapshot.data!.length}');
-                        //                   var word = snapshot.data![index];
-                        //                   return const Word(
-                        //                     eng: 'word.eng',
-                        //                     kor: 'word.kor',
-                        //                     id: 1,
-                        //                     day: 1,
-                        //                     isDone: true,
-                        //                   );
-                        //                 },
-                        //                 separatorBuilder: (context, index) =>
-                        //                     const SizedBox(
-                        //                   height: 20,
-                        //                 ),
-                        //               ),
-                        //             ),
-                        //           ],
-                        //         );
-                        //       } else if (!snapshot.hasData ||
-                        //           (snapshot.data as List).isEmpty) {
-                        //         return const Center(
-                        //             child: Text('알림 기록이 없습니다.'));
-                        //       } else {
-                        //         return const CircularProgressIndicator();
-                        //       }
-                        //     },
-                        //   ),
-                        // ),
+                        Expanded(
+                          child: FutureBuilder(
+                            future: _behaviorsFuture,
+                            builder: (context, snapshot) {
+                              if (snapshot.hasError) {
+                                print('snapshot error');
+                                return Center(
+                                  child: Text(snapshot.error.toString()),
+                                );
+                              } else if (snapshot.hasData) {
+                                if (snapshot.data!.isEmpty) {
+                                  return const Center(
+                                    child: Text('매장 알림 기록이 없습니다.'),
+                                  );
+                                }
+                                print(snapshot.data);
+                                return ListView.separated(
+                                  shrinkWrap: true,
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 10, horizontal: 60),
+                                  itemCount: snapshot.data!.length,
+                                  itemBuilder: (context, index) {
+                                    var notification = snapshot.data![index];
+                                    return null;
+                                    // return Behavior(
+                                    //   time: notification.time,
+                                    //   cctvName: notification.cctvName,
+                                    //   behaviorCode: notification.behaviorCode,
+                                    // );
+                                  },
+                                  separatorBuilder: (context, index) =>
+                                      const SizedBox(
+                                    height: 20,
+                                  ),
+                                );
+                              } else {
+                                return const Center(
+                                    child: CircularProgressIndicator());
+                              }
+                            },
+                          ),
+                        ),
                       ],
                     ),
                     Column(
                       children: [
-                        SizedBox(
-                          height: 100,
-                          child: GridView.count(
-                            crossAxisCount: 4,
-                            mainAxisSpacing: 8,
-                            crossAxisSpacing: 8,
-                            shrinkWrap: true,
-                            childAspectRatio: 3 / 1,
-                            physics: const NeverScrollableScrollPhysics(),
-                            padding: const EdgeInsets.all(8.0),
-                            children: filterButtonStates.keys
-                                .skip(2)
-                                .map((String text) {
-                              return buildToggleButton(text);
-                            }).toList(),
+                        // SizedBox(
+                        //   height: 100,
+                        //   child: GridView.count(
+                        //     crossAxisCount: 4,
+                        //     mainAxisSpacing: 8,
+                        //     crossAxisSpacing: 8,
+                        //     shrinkWrap: true,
+                        //     childAspectRatio: 3 / 1,
+                        //     physics: const NeverScrollableScrollPhysics(),
+                        //     padding: const EdgeInsets.all(8.0),
+                        //     children: filterButtonStates.keys
+                        //         .skip(2)
+                        //         .map((String text) {
+                        //       return buildToggleButton(text);
+                        //     }).toList(),
+                        //   ),
+                        // ),
+                        Expanded(
+                          child: FutureBuilder(
+                            future: _regionFuture,
+                            builder: (context, snapshot) {
+                              if (snapshot.hasError) {
+                                print('snapshot error');
+                                return Center(
+                                  child: Text(snapshot.error.toString()),
+                                );
+                              } else if (snapshot.hasData) {
+                                if (snapshot.data!.isEmpty) {
+                                  return const Center(
+                                    child: Text('지역 알림 기록이 없습니다.'),
+                                  );
+                                }
+                                print(snapshot.data);
+                                return ListView.separated(
+                                  shrinkWrap: true,
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 10, horizontal: 60),
+                                  itemCount: snapshot.data!.length,
+                                  itemBuilder: (context, index) {
+                                    var notification = snapshot.data![index];
+                                    return null;
+                                    // return Behavior(
+                                    //   time: notification.time,
+                                    //   cctvName: notification.cctvName,
+                                    //   behaviorCode: notification.behaviorCode,
+                                    // );
+                                  },
+                                  separatorBuilder: (context, index) =>
+                                      const SizedBox(
+                                    height: 20,
+                                  ),
+                                );
+                              } else {
+                                return const Center(
+                                    child: CircularProgressIndicator());
+                              }
+                            },
                           ),
                         ),
-                        Expanded(child: makeListView(20)),
                       ],
                     ),
                   ],
