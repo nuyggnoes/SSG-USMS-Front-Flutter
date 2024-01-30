@@ -116,11 +116,12 @@ class UserService {
           customShowDialog(
               context: context,
               title: '서버 오류',
-              message: '$e',
+              message: '서버 종료상태입니다.',
               onPressed: () {
                 Navigator.pop(context);
               });
         });
+        print('[ERR] $e');
       }
     }
   }

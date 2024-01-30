@@ -4,7 +4,7 @@ class StoreNotification {
   String? startDate;
   String? endDate;
   List<int>? behaviorCodeList;
-  int? behaviorCode;
+  int behaviorCode;
   final String cctvName = '';
   final DateTime eventTimestamp;
 
@@ -15,7 +15,7 @@ class StoreNotification {
     this.cctvId,
     this.startDate,
     this.endDate,
-    this.behaviorCode,
+    this.behaviorCode = -1,
   });
 
   Map<String, dynamic> toJson() => {

@@ -6,6 +6,7 @@ import 'package:usms_app/models/cctv_model.dart';
 import 'package:usms_app/models/region_notification_model.dart';
 import 'package:usms_app/services/store_service.dart';
 import 'package:usms_app/utils/user_provider.dart';
+import 'package:usms_app/widget/behavior_widget.dart';
 
 class NotificationListScreen extends StatefulWidget {
   const NotificationListScreen({
@@ -359,6 +360,9 @@ class _NotificationListScreenState extends State<NotificationListScreen>
                                   );
                                 }
                                 print(snapshot.data);
+                                for (var cctv in widget.cctvList) {
+                                  print(cctv);
+                                }
                                 return ListView.separated(
                                   shrinkWrap: true,
                                   padding: const EdgeInsets.symmetric(
@@ -366,12 +370,11 @@ class _NotificationListScreenState extends State<NotificationListScreen>
                                   itemCount: snapshot.data!.length,
                                   itemBuilder: (context, index) {
                                     var notification = snapshot.data![index];
-                                    return null;
-                                    // return Behavior(
-                                    //   time: notification.time,
-                                    //   cctvName: notification.cctvName,
-                                    //   behaviorCode: notification.behaviorCode,
-                                    // );
+                                    return Behavior(
+                                      time: notification.eventTimestamp,
+                                      cctvName: notification.cctvId.toString(),
+                                      behaviorCode: notification.behaviorCode,
+                                    );
                                   },
                                   separatorBuilder: (context, index) =>
                                       const SizedBox(

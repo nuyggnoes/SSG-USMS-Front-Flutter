@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
 class Behavior extends StatelessWidget {
-  final String time, cctvName;
+  final String cctvName;
   final int behaviorCode;
+  final DateTime time;
 
   const Behavior({
     super.key,

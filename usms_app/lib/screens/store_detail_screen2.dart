@@ -38,7 +38,7 @@ class StoreDetail2 extends StatefulWidget {
 
 class _StoreDetailState extends State<StoreDetail2> {
   final CCTVService cctvService = CCTVService();
-  final List<CCTV> cctvList = [];
+  List<CCTV> cctvList = [];
 
   final List<String> urlStringList = [
     'https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8',
@@ -328,7 +328,7 @@ class _StoreDetailState extends State<StoreDetail2> {
                       return Text('에러발생 : ${snapshot.error}');
                     } else if (snapshot.hasData) {
                       print('snapshot.hasData');
-                      List<CCTV> cctvList = snapshot.data!;
+                      cctvList = snapshot.data!;
 
                       // return SizedBox(
                       //   height: listViewHeightCalculation(cctvList.length),
