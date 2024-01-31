@@ -39,10 +39,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             // const NotificationListScreen(
             //   storeId: 30,
             // ),
-            const StatisticScreen(
-              storeId: 1,
-              uid: 1,
-            ),
+            // const StatisticScreen(
+            //   storeId: 1,
+            //   uid: 1,
+            // ),
             const MyPageScreen(),
           ];
           user = value;
@@ -78,10 +78,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             //   icon: Icon(Icons.notifications_sharp),
             //   label: '알림',
             // ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.bar_chart_rounded),
-              label: '통계',
-            ),
+            // BottomNavigationBarItem(
+            //   icon: Icon(Icons.bar_chart_rounded),
+            //   label: '통계',
+            // ),
             BottomNavigationBarItem(
               icon: Icon(Icons.person),
               label: '내 정보',

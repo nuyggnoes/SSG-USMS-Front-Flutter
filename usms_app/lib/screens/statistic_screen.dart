@@ -73,91 +73,10 @@ class _StatisticScreenState extends State<StatisticScreen> {
               child: Text('이상감지 현황'),
             ),
           ),
-          Expanded(
-            child: Row(
-              children: [
-                Expanded(
-                  child: ElevatedButton(
-                    style: ButtonStyle(
-                      side: const MaterialStatePropertyAll(
-                        BorderSide(color: Colors.grey),
-                      ),
-                      fixedSize: MaterialStateProperty.all(
-                        const Size(80, 50),
-                      ),
-                      shape: MaterialStateProperty.all(
-                        const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.zero,
-                        ),
-                      ),
-                    ),
-                    onPressed: () async {
-                      final selectedDate = await showDatePicker(
-                        context: context,
-                        initialDate: _startDate,
-                        firstDate: DateTime(2000),
-                        lastDate: DateTime.now(),
-                        locale: const Locale('ko', 'KR'),
-                      );
-                      if (selectedDate != null) {
-                        setState(() {
-                          _startDate = selectedDate;
-                        });
-                      }
-                    },
-                    child: Text(
-                      _startDate == null
-                          ? ''
-                          : DateFormat('yyyy-MM-dd').format(_startDate!),
-                      style: const TextStyle(color: Colors.black),
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  width: 20,
-                  child: Text(' -- '),
-                ),
-                Expanded(
-                  child: ElevatedButton(
-                    style: ButtonStyle(
-                      side: const MaterialStatePropertyAll(
-                        BorderSide(color: Colors.grey),
-                      ),
-                      fixedSize: MaterialStateProperty.all(
-                        const Size(80, 50),
-                      ),
-                      shape: MaterialStateProperty.all(
-                        const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.zero,
-                        ),
-                      ),
-                    ),
-                    onPressed: () async {
-                      final selectedDate = await showDatePicker(
-                        context: context,
-                        initialDate: _endDate,
-                        firstDate: DateTime(2000),
-                        lastDate: DateTime.now(),
-                        locale: const Locale('ko', 'KR'),
-                      );
-                      if (selectedDate != null) {
-                        setState(() {
-                          _endDate = selectedDate;
-                        });
-                      }
-                    },
-                    child: Text(
-                      _endDate == null
-                          ? ''
-                          : DateFormat('yyyy-MM-dd').format(_endDate!),
-                      style: const TextStyle(color: Colors.black),
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  width: 20,
-                ),
-                ElevatedButton(
+          Row(
+            children: [
+              Expanded(
+                child: ElevatedButton(
                   style: ButtonStyle(
                     side: const MaterialStatePropertyAll(
                       BorderSide(color: Colors.grey),
@@ -172,22 +91,101 @@ class _StatisticScreenState extends State<StatisticScreen> {
                     ),
                   ),
                   onPressed: () async {
-                    String startDateString;
-                    String endtDateString;
-                    startDateString = _startDate.toString().split(" ").first;
-                    endtDateString = _endDate.toString().split(" ").first;
-                    print('[SELECT DATE] : $_startDate ~ $_endDate');
-                    print('[SELECT DATE] : $startDateString,$endtDateString');
-                    statisticData = _fetchStatistic();
-                    setState(() {});
+                    final selectedDate = await showDatePicker(
+                      context: context,
+                      initialDate: _startDate,
+                      firstDate: DateTime(2000),
+                      lastDate: DateTime.now(),
+                      locale: const Locale('ko', 'KR'),
+                    );
+                    if (selectedDate != null) {
+                      setState(() {
+                        _startDate = selectedDate;
+                      });
+                    }
                   },
-                  child: const Text(
-                    '조회',
-                    style: TextStyle(color: Colors.black),
+                  child: Text(
+                    _startDate == null
+                        ? ''
+                        : DateFormat('yyyy-MM-dd').format(_startDate!),
+                    style: const TextStyle(color: Colors.black),
                   ),
                 ),
-              ],
-            ),
+              ),
+              const SizedBox(
+                width: 20,
+                child: Text(' -- '),
+              ),
+              Expanded(
+                child: ElevatedButton(
+                  style: ButtonStyle(
+                    side: const MaterialStatePropertyAll(
+                      BorderSide(color: Colors.grey),
+                    ),
+                    fixedSize: MaterialStateProperty.all(
+                      const Size(80, 50),
+                    ),
+                    shape: MaterialStateProperty.all(
+                      const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.zero,
+                      ),
+                    ),
+                  ),
+                  onPressed: () async {
+                    final selectedDate = await showDatePicker(
+                      context: context,
+                      initialDate: _endDate,
+                      firstDate: DateTime(2000),
+                      lastDate: DateTime.now(),
+                      locale: const Locale('ko', 'KR'),
+                    );
+                    if (selectedDate != null) {
+                      setState(() {
+                        _endDate = selectedDate;
+                      });
+                    }
+                  },
+                  child: Text(
+                    _endDate == null
+                        ? ''
+                        : DateFormat('yyyy-MM-dd').format(_endDate!),
+                    style: const TextStyle(color: Colors.black),
+                  ),
+                ),
+              ),
+              const SizedBox(
+                width: 20,
+              ),
+              ElevatedButton(
+                style: ButtonStyle(
+                  side: const MaterialStatePropertyAll(
+                    BorderSide(color: Colors.grey),
+                  ),
+                  fixedSize: MaterialStateProperty.all(
+                    const Size(80, 50),
+                  ),
+                  shape: MaterialStateProperty.all(
+                    const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.zero,
+                    ),
+                  ),
+                ),
+                onPressed: () async {
+                  String startDateString;
+                  String endtDateString;
+                  startDateString = _startDate.toString().split(" ").first;
+                  endtDateString = _endDate.toString().split(" ").first;
+                  print('[SELECT DATE] : $_startDate ~ $_endDate');
+                  print('[SELECT DATE] : $startDateString,$endtDateString');
+                  statisticData = _fetchStatistic();
+                  setState(() {});
+                },
+                child: const Text(
+                  '조회',
+                  style: TextStyle(color: Colors.black),
+                ),
+              ),
+            ],
           ),
           // Stack(
           //   alignment: Alignment.center,
@@ -250,7 +248,7 @@ class _StatisticScreenState extends State<StatisticScreen> {
                         enableTooltip: true,
                         dataLabelSettings:
                             const DataLabelSettings(isVisible: true),
-                        explode: true,
+                        // explode: true,
                       ),
                     ],
                   );
