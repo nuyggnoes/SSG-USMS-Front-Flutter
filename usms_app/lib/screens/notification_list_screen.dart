@@ -257,6 +257,7 @@ class _NotificationListScreenState extends State<NotificationListScreen>
                               _behaviorsFuture = _fetchBehaviors();
                             } else if (tabBarIndex == 1) {
                               _regionFuture = _fetchRegions();
+                              setState(() {});
                             }
                             print('paramList : $paramList');
                             String startDateString;
@@ -440,14 +441,16 @@ class _NotificationListScreenState extends State<NotificationListScreen>
                                 return ListView.separated(
                                   shrinkWrap: true,
                                   padding: const EdgeInsets.symmetric(
-                                      vertical: 10, horizontal: 60),
+                                      vertical: 10, horizontal: 20),
                                   itemCount: snapshot.data!.length,
                                   itemBuilder: (context, index) {
                                     var notification = snapshot.data![index];
+
                                     return Region(
                                       date: notification.date,
-                                      cctvName: notification.count.toString(),
+                                      count: notification.count,
                                       behavior: behaviorNames[index]!,
+                                      region: notification.region!,
                                     );
                                   },
                                   separatorBuilder: (context, index) =>

@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 
 class Region extends StatelessWidget {
-  final String cctvName;
+  final int count;
   final String behavior;
   final String date;
+  final String region;
 
   const Region({
     super.key,
     required this.date,
-    required this.cctvName,
+    required this.count,
     required this.behavior,
+    required this.region,
   });
 
   @override
@@ -25,18 +27,24 @@ class Region extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              const Column(
-                children: [
-                  Text('일시'),
-                  Text('CCTV명'),
-                  Text('행동'),
-                ],
+              const Icon(
+                Icons.warning_rounded,
+                color: Colors.amber,
+                size: 60,
               ),
               Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(date),
-                  Text(cctvName.toString()),
-                  Text(behavior),
+                  const Text(
+                    '지역알림',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                  Text(
+                    '[$date] $region에서 \n[ $behavior ] 이(가) $count건 발생했습니다.',
+                    softWrap: true,
+                  ),
                 ],
               ),
             ],

@@ -44,7 +44,7 @@ dependencies:
   intl: ^0.18.0
 
   video_player_web_hls: ^1.1.0
-  video_player: ^2.2.19
+  video_player: ^2.7.0
   chewie: ^1.7.4
 
   daum_postcode_search: ^0.0.2

@@ -18,7 +18,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
     // 비디오 URL을 전달하여 VideoPlayerController를 초기화합니다.
     _controller = VideoPlayerController.networkUrl(
       Uri.parse(
-          'https://usms-media.serveftp.com/video/hls/replay/0e798b6c-2b80-47d6-beae-95435399fb7d/0e798b6c-2b80-47d6-beae-95435399fb7d-1706599796.m3u8'),
+          'https://usms-media.serveftp.com/video/hls/replay/0e798b6c-2b80-47d6-beae-95435399fb7d-1706602196.m3u8'),
       formatHint: VideoFormat.other,
     )..initialize().then((_) {
         // 비디오가 초기화되면 setState를 호출하여 UI를 갱신합니다.

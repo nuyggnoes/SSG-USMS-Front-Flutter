@@ -54,22 +54,23 @@ class _StoreDetailState extends State<StoreDetail2> {
   Future<ChewieController?> setController(CCTV cctv) async {
     if (cctv.isConnected) {
       print('isConnected true');
-      var videoController = VideoPlayerController.networkUrl(Uri.parse(
-          'https://usms-media.serveftp.com/video/hls/live/0e798b6c-2b80-47d6-beae-95435399fb7d/index.m3u8'));
-
-      videoList.add(videoController);
-      print('videoList : $videoList');
-      // 'https://usms.serveftp.com/video/hls/live/${cctv.cctvStreamKey}/index.m3u8'));
-      // 'https://usms-media.serveftp.com/video/hls/live/f6cddf98-777c-4bd5-9289-ce298bdd6140/index.m3u8';
+      var videoController = VideoPlayerController.networkUrl(
+          Uri.parse(
+              'https://usms-media.serveftp.com/video/hls/live/0e798b6c-2b80-47d6-beae-95435399fb7d/index.m3u8'),
+          videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true));
+      // 'https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8'));
 
       if (!videoController.value.isInitialized) {
         print('비디오 초기화 전');
-        videoController.initialize().then((value) {
+        return await videoController.initialize().then((value) {
+          videoList.add(videoController);
+          print('videoList : $videoList');
           var chewieController = ChewieController(
             videoPlayerController: videoController,
             autoPlay: true,
             aspectRatio: 16 / 9,
           );
+          print(chewieController);
           print('비디오 초기화 완료');
           return chewieController;
         });
@@ -96,7 +97,7 @@ class _StoreDetailState extends State<StoreDetail2> {
   @override
   void dispose() {
     print('dispose()');
-    for (var i = 0; i < chewieList.length; i++) {
+    for (var i = 0; i < videoList.length; i++) {
       print('dispose for()');
       videoList[i].dispose();
       if (chewieList[i] != null) {
@@ -104,29 +105,6 @@ class _StoreDetailState extends State<StoreDetail2> {
       }
     }
     super.dispose();
-  }
-
-  Widget buildVideoContainer({
-    required ChewieController chewieController,
-    required int idx,
-  }) {
-    return Container(
-      // height: 100,
-      width: 270,
-      decoration: BoxDecoration(
-        color: Colors.grey.shade200,
-      ),
-      // child: _videoController.value.isInitialized
-      //     ? Chewie(controller: _chewieController)
-      //     : const Center(
-      //         child: CircularProgressIndicator(),
-      //       ),
-      child: videoList[idx].value.isInitialized
-          ? Chewie(controller: chewieController)
-          : const Center(
-              child: CircularProgressIndicator(),
-            ),
-    );
   }
 
   double listViewHeightCalculation(int storeListLength) {
@@ -303,8 +281,7 @@ class _StoreDetailState extends State<StoreDetail2> {
                                   CCTV cctv = cctvList[index];
                                   ChewieController? chewieController =
                                       chewieControllers[index];
-                                  print(
-                                      '=================chwieListItem 직전================');
+                                  print('========chwieListItem 직전=========');
 
                                   return ChewieListItem(
                                     cctv: cctv,
