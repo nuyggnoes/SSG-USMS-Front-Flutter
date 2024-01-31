@@ -549,7 +549,10 @@ class StoreService {
 
         List<StatisticModel> statisticsDataList =
             StatisticModel.fromMapToRegionModel(response.data);
-        print('responseData to List => $statisticsDataList');
+        for (var a in statisticsDataList) {
+          print(
+              '행동 코드 : ${a.behavior} / 횟수 : ${a.count} / ${a.startDate},${a.endDate}');
+        }
 
         return statisticsDataList;
       }

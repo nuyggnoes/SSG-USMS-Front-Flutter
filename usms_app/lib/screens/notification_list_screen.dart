@@ -85,7 +85,6 @@ class _NotificationListScreenState extends State<NotificationListScreen>
       endDate: _endDate.toString().split(" ").first,
       behaviorCodes: paramList,
     );
-    print('RegionReturnValue : $returnValue');
     return returnValue;
   }
 

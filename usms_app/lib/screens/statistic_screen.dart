@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
+
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:usms_app/models/statistic_model.dart';
-import 'package:usms_app/models/word_model.dart';
+
 import 'package:usms_app/services/store_service.dart';
-import 'package:usms_app/services/word_json.dart';
-import 'package:usms_app/utils/user_provider.dart';
 
 class StatisticScreen extends StatefulWidget {
   const StatisticScreen({super.key, required this.storeId, required this.uid});
@@ -17,38 +15,7 @@ class StatisticScreen extends StatefulWidget {
 }
 
 class _StatisticScreenState extends State<StatisticScreen> {
-  List<_SalesData> data = [
-    _SalesData('행동1', 2),
-    _SalesData('행동2', 2),
-    _SalesData('행동3', 3),
-    _SalesData('행동4', 4),
-  ];
-  // 각 행동들의 날짜(기간)에 대한 count
-  // var dummy = [
-  //   {
-  //     "storeId": 1,
-  //     "behaviorCode": 0,
-  //     "count": 50,
-  //     "startDate": "2023-12-01",
-  //     "endDate": "2024-01-31"
-  //   },
-  //   {
-  //     "storeId": 1,
-  //     "behaviorCode": 3,
-  //     "count": 30,
-  //     "startDate": "2023-12-01",
-  //     "endDate": "2024-01-31"
-  //   },
-  //   {
-  //     "storeId": 1,
-  //     "behaviorCode": 7,
-  //     "count": 60,
-  //     "startDate": "2023-12-01",
-  //     "endDate": "2024-01-31"
-  //   }
-  // ];
   Future<List<StatisticModel>?>? statisticData;
-  Future<List<WordModel>>? words;
 
   DateTime? _startDate;
   DateTime? _endDate;
@@ -58,21 +25,26 @@ class _StatisticScreenState extends State<StatisticScreen> {
     super.initState();
     _startDate = null;
     _endDate = null;
+  }
 
-    statisticData = StoreService.getStoreStatistics(
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    statisticData = _fetchStatistic();
+  }
+
+  Future<List<StatisticModel>?> _fetchStatistic() async {
+    var returnValue = await StoreService.getStoreStatistics(
         context: context,
         storeId: widget.storeId,
         userId: widget.uid,
         startDate: _startDate.toString().split(" ").first,
         endDate: _endDate.toString().split(" ").first);
-
-    // statisticData = StoreService.
+    return returnValue;
   }
 
   @override
   Widget build(BuildContext context) {
-    int totalSales =
-        data.map((salesData) => salesData.sales).fold(0, (a, b) => a + b);
     return Scaffold(
       appBar: AppBar(
         title: const Text('통계 지표'),
@@ -199,19 +171,15 @@ class _StatisticScreenState extends State<StatisticScreen> {
                       ),
                     ),
                   ),
-                  onPressed: () {
+                  onPressed: () async {
                     String startDateString;
                     String endtDateString;
                     startDateString = _startDate.toString().split(" ").first;
                     endtDateString = _endDate.toString().split(" ").first;
                     print('[SELECT DATE] : $_startDate ~ $_endDate');
                     print('[SELECT DATE] : $startDateString,$endtDateString');
-                    // StoreService.getStoreStatistics(
-                    //     context: context,
-                    //     storeId: widget.storeId,
-                    //     userId: Provider.of<UserProvider>(context).user.id!,
-                    //     startDate: _startDate.toString().split(" ").first,
-                    //     endDate: _endDate.toString().split(" ").first);
+                    statisticData = _fetchStatistic();
+                    setState(() {});
                   },
                   child: const Text(
                     '조회',
@@ -221,7 +189,6 @@ class _StatisticScreenState extends State<StatisticScreen> {
               ],
             ),
           ),
-          Text('$statisticData'),
           // Stack(
           //   alignment: Alignment.center,
           //   children: [
@@ -256,21 +223,30 @@ class _StatisticScreenState extends State<StatisticScreen> {
                 } else if (snapshot.hasError) {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 } else {
+                  final List<StatisticModel> data = snapshot.data!;
+                  final Map<String, int> behaviorCount = {};
                   final Map<int, int> wordCountByDay = {};
-                  final Map<int, int> behaviorCount = {};
+                  print(StoreService.reversedMap);
+
+                  for (var stat in data) {
+                    final behavior = StoreService.reversedMap[stat.behavior]!;
+                    behaviorCount[behavior] =
+                        (behaviorCount[behavior] ?? 0) + stat.count;
+                  }
+
                   for (var data in snapshot.data!) {
                     final code = data.behavior;
                     wordCountByDay[code] = (wordCountByDay[code] ?? 0) + 1;
                   }
                   return SfCircularChart(
                     legend: const Legend(isVisible: true),
-                    series: <DoughnutSeries<MapEntry<int, int>, String>>[
-                      DoughnutSeries<MapEntry<int, int>, String>(
-                        dataSource: wordCountByDay.entries.toList(),
+                    series: <DoughnutSeries<MapEntry<String, int>, String>>[
+                      DoughnutSeries<MapEntry<String, int>, String>(
+                        dataSource: behaviorCount.entries.toList(),
                         xValueMapper: (entry, _) => entry.key.toString(),
                         yValueMapper: (entry, _) => entry.value,
                         dataLabelMapper: (entry, _) =>
-                            '${entry.key}일차 단어 : ${entry.value}개',
+                            '${entry.key} : ${entry.value}개',
                         enableTooltip: true,
                         dataLabelSettings:
                             const DataLabelSettings(isVisible: true),
@@ -286,11 +262,4 @@ class _StatisticScreenState extends State<StatisticScreen> {
       ),
     );
   }
-}
-
-class _SalesData {
-  _SalesData(this.year, this.sales);
-
-  final String year;
-  final int sales;
 }
