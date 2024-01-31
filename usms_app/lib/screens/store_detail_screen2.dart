@@ -55,9 +55,11 @@ class _StoreDetailState extends State<StoreDetail2> {
     if (cctv.isConnected) {
       print('isConnected true');
       var videoController = VideoPlayerController.networkUrl(
-          Uri.parse(
-              'https://usms-media.serveftp.com/video/hls/live/0e798b6c-2b80-47d6-beae-95435399fb7d/index.m3u8'),
-          videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true));
+        Uri.parse(
+            'https://usms-media.serveftp.com/video/hls/live/0e798b6c-2b80-47d6-beae-95435399fb7d/index.m3u8'),
+        videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true),
+        formatHint: VideoFormat.hls,
+      );
       // 'https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8'));
 
       if (!videoController.value.isInitialized) {

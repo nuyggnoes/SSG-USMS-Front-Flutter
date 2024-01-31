@@ -18,6 +18,30 @@ class _StatisticScreenState extends State<StatisticScreen> {
     _SalesData('행동3', 3),
     _SalesData('행동4', 4),
   ];
+
+  var dummy = [
+    {
+      "storeId": 1,
+      "behaviorCode": 0,
+      "count": 50,
+      "startDate": "2023-12-01",
+      "endDate": "2024-01-31"
+    },
+    {
+      "storeId": 1,
+      "behaviorCode": 3,
+      "count": 30,
+      "startDate": "2023-12-01",
+      "endDate": "2024-01-31"
+    },
+    {
+      "storeId": 1,
+      "behaviorCode": 7,
+      "count": 60,
+      "startDate": "2023-12-01",
+      "endDate": "2024-01-31"
+    }
+  ];
   Future<List<WordModel>>? words;
   int? tappedIndex = -1;
 

@@ -71,6 +71,7 @@ class _NotificationListScreenState extends State<NotificationListScreen>
       userId: Provider.of<UserProvider>(context, listen: false).user.id!,
       startDate: _startDate.toString().split(" ").first,
       endDate: _endDate.toString().split(" ").first,
+      // endDate: '2024-02-01',
       behaviorCodes: paramList,
     );
     print('allbehasviorByStore : $returnValue');

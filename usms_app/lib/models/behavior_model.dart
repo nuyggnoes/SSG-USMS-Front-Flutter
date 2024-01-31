@@ -31,4 +31,13 @@ class StoreNotification {
       behaviorCode: map['behaviorCode'],
     );
   }
+
+  static List<StoreNotification> fromMapToStoreNotificationModel(
+      List<dynamic> list) {
+    List<StoreNotification> storeList = list.map((json) {
+      return StoreNotification.fromMap(json);
+    }).toList();
+
+    return storeList;
+  }
 }

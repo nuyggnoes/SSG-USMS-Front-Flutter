@@ -27,25 +27,31 @@ class Region extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              const Icon(
-                Icons.warning_rounded,
-                color: Colors.amber,
-                size: 60,
+              const Expanded(
+                flex: 1,
+                child: Icon(
+                  Icons.warning_rounded,
+                  color: Colors.amber,
+                  size: 60,
+                ),
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    '지역알림',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w800,
+              Expanded(
+                flex: 3,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      '지역알림',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w800,
+                      ),
                     ),
-                  ),
-                  Text(
-                    '[$date] $region에서 \n[ $behavior ] 이(가) $count건 발생했습니다.',
-                    softWrap: true,
-                  ),
-                ],
+                    Text(
+                      '[$date] $region에서 \n[ $behavior ] 이(가) $count건 발생했습니다.',
+                      softWrap: true,
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
