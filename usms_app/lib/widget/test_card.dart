@@ -1,33 +1,14 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 
 class CurrencyCard extends StatelessWidget {
   final String name, amount;
   final IconData icon;
   final int code;
-  // final bool isInverted;
 
-  // final _blackColor = const Color(0xFF1F2123);
   final Color selectedCardColors;
   final AnimationController animationController;
   final Animation<double> opacityAnimation;
   void Function()? onTapAction;
-
-  List<IconData> randomIconData = [
-    Icons.store_mall_directory_rounded,
-    Icons.storefront_outlined,
-    Icons.apartment_rounded,
-  ];
-
-  Color getRandomColor() {
-    Random random = Random();
-    int red = random.nextInt(256); // 0부터 255까지의 랜덤한 빨강 값
-    int green = random.nextInt(256); // 0부터 255까지의 랜덤한 초록 값
-    int blue = random.nextInt(256); // 0부터 255까지의 랜덤한 파랑 값
-
-    return Color.fromARGB(255, red, green, blue);
-  }
 
   CurrencyCard({
     super.key,
@@ -90,7 +71,7 @@ class CurrencyCard extends StatelessWidget {
             child: Container(
               clipBehavior: Clip.hardEdge,
               decoration: BoxDecoration(
-                color: getRandomColor(),
+                color: selectedCardColors,
                 // color: Colors.blueAccent,
                 borderRadius: BorderRadius.circular(20),
               ),
@@ -150,7 +131,7 @@ class CurrencyCard extends StatelessWidget {
                         child: Transform.translate(
                           offset: const Offset(1, 13),
                           child: Icon(
-                            randomIconData[Random().nextInt(3)],
+                            icon,
                             color: Colors.white,
                             size: 70,
                           ),

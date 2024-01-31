@@ -8,6 +8,7 @@ import 'package:usms_app/screens/no_cctv_screen.dart';
 
 import 'package:usms_app/routes.dart';
 import 'package:usms_app/screens/notification_list_screen.dart';
+import 'package:usms_app/screens/statistic_screen.dart';
 import 'package:usms_app/screens/store_notification_screen.dart';
 
 import 'package:usms_app/services/cctv_service.dart';
@@ -41,7 +42,7 @@ class _StoreDetailState extends State<StoreDetail2> {
   List<CCTV> cctvList = [];
 
   final List<VideoPlayerController> videoList = [];
-  final List<ChewieController?> chewieList = [];
+  List<ChewieController?> chewieList = [];
 
   final _formKey = GlobalKey<FormState>();
   final cctvNameController = TextEditingController();
@@ -57,10 +58,10 @@ class _StoreDetailState extends State<StoreDetail2> {
       var videoController = VideoPlayerController.networkUrl(
         Uri.parse(
             'https://usms-media.serveftp.com/video/hls/live/0e798b6c-2b80-47d6-beae-95435399fb7d/index.m3u8'),
+        // 'https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8'),
         videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true),
         formatHint: VideoFormat.hls,
       );
-      // 'https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8'));
 
       if (!videoController.value.isInitialized) {
         print('비디오 초기화 전');
@@ -117,6 +118,7 @@ class _StoreDetailState extends State<StoreDetail2> {
 
   @override
   Widget build(BuildContext context) {
+    chewieList = [];
     var height = 300.0;
     return Scaffold(
       appBar: AppBar(
@@ -194,28 +196,6 @@ class _StoreDetailState extends State<StoreDetail2> {
             ),
             child: Column(
               children: [
-                // chewieList.isEmpty
-                //     ? const SizedBox(
-                //         height: 620,
-                //         child: Center(
-                //           child: CircularProgressIndicator(),
-                //         ),
-                //       )
-                //     : SizedBox(
-                //         height: 620,
-                //         child: ListView.builder(
-                //           itemCount: chewieList.length,
-                //           itemBuilder: (context, index) {
-                //             print('chewieList 길이 : ${chewieList.length}');
-                //             return ChewieListItem(
-                //               chewieController: chewieList[index],
-                //               index: index,
-                //               routes: Routes.cctvReplay,
-                //             );
-                //           },
-                //         ),
-                //       ),
-
                 FutureBuilder(
                   future: cctvService.getAllcctvList(
                     context: context,
@@ -231,35 +211,7 @@ class _StoreDetailState extends State<StoreDetail2> {
                     } else if (snapshot.hasData) {
                       print('snapshot.hasData');
                       cctvList = snapshot.data!;
-
-                      // return SizedBox(
-                      //   height: listViewHeightCalculation(cctvList.length),
-                      //   child: ListView.separated(
-                      //     itemCount: cctvList.length,
-                      //     itemBuilder: (context, index) {
-                      //       height = height * cctvList.length;
-                      //       CCTV cctv = cctvList[index];
-                      //       var chewieController = setController(cctv);
-                      //       return ChewieListItem(
-                      //         cctv: cctv,
-                      //         chewieController: chewieController!,
-                      //         index: index,
-                      //         routes: Routes.cctvReplay,
-                      //         uid: widget.uid,
-                      //         storeId: widget.storeId,
-                      //       );
-                      //     },
-                      //     separatorBuilder: (BuildContext context, int index) {
-                      //       return const SizedBox(
-                      //         height: 10,
-                      //       );
-                      //     },
-                      //   ),
-                      // );
                       return FutureBuilder<List<ChewieController?>>(
-                        // future: Future.wait(
-                        //   cctvList.map((cctv) => setController(cctv)),
-                        // ),
                         future: setControllers(cctvList),
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
@@ -275,7 +227,6 @@ class _StoreDetailState extends State<StoreDetail2> {
                             print('chewieControllerList : $chewieControllers');
                             return SizedBox(
                               height: 600,
-                              // listViewHeightCalculation(cctvList.length),
                               child: ListView.separated(
                                 itemCount: cctvList.length,
                                 itemBuilder: (context, index) {
@@ -283,7 +234,6 @@ class _StoreDetailState extends State<StoreDetail2> {
                                   CCTV cctv = cctvList[index];
                                   ChewieController? chewieController =
                                       chewieControllers[index];
-                                  print('========chwieListItem 직전=========');
 
                                   return ChewieListItem(
                                     cctv: cctv,
@@ -360,19 +310,13 @@ class _StoreDetailState extends State<StoreDetail2> {
                 const SizedBox(
                   height: 30,
                 ),
-                // 버튼들
+
                 CustomInfoButton(
                   buttonText: 'CCTV 설치 및 연결 방법',
                   parentContext: context,
                   route: Routes.cctvManual,
                   icon: Icons.collections_bookmark_rounded,
                 ),
-                // CustomInfoButton(
-                //   buttonText: '매장별 알림 기록',
-                //   parentContext: context,
-                //   route: Routes.storeNotification,
-                //   icon: Icons.notifications_active_rounded,
-                // ),
                 InkWell(
                   onTap: () {
                     Navigator.push(
@@ -418,6 +362,52 @@ class _StoreDetailState extends State<StoreDetail2> {
                     ),
                   ),
                 ),
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => StatisticScreen(
+                          storeId: widget.storeId,
+                        ),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 10,
+                      horizontal: 10,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      border: Border(
+                        bottom: BorderSide(
+                          color: Colors.grey.shade400,
+                          width: 2,
+                        ),
+                      ),
+                    ),
+                    height: 70,
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.bar_chart_rounded,
+                              color: Colors.grey,
+                            ),
+                            SizedBox(
+                              width: 25,
+                            ),
+                            Text('매장 알림 통계'),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
                 InkWell(
                   onTap: () {
                     showDialog(
@@ -510,7 +500,7 @@ class ChewieListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('chewieListItem build');
+    print('=======chewieListItem build=======');
     return Card(
       child: SizedBox(
         height: 300,
@@ -545,7 +535,6 @@ class ChewieListItem extends StatelessWidget {
                     children: [
                       IconButton(
                         onPressed: () {
-                          print('cctv 삭제');
                           CCTVService.deleteCCTV(
                               context: context,
                               uid: uid,

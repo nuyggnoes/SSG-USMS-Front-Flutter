@@ -74,7 +74,6 @@ class _NotificationListScreenState extends State<NotificationListScreen>
       // endDate: '2024-02-01',
       behaviorCodes: paramList,
     );
-    print('allbehasviorByStore : $returnValue');
     return returnValue;
   }
 
@@ -256,6 +255,7 @@ class _NotificationListScreenState extends State<NotificationListScreen>
                                 .toList();
                             if (tabBarIndex == 0) {
                               _behaviorsFuture = _fetchBehaviors();
+                              setState(() {});
                             } else if (tabBarIndex == 1) {
                               _regionFuture = _fetchRegions();
                               setState(() {});
@@ -371,7 +371,7 @@ class _NotificationListScreenState extends State<NotificationListScreen>
                                   shrinkWrap: true,
                                   padding: const EdgeInsets.symmetric(
                                       vertical: 10, horizontal: 60),
-                                  itemCount: snapshot.data!.length,
+                                  itemCount: snapshot.data!.length, // 36
                                   itemBuilder: (context, index) {
                                     var notification = snapshot.data![index];
                                     return Behavior(

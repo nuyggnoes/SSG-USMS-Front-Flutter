@@ -6,7 +6,7 @@ class StoreNotification {
   List<int>? behaviorCodeList;
   int behaviorCode;
   final String cctvName = '';
-  final DateTime eventTimestamp;
+  final int eventTimestamp;
 
   StoreNotification({
     required this.eventTimestamp,
@@ -27,8 +27,8 @@ class StoreNotification {
     return StoreNotification(
       id: map['id'],
       cctvId: map['cctvId'],
-      eventTimestamp: map['eventTimestamp'],
-      behaviorCode: map['behaviorCode'],
+      eventTimestamp: map['startTimestamp'],
+      behaviorCode: map['behavior'],
     );
   }
 

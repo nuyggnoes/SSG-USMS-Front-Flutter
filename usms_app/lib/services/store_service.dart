@@ -317,10 +317,10 @@ class StoreService {
 
     Map<String, dynamic> param = {
       'offset': 0,
-      'size': 20,
+      'size': 40,
     };
     if (behaviorCodes.isNotEmpty) {
-      param['behaviorCode'] = codeList;
+      param['behavior'] = codeList;
     }
 
     if (startDate != 'null') {

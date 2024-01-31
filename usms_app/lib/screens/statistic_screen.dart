@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:usms_app/models/statistic_model.dart';
 import 'package:usms_app/models/word_model.dart';
+import 'package:usms_app/services/store_service.dart';
 import 'package:usms_app/services/word_json.dart';
 
 class StatisticScreen extends StatefulWidget {
-  static const route = 'statistic-screen';
-  const StatisticScreen({super.key});
-
+  const StatisticScreen({super.key, required this.storeId});
+  final int storeId;
   @override
   State<StatisticScreen> createState() => _StatisticScreenState();
 }
@@ -19,29 +20,30 @@ class _StatisticScreenState extends State<StatisticScreen> {
     _SalesData('행동4', 4),
   ];
 
-  var dummy = [
-    {
-      "storeId": 1,
-      "behaviorCode": 0,
-      "count": 50,
-      "startDate": "2023-12-01",
-      "endDate": "2024-01-31"
-    },
-    {
-      "storeId": 1,
-      "behaviorCode": 3,
-      "count": 30,
-      "startDate": "2023-12-01",
-      "endDate": "2024-01-31"
-    },
-    {
-      "storeId": 1,
-      "behaviorCode": 7,
-      "count": 60,
-      "startDate": "2023-12-01",
-      "endDate": "2024-01-31"
-    }
-  ];
+  // var dummy = [
+  //   {
+  //     "storeId": 1,
+  //     "behaviorCode": 0,
+  //     "count": 50,
+  //     "startDate": "2023-12-01",
+  //     "endDate": "2024-01-31"
+  //   },
+  //   {
+  //     "storeId": 1,
+  //     "behaviorCode": 3,
+  //     "count": 30,
+  //     "startDate": "2023-12-01",
+  //     "endDate": "2024-01-31"
+  //   },
+  //   {
+  //     "storeId": 1,
+  //     "behaviorCode": 7,
+  //     "count": 60,
+  //     "startDate": "2023-12-01",
+  //     "endDate": "2024-01-31"
+  //   }
+  // ];
+  Future<List<StatisticModel>>? statisticData;
   Future<List<WordModel>>? words;
   int? tappedIndex = -1;
 
@@ -49,6 +51,7 @@ class _StatisticScreenState extends State<StatisticScreen> {
   void initState() {
     super.initState();
     words = WordJson.getWords();
+    // statisticData = StoreService.
   }
 
   @override

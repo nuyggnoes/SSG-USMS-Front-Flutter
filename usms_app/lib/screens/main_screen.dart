@@ -1,9 +1,10 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:usms_app/models/store_model.dart';
 import 'package:usms_app/models/user_model.dart';
 import 'package:usms_app/routes.dart';
-import 'package:usms_app/screens/register_store_screen.dart';
 import 'package:usms_app/screens/store_detail_screen2.dart';
 import 'package:usms_app/services/show_dialog.dart';
 import 'package:usms_app/services/store_service.dart';
@@ -121,6 +122,24 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
     return totalHeight;
   }
 
+  Color getRandomColor() {
+    Random random = Random();
+    int red = random.nextInt(256); // 0부터 255까지의 랜덤한 빨강 값
+    int green = random.nextInt(256); // 0부터 255까지의 랜덤한 초록 값
+    int blue = random.nextInt(256); // 0부터 255까지의 랜덤한 파랑 값
+
+    return Color.fromARGB(255, red, green, blue);
+  }
+
+  IconData getRandomIconData() {
+    List<IconData> randomIconData = [
+      Icons.store_mall_directory_rounded,
+      Icons.storefront_outlined,
+      Icons.apartment_rounded,
+    ];
+    return randomIconData[Random().nextInt(3)];
+  }
+
   @override
   Widget build(BuildContext context) {
     var height = 150.0;
@@ -174,8 +193,6 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                                 itemBuilder: (context, index) {
                                   height = height * storeList.length;
                                   Store store = storeList[index];
-                                  // setStoreProvider(store);
-                                  //2. ListView를 생성할때 Store 각각을 StoreList.add() 를 통해 업데이트
                                   return Column(
                                     children: [
                                       CurrencyCard(
@@ -184,8 +201,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                                         amount: '',
                                         icon:
                                             Icons.store_mall_directory_rounded,
-                                        selectedCardColors:
-                                            Colors.blue.shade200,
+                                        selectedCardColors: getRandomColor(),
                                         animationController:
                                             _animationController,
                                         opacityAnimation: _opacityAnimation,
@@ -228,8 +244,9 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                                       name: store.name,
                                       code: store.storeState,
                                       amount: '',
-                                      icon: Icons.store_mall_directory_rounded,
-                                      selectedCardColors: Colors.blue.shade200,
+                                      // icon: Icons.store_mall_directory_rounded,
+                                      icon: getRandomIconData(),
+                                      selectedCardColors: getRandomColor(),
                                       animationController: _animationController,
                                       opacityAnimation: _opacityAnimation,
                                       onTapAction: () {
