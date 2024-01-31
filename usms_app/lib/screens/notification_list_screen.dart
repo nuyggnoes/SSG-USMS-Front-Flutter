@@ -71,7 +71,6 @@ class _NotificationListScreenState extends State<NotificationListScreen>
       userId: Provider.of<UserProvider>(context, listen: false).user.id!,
       startDate: _startDate.toString().split(" ").first,
       endDate: _endDate.toString().split(" ").first,
-      // endDate: '2024-02-01',
       behaviorCodes: paramList,
     );
     return returnValue;
@@ -370,13 +369,12 @@ class _NotificationListScreenState extends State<NotificationListScreen>
                                 return ListView.separated(
                                   shrinkWrap: true,
                                   padding: const EdgeInsets.symmetric(
-                                      vertical: 10, horizontal: 60),
+                                      vertical: 10, horizontal: 20),
                                   itemCount: snapshot.data!.length, // 36
                                   itemBuilder: (context, index) {
                                     var notification = snapshot.data![index];
                                     return Behavior(
                                       time: notification.eventTimestamp,
-                                      // cctvName: notification.cctvId.toString(),
                                       cctvName: cctvNames[index],
                                       behavior: behaviorNames[index]!,
                                     );

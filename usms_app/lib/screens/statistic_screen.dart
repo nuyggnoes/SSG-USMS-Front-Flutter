@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:usms_app/models/statistic_model.dart';
 import 'package:usms_app/models/word_model.dart';
 import 'package:usms_app/services/store_service.dart';
 import 'package:usms_app/services/word_json.dart';
+import 'package:usms_app/utils/user_provider.dart';
 
 class StatisticScreen extends StatefulWidget {
-  const StatisticScreen({super.key, required this.storeId});
+  const StatisticScreen({super.key, required this.storeId, required this.uid});
   final int storeId;
+  final int uid;
   @override
   State<StatisticScreen> createState() => _StatisticScreenState();
 }
@@ -19,7 +23,7 @@ class _StatisticScreenState extends State<StatisticScreen> {
     _SalesData('행동3', 3),
     _SalesData('행동4', 4),
   ];
-
+  // 각 행동들의 날짜(기간)에 대한 count
   // var dummy = [
   //   {
   //     "storeId": 1,
@@ -43,14 +47,25 @@ class _StatisticScreenState extends State<StatisticScreen> {
   //     "endDate": "2024-01-31"
   //   }
   // ];
-  Future<List<StatisticModel>>? statisticData;
+  Future<List<StatisticModel>?>? statisticData;
   Future<List<WordModel>>? words;
-  int? tappedIndex = -1;
+
+  DateTime? _startDate;
+  DateTime? _endDate;
 
   @override
   void initState() {
     super.initState();
-    words = WordJson.getWords();
+    _startDate = null;
+    _endDate = null;
+
+    statisticData = StoreService.getStoreStatistics(
+        context: context,
+        storeId: widget.storeId,
+        userId: widget.uid,
+        startDate: _startDate.toString().split(" ").first,
+        endDate: _endDate.toString().split(" ").first);
+
     // statisticData = StoreService.
   }
 
@@ -62,7 +77,12 @@ class _StatisticScreenState extends State<StatisticScreen> {
       appBar: AppBar(
         title: const Text('통계 지표'),
         centerTitle: true,
-        leading: const Icon(Icons.bar_chart_rounded),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: const Icon(Icons.arrow_back_ios_new_rounded),
+        ),
       ),
       body: Column(
         children: [
@@ -81,6 +101,127 @@ class _StatisticScreenState extends State<StatisticScreen> {
               child: Text('이상감지 현황'),
             ),
           ),
+          Expanded(
+            child: Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                    style: ButtonStyle(
+                      side: const MaterialStatePropertyAll(
+                        BorderSide(color: Colors.grey),
+                      ),
+                      fixedSize: MaterialStateProperty.all(
+                        const Size(80, 50),
+                      ),
+                      shape: MaterialStateProperty.all(
+                        const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.zero,
+                        ),
+                      ),
+                    ),
+                    onPressed: () async {
+                      final selectedDate = await showDatePicker(
+                        context: context,
+                        initialDate: _startDate,
+                        firstDate: DateTime(2000),
+                        lastDate: DateTime.now(),
+                        locale: const Locale('ko', 'KR'),
+                      );
+                      if (selectedDate != null) {
+                        setState(() {
+                          _startDate = selectedDate;
+                        });
+                      }
+                    },
+                    child: Text(
+                      _startDate == null
+                          ? ''
+                          : DateFormat('yyyy-MM-dd').format(_startDate!),
+                      style: const TextStyle(color: Colors.black),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  width: 20,
+                  child: Text(' -- '),
+                ),
+                Expanded(
+                  child: ElevatedButton(
+                    style: ButtonStyle(
+                      side: const MaterialStatePropertyAll(
+                        BorderSide(color: Colors.grey),
+                      ),
+                      fixedSize: MaterialStateProperty.all(
+                        const Size(80, 50),
+                      ),
+                      shape: MaterialStateProperty.all(
+                        const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.zero,
+                        ),
+                      ),
+                    ),
+                    onPressed: () async {
+                      final selectedDate = await showDatePicker(
+                        context: context,
+                        initialDate: _endDate,
+                        firstDate: DateTime(2000),
+                        lastDate: DateTime.now(),
+                        locale: const Locale('ko', 'KR'),
+                      );
+                      if (selectedDate != null) {
+                        setState(() {
+                          _endDate = selectedDate;
+                        });
+                      }
+                    },
+                    child: Text(
+                      _endDate == null
+                          ? ''
+                          : DateFormat('yyyy-MM-dd').format(_endDate!),
+                      style: const TextStyle(color: Colors.black),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  width: 20,
+                ),
+                ElevatedButton(
+                  style: ButtonStyle(
+                    side: const MaterialStatePropertyAll(
+                      BorderSide(color: Colors.grey),
+                    ),
+                    fixedSize: MaterialStateProperty.all(
+                      const Size(80, 50),
+                    ),
+                    shape: MaterialStateProperty.all(
+                      const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.zero,
+                      ),
+                    ),
+                  ),
+                  onPressed: () {
+                    String startDateString;
+                    String endtDateString;
+                    startDateString = _startDate.toString().split(" ").first;
+                    endtDateString = _endDate.toString().split(" ").first;
+                    print('[SELECT DATE] : $_startDate ~ $_endDate');
+                    print('[SELECT DATE] : $startDateString,$endtDateString');
+                    // StoreService.getStoreStatistics(
+                    //     context: context,
+                    //     storeId: widget.storeId,
+                    //     userId: Provider.of<UserProvider>(context).user.id!,
+                    //     startDate: _startDate.toString().split(" ").first,
+                    //     endDate: _endDate.toString().split(" ").first);
+                  },
+                  child: const Text(
+                    '조회',
+                    style: TextStyle(color: Colors.black),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Text('$statisticData'),
           // Stack(
           //   alignment: Alignment.center,
           //   children: [
@@ -108,7 +249,7 @@ class _StatisticScreenState extends State<StatisticScreen> {
           // ),
           Expanded(
             child: FutureBuilder(
-              future: words,
+              future: statisticData,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
@@ -116,9 +257,10 @@ class _StatisticScreenState extends State<StatisticScreen> {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 } else {
                   final Map<int, int> wordCountByDay = {};
-                  for (var word in snapshot.data!) {
-                    final day = word.day;
-                    wordCountByDay[day] = (wordCountByDay[day] ?? 0) + 1;
+                  final Map<int, int> behaviorCount = {};
+                  for (var data in snapshot.data!) {
+                    final code = data.behavior;
+                    wordCountByDay[code] = (wordCountByDay[code] ?? 0) + 1;
                   }
                   return SfCircularChart(
                     legend: const Legend(isVisible: true),
@@ -133,15 +275,6 @@ class _StatisticScreenState extends State<StatisticScreen> {
                         dataLabelSettings:
                             const DataLabelSettings(isVisible: true),
                         explode: true,
-                        // pointColorMapper: (WordModel word, _) =>
-                        //     word.isHighlighted
-                        //         ? Colors.blue // Highlighted color
-                        //         : Colors.green, // Default color
-                        // // Implement onTap callback if needed
-                        // selectionSettings: SelectionSettings(
-                        //   enable: true,
-                        //   unselectedColor: Colors.green.withOpacity(0.6),
-                        // ),
                       ),
                     ],
                   );

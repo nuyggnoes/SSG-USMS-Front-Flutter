@@ -369,6 +369,7 @@ class _StoreDetailState extends State<StoreDetail2> {
                       MaterialPageRoute(
                         builder: (context) => StatisticScreen(
                           storeId: widget.storeId,
+                          uid: widget.uid,
                         ),
                       ),
                     );
@@ -400,7 +401,7 @@ class _StoreDetailState extends State<StoreDetail2> {
                             SizedBox(
                               width: 25,
                             ),
-                            Text('매장 알림 통계'),
+                            Text('매장 이상 행동 통계'),
                           ],
                         ),
                       ],

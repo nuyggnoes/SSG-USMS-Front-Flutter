@@ -15,19 +15,15 @@ class Behavior extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var test = DateTime.fromMillisecondsSinceEpoch(time).toString();
-    var timeStampList =
-        DateTime.fromMillisecondsSinceEpoch(time).toString().split(" ");
-    var date = timeStampList.first;
-    var c = timeStampList.last.split(".").first;
-
-    DateTime dateTime = DateTime.parse('$date $c');
-
-    DateFormat dateFormat = DateFormat('yyyy-MM-dd HH:mm:ss');
-
-    String formattedDateTime = dateFormat.format(dateTime);
+    var timestamp = DateTime.fromMillisecondsSinceEpoch(time);
+    var originalDateTimeString =
+        DateFormat('yyyy-MM-dd HH:mm:ss').format(timestamp);
+    DateTime originalDateTime = DateTime.parse(originalDateTimeString);
+    String formattedDateTime =
+        DateFormat('yyyy/M/d(E) a h시 m분', 'ko_KR').format(originalDateTime);
 
     return Container(
+      padding: const EdgeInsets.all(10),
       decoration: const BoxDecoration(
         border: Border(
           bottom: BorderSide(color: Colors.grey),
@@ -39,16 +35,33 @@ class Behavior extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               const Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('일시'),
-                  Text('CCTV명'),
-                  Text('행동'),
+                  Text(
+                    '일시',
+                    style: TextStyle(
+                      color: Colors.grey,
+                    ),
+                  ),
+                  Text(
+                    'CCTV명',
+                    style: TextStyle(
+                      color: Colors.grey,
+                    ),
+                  ),
+                  Text(
+                    '행동',
+                    style: TextStyle(
+                      color: Colors.grey,
+                    ),
+                  ),
                 ],
               ),
               Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Text(DateTime.fromMicrosecondsSinceEpoch(time).toString()),
-                  Text(test),
+                  Text(formattedDateTime),
                   Text(cctvName.toString()),
                   Text(behavior),
                 ],

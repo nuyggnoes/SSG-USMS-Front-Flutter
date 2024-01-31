@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:usms_app/main.dart';
 import 'package:usms_app/models/behavior_model.dart';
 import 'package:usms_app/models/region_notification_model.dart';
+import 'package:usms_app/models/statistic_model.dart';
 import 'package:usms_app/models/store_model.dart';
 import 'package:usms_app/services/show_dialog.dart';
 import 'package:usms_app/utils/store_provider.dart';
@@ -503,5 +504,81 @@ class StoreService {
     return [];
   }
 
-  // provider 써보기
+  // 매장별 통계 데이터 조회
+  static Future<List<StatisticModel>?> getStoreStatistics({
+    required BuildContext context,
+    required int storeId,
+    required int userId,
+    required String startDate,
+    required String endDate,
+  }) async {
+    print('storeId : $storeId, userId : $userId');
+    print('startDate : $startDate, endDate : $endDate, ');
+
+    var jSessionId = await storage.read(key: 'cookie');
+    Response response;
+    var baseoptions = BaseOptions(
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+        "cookie": jSessionId,
+      },
+      baseUrl: baseUrl,
+    );
+
+    Dio dio = Dio(baseoptions);
+
+    Map<String, dynamic> param = {};
+
+    if (startDate != 'null') {
+      param['startDate'] = startDate;
+    }
+
+    if (endDate != 'null') {
+      param['endDate'] = endDate;
+    }
+
+    print(param);
+
+    try {
+      response = await dio.get(
+        '/api/users/$userId/stores/$storeId/cctvs/accidents/stats',
+        queryParameters: param,
+      );
+      if (response.statusCode! ~/ 100 == 2) {
+        print('==========이상행동 통계정보 200===========');
+
+        List<StatisticModel> statisticsDataList =
+            StatisticModel.fromMapToRegionModel(response.data);
+        print('responseData to List => $statisticsDataList');
+
+        return statisticsDataList;
+      }
+    } on DioException catch (e) {
+      if (e.response!.statusCode! ~/ 100 == 4) {
+        print("[Error] : [$e]");
+        Future.microtask(() {
+          customShowDialog(
+              context: context,
+              title: '통계 데이터 조회를 실패하였습니다.',
+              message: '$e',
+              onPressed: () {
+                Navigator.pop(context);
+              });
+        });
+        return [];
+      } else {
+        Future.microtask(() {
+          customShowDialog(
+              context: context,
+              title: '동계 데이터 조회 서버 오류',
+              message: '$e',
+              onPressed: () {
+                Navigator.pop(context);
+              });
+        });
+        return [];
+      }
+    }
+    return [];
+  }
 }

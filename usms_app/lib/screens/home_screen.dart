@@ -41,6 +41,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             // ),
             const StatisticScreen(
               storeId: 1,
+              uid: 1,
             ),
             const MyPageScreen(),
           ];

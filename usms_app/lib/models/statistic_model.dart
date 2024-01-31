@@ -1,30 +1,30 @@
 class StatisticModel {
-  String? region;
-  int behaviorCode;
-  String? endDate;
-  String? startDate;
+  int storeId;
+  int behavior;
   int count;
+  String? startDate;
+  String? endDate;
 
   StatisticModel({
     required this.count,
     this.endDate,
-    this.region,
     this.startDate,
-    required this.behaviorCode,
+    this.storeId = -1,
+    required this.behavior,
   });
 
   // Map<String, dynamic> toJson() => {
-  //       'behaviorCode': behaviorCodeList,
+  //       'behavior': behaviorCodeList,
   //       'startDate': startDate,
   //       'endDate': endDate,
   //     };
   factory StatisticModel.fromMap(Map<String, dynamic> map) {
     return StatisticModel(
-      region: map['storeId'],
-      behaviorCode: map['behaviorCode'],
+      storeId: map['storeId'],
+      behavior: map['behavior'],
+      count: map['count'],
       startDate: map['startDate'],
       endDate: map['endDate'],
-      count: map['count'],
     );
   }
 
