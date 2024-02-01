@@ -22,8 +22,9 @@ class CCTVReplay extends StatefulWidget {
 class _CalendarScreenState extends State<CCTVReplay> {
   static late Future<List<dynamic>> cctvReplayUrlList;
   DateTime selectedDate = DateTime.now();
-  static List<VideoPlayerController> videoList = [];
-  static List<ChewieController?> chewieList = [];
+  // static List<VideoPlayerController> videoList = [];
+  static List<ChewieController?> chewieControllers = [];
+  static List<VideoPlayerController?> videoControllers = [];
   static List<dynamic> testList = [];
 
   final List<Item> _data = generateItems(24);
@@ -40,18 +41,18 @@ class _CalendarScreenState extends State<CCTVReplay> {
     super.didChangeDependencies();
   }
 
-  @override
-  void dispose() {
-    print('dispose()');
-    for (var i = 0; i < videoList.length; i++) {
-      print('dispose for()');
-      videoList[i].dispose();
-      if (chewieList[i] != null) {
-        chewieList[i]!.dispose();
-      }
-    }
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   print('dispose()');
+  //   for (var i = 0; i < videoList.length; i++) {
+  //     print('dispose for()');
+  //     videoList[i].dispose();
+  //     if (chewieList[i] != null) {
+  //       chewieList[i]!.dispose();
+  //     }
+  //   }
+  //   super.dispose();
+  // }
 
   getUrl(int index) async {
     await _fetchReplays();
@@ -217,19 +218,28 @@ List<Item> generateItems(int numberOfItems) {
   });
 }
 
+// void _disposeChewieControllers() {
+//   for (var controller in chewieControllers) {
+//     if (controller != null) {
+//       controller.dispose();
+//     }
+//   }
+// }
+
 Widget _buildVideoPlayer(String? videoUrl) {
+  print('패널의 url: $videoUrl');
   if (videoUrl != null) {
     VideoPlayerController videoPlayerController =
         VideoPlayerController.networkUrl(Uri.parse(videoUrl));
     ChewieController chewieController = ChewieController(
       videoPlayerController: videoPlayerController,
-      autoPlay: false,
-      looping: false,
       // 다양한 설정들을 추가할 수 있습니다.
     );
+    _CalendarScreenState.chewieControllers.add(chewieController);
+    _CalendarScreenState.videoControllers.add(videoPlayerController);
 
     return Chewie(controller: chewieController);
   } else {
-    return const Text('No video available');
+    return const Text('다시보기 파일이 존재하지 않습니다.');
   }
 }

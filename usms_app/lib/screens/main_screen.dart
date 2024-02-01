@@ -99,7 +99,6 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
               ),
             ),
           );
-          print('승인된 매장');
         });
         break;
       case 2:
@@ -109,7 +108,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
               title: '승인 부적절',
               message: '${store.adminComment}',
               onPressed: () {
-                print('승인 부적절');
+                Navigator.pop(context);
               });
         });
         break;
@@ -143,6 +142,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     var height = 150.0;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(''),
@@ -265,31 +265,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                       ),
                       // =========================================================================
                       // storeState : READY(0), APPROVAL(1), DISAPPROVAL(2), STOPPED(3);
-                      CurrencyCard(
-                        name: 'GS25 무인매장점',
-                        code: 0,
-                        amount: '',
-                        icon: Icons.store_mall_directory_rounded,
-                        selectedCardColors: Colors.blue.shade200,
-                        animationController: _animationController,
-                        opacityAnimation: _opacityAnimation,
-                        onTapAction: () {
-                          // Navigator.pushNamed(
-                          //   context,
-                          //   Routes.storeDetail2,
-                          // );
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => StoreDetail2(
-                                uid: Provider.of<UserProvider>(context).user.id,
-                                storeId: 1,
-                                storeInfo: null,
-                              ),
-                            ),
-                          );
-                        },
-                      ),
+
                       const SizedBox(
                         height: 20,
                       ),
