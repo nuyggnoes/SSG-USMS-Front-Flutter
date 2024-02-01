@@ -64,11 +64,13 @@ class _StoreDetailState extends State<StoreDetail2> {
     if (cctv.isConnected) {
       print('isConnected true');
 
-      var videoController = VideoPlayerController.networkUrl(Uri.parse(
-              // 'https://usms.serveftp.com/video/hls/replay/0e798b6c-2b80-47d6-beae-95435399fb7d/0e798b6c-2b80-47d6-beae-95435399fb7d-1706602196.m3u8'),
-              // 'https://usms-media.serveftp.com/video/hls/live/0e798b6c-2b80-47d6-beae-95435399fb7d/index.m3u8'),
-              // "https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"),
-              'https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8'),
+      var videoController = VideoPlayerController.networkUrl(
+          Uri.parse(
+            // 'https://usms.serveftp.com/video/hls/replay/0e798b6c-2b80-47d6-beae-95435399fb7d/0e798b6c-2b80-47d6-beae-95435399fb7d-1706602196.m3u8'),
+            // 'https://usms-media.serveftp.com/video/hls/live/0e798b6c-2b80-47d6-beae-95435399fb7d/index.m3u8'),
+            // "https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"),
+            'https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8',
+          ),
           videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true),
           formatHint: VideoFormat.hls,
           httpHeaders: {
