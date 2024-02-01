@@ -202,7 +202,7 @@ class Item {
 
 List<Item> generateItems(int numberOfItems) {
   List<String?> replayUrl = [];
-  if (_CalendarScreenState.testList.length < 24) {
+  if (_CalendarScreenState.testList.length <= 24) {
     replayUrl = List<String?>.filled(24, null);
     for (int i = 0; i < _CalendarScreenState.testList.length; i++) {
       replayUrl[i] = _CalendarScreenState.testList[i];
