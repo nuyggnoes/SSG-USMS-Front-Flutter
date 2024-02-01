@@ -43,9 +43,9 @@ dependencies:
   table_calendar: ^3.0.9
   intl: ^0.18.0
 
-  video_player_web_hls: ^1.1.0
   video_player: ^2.7.0
   chewie: ^1.7.4
+
 
   daum_postcode_search: ^0.0.2
   flutter_inappwebview: ^5.7.2+3

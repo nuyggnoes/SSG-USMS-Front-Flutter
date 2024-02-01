@@ -1,21 +1,19 @@
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
-import 'package:get/utils.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'package:provider/provider.dart';
 import 'package:usms_app/models/cctv_model.dart';
+import 'package:usms_app/screens/cctv_replay_screen.dart';
 import 'package:usms_app/screens/no_cctv_screen.dart';
 
 import 'package:usms_app/routes.dart';
 import 'package:usms_app/screens/notification_list_screen.dart';
 import 'package:usms_app/screens/statistic_screen.dart';
-import 'package:usms_app/screens/store_notification_screen.dart';
 
 import 'package:usms_app/services/cctv_service.dart';
 import 'package:usms_app/services/show_dialog.dart';
 import 'package:usms_app/services/store_service.dart';
-import 'package:usms_app/utils/cctv_provider.dart';
-import 'package:usms_app/utils/url.dart';
 import 'package:usms_app/utils/user_provider.dart';
 
 import 'package:usms_app/widget/custom_info_button.dart';
@@ -38,11 +36,13 @@ class StoreDetail2 extends StatefulWidget {
 }
 
 class _StoreDetailState extends State<StoreDetail2> {
+  late Future<List<String>> liveUrlList;
   final CCTVService cctvService = CCTVService();
   List<CCTV> cctvList = [];
+  final FlutterSecureStorage storage = const FlutterSecureStorage();
 
-  final List<VideoPlayerController> videoList = [];
-  List<ChewieController?> chewieList = [];
+  static List<VideoPlayerController> videoList = [];
+  static List<ChewieController?> chewieList = [];
 
   final _formKey = GlobalKey<FormState>();
   final cctvNameController = TextEditingController();
@@ -52,16 +52,30 @@ class _StoreDetailState extends State<StoreDetail2> {
     super.initState();
   }
 
+  Future<List<String>> fetchLive() async {
+    liveUrlList = CCTVService.getCCTVLiveStream(
+        context: context, streamKey: '0e798b6c-2b80-47d6-beae-95435399fb7d');
+    print(liveUrlList);
+    return liveUrlList;
+  }
+
   Future<ChewieController?> setController(CCTV cctv) async {
+    var session = await storage.read(key: 'cookie');
     if (cctv.isConnected) {
       print('isConnected true');
-      var videoController = VideoPlayerController.networkUrl(
-        Uri.parse(
-            'https://usms-media.serveftp.com/video/hls/live/0e798b6c-2b80-47d6-beae-95435399fb7d/index.m3u8'),
-        // 'https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8'),
-        videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true),
-        formatHint: VideoFormat.hls,
-      );
+
+      var videoController = VideoPlayerController.networkUrl(Uri.parse(
+              // 'https://usms.serveftp.com/video/hls/replay/0e798b6c-2b80-47d6-beae-95435399fb7d/0e798b6c-2b80-47d6-beae-95435399fb7d-1706602196.m3u8'),
+              // 'https://usms-media.serveftp.com/video/hls/live/0e798b6c-2b80-47d6-beae-95435399fb7d/index.m3u8'),
+              // "https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"),
+              'https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8'),
+          videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true),
+          formatHint: VideoFormat.hls,
+          httpHeaders: {
+            'cookie': session!,
+          });
+      // var videoController = VideoPlayerController.network(
+      // 'https://usms-media.serveftp.com/video/hls/live/0e798b6c-2b80-47d6-beae-95435399fb7d/index.m3u8');
 
       if (!videoController.value.isInitialized) {
         print('비디오 초기화 전');
@@ -546,10 +560,26 @@ class ChewieListItem extends StatelessWidget {
                       ),
                       IconButton(
                         onPressed: () {
-                          Navigator.pushNamed(
+                          //여기
+                          // _StoreDetailState.disposeTest();
+                          // Navigator.pushNamed(
+                          //   context,
+                          //   Routes.cctvReplay,
+                          //   arguments: cctv,
+                          // );
+                          // Navigator.push(
+                          //   context,
+                          //   MaterialPageRoute(
+                          //     builder: (context) => CCTVReplay(
+                          //         cctv: cctv, userId: uid, storeId: storeId),
+                          //   ),
+                          // );
+                          Navigator.pushReplacement(
                             context,
-                            Routes.cctvReplay,
-                            arguments: cctv,
+                            MaterialPageRoute(
+                              builder: (context) => CCTVReplay(
+                                  cctv: cctv, userId: uid, storeId: storeId),
+                            ),
                           );
                         },
                         icon: const Icon(Icons.replay),

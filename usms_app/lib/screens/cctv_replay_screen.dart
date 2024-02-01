@@ -3,8 +3,15 @@ import 'package:usms_app/models/cctv_model.dart';
 import 'package:usms_app/services/cctv_service.dart';
 
 class CCTVReplay extends StatefulWidget {
-  const CCTVReplay({super.key, required this.cctv});
+  const CCTVReplay({
+    super.key,
+    required this.cctv,
+    required this.userId,
+    required this.storeId,
+  });
   final CCTV cctv;
+  final int userId;
+  final int storeId;
 
   @override
   State<CCTVReplay> createState() => _CalendarScreenState();
@@ -12,8 +19,33 @@ class CCTVReplay extends StatefulWidget {
 
 class _CalendarScreenState extends State<CCTVReplay> {
   DateTime selectedDate = DateTime.now();
+  late Future<List<dynamic>> cctvReplayUrlList;
 
   final List<Item> _data = generateItems(24);
+
+  @override
+  initState() {
+    selectedDate = DateTime.now();
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    cctvReplayUrlList = _fetchReplays();
+  }
+
+  Future<List<dynamic>> _fetchReplays() async {
+    var returnValues = await CCTVService.getAllCCTVReplay(
+      context: context,
+      userId: widget.userId,
+      storeId: widget.storeId,
+      date: selectedDate,
+      cctv: widget.cctv,
+    );
+    print(returnValues);
+    return returnValues;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,19 +65,14 @@ class _CalendarScreenState extends State<CCTVReplay> {
             initialDate: DateTime.now(),
             firstDate: DateTime(2010),
             lastDate: DateTime.now(),
-            onDateChanged: (DateTime date) {
+            onDateChanged: (DateTime date) async {
               setState(() {
                 selectedDate = date;
                 // 다시보기 api 요청
-                //widget.cctv.cctvStreamKey
-                CCTVService.getCCTVReplay(
-                  context: context,
-                  date: selectedDate,
-                  // index: index,
-                  cctv: widget.cctv,
-                ).then({});
+
                 // 각 패널에 영상 넣기
               });
+              await _fetchReplays();
               // 다시보기 cctv 조회
             },
           ),

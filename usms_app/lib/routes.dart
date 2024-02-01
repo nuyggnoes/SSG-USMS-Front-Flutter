@@ -60,10 +60,10 @@ class Routes {
       payInfo: (context) => const PayInfoScreen(),
       secondaryPassword: (context) => const SecondaryPasswordScreen(),
       cctvDetail: (context) => const CCTVScreen(),
-      cctvReplay: (context) {
-        final CCTV cctv = ModalRoute.of(context)!.settings.arguments as CCTV;
-        return CCTVReplay(cctv: cctv);
-      },
+      // cctvReplay: (context) {
+      //   final CCTV cctv = ModalRoute.of(context)!.settings.arguments as CCTV;
+      //   return CCTVReplay(cctv: cctv, userId: null,);
+      // },
       cctvManual: (context) => const CCTVManual(),
       provider: (context) => const ProviderTest(),
 

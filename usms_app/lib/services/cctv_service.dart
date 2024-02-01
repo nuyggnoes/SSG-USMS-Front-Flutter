@@ -232,7 +232,8 @@ class CCTVService {
         print(response.data);
         var m3u8Content = response.data;
         List<String> tsUrls = extractTsUrlsFromM3u8(m3u8Content);
-        return tsUrls;
+        // return tsUrls;
+        return [response.data];
 
         // List<Mape<String, dynamic>> stores
       }
@@ -263,15 +264,18 @@ class CCTVService {
     return [];
   }
 
-  // cctv 다시보기 조회
-  static getCCTVReplay({
+  // cctv 다시보기 전체 조회
+  static getAllCCTVReplay({
     required BuildContext context,
+    required int userId,
+    required int storeId,
     required CCTV cctv,
     required DateTime date,
     // required int index,
   }) async {
     print('DateTime date : $date');
     print('TimeStamp date : ${date.microsecondsSinceEpoch}');
+    var ymd = date.toString().split(" ").first;
 
     var jSessionId = await storage.read(key: 'cookie');
     Response response;
@@ -283,46 +287,50 @@ class CCTVService {
       },
       baseUrl: baseUrl,
     );
+
+    var param = {
+      'date': ymd,
+    };
     Dio dio = Dio(baseoptions);
     var timestamp = date.microsecondsSinceEpoch;
     print(timestamp);
 
-    // try {
-    //   response = await dio.get(
-    //       '/video/hls/replay/${cctv.cctvStreamKey}/${cctv.cctvStreamKey}-{timestamp}.m3u8');
-    //   if (response.statusCode! ~/ 100 == 2) {
-    //     print('=============CCTVLive response 200=============');
-    //     print(response.data);
-    //     var m3u8Content = response.data;
-    //     List<String> tsUrls = extractTsUrlsFromM3u8(m3u8Content);
-    //     return tsUrls;
+    try {
+      response = await dio.get(
+          '/api/users/$userId/stores/$storeId/cctvs/${cctv.cctvId}/replay',
+          queryParameters: param);
+      if (response.statusCode! ~/ 100 == 2) {
+        print('=============CCTVLive response 200=============');
+        print(response.data);
+        return response.data;
 
-    //     // List<Mape<String, dynamic>> stores
-    //   }
-    // } on DioException catch (e) {
-    //   if (e.response!.statusCode! ~/ 100 == 4) {
-    //     Future.microtask(() {
-    //       customShowDialog(
-    //           context: context,
-    //           title: '실시간 CCTV 조회 실패',
-    //           message: '${e.response!.data}',
-    //           onPressed: () {
-    //             Navigator.pop(context);
-    //           });
-    //     });
-    //     return [];
-    //   } else {
-    //     Future.microtask(() {
-    //       customShowDialog(
-    //           context: context,
-    //           title: '오류 메시지',
-    //           message: '실시간 CCTV 조회 실패 : ${e.response}',
-    //           onPressed: () {
-    //             Navigator.pop(context);
-    //           });
-    //     });
-    //   }
-    // }
+        // List<Mape<String, dynamic>> stores
+      }
+    } on DioException catch (e) {
+      if (e.response!.statusCode! ~/ 100 == 4) {
+        print(e.response!.data['message']);
+        Future.microtask(() {
+          customShowDialog(
+              context: context,
+              title: '실시간 CCTV 조회 실패',
+              message: '${e.response!.data}',
+              onPressed: () {
+                Navigator.pop(context);
+              });
+        });
+        return [];
+      } else {
+        Future.microtask(() {
+          customShowDialog(
+              context: context,
+              title: '오류 메시지',
+              message: '실시간 CCTV 조회 실패 : ${e.response}',
+              onPressed: () {
+                Navigator.pop(context);
+              });
+        });
+      }
+    }
   }
 
   static List<String> extractTsUrlsFromM3u8(String m3u8Content) {
