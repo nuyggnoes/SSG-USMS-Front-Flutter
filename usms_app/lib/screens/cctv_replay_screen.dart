@@ -27,7 +27,7 @@ class _CalendarScreenState extends State<CCTVReplay> {
   static List<VideoPlayerController?> videoControllers = [];
   static List<dynamic> testList = [];
 
-  final List<Item> _data = generateItems(24);
+  final List<Item> data = generateItems(24);
 
   @override
   initState() {
@@ -84,6 +84,7 @@ class _CalendarScreenState extends State<CCTVReplay> {
 
   @override
   Widget build(BuildContext context) {
+    // final List<Item> data = generateItems(24);
     return Scaffold(
       appBar: AppBar(
         title: Text('${widget.cctv.cctvName} CCTV 다시보기'),
@@ -110,19 +111,6 @@ class _CalendarScreenState extends State<CCTVReplay> {
               // 다시보기 cctv 조회
             },
           ),
-          Container(
-            width: 300,
-            height: 100,
-            decoration: BoxDecoration(
-              color: Colors.grey[200],
-            ),
-            child: Center(
-              child: Text(
-                '${selectedDate.year}-${selectedDate.month}-${selectedDate.day}',
-                style: const TextStyle(fontSize: 18),
-              ),
-            ),
-          ),
           const SizedBox(
             height: 20,
           ),
@@ -140,22 +128,22 @@ class _CalendarScreenState extends State<CCTVReplay> {
                     //   index: index,
                     // ).then({});
                   }
-                  if (_data.any((item) => item.isExpanded)) {
+                  if (data.any((item) => item.isExpanded)) {
                     int openedPanelIndex =
-                        _data.indexWhere((item) => item.isExpanded);
+                        data.indexWhere((item) => item.isExpanded);
                     print(openedPanelIndex);
                     setState(() {
-                      for (var item in _data) {
+                      for (var item in data) {
                         item.isExpanded = false;
                       }
                     });
                     print('$index번 패널의 상태 : $isExpanded');
                   }
                   setState(() {
-                    _data[index].isExpanded = isExpanded;
+                    data[index].isExpanded = isExpanded;
                   });
                 },
-                children: _data.map<ExpansionPanel>((Item item) {
+                children: data.map<ExpansionPanel>((Item item) {
                   return ExpansionPanel(
                     headerBuilder: (BuildContext context, bool isExpanded) {
                       return ListTile(
@@ -202,12 +190,14 @@ class Item {
 
 List<Item> generateItems(int numberOfItems) {
   List<String?> replayUrl = [];
-  if (_CalendarScreenState.testList.length <= 24) {
-    replayUrl = List<String?>.filled(24, null);
-    for (int i = 0; i < _CalendarScreenState.testList.length; i++) {
-      replayUrl[i] = _CalendarScreenState.testList[i];
-    }
+
+  replayUrl = List<String?>.filled(24, null);
+  print('testList 길이 : ${_CalendarScreenState.testList.length}');
+  for (int i = 0; i < _CalendarScreenState.testList.length; i++) {
+    replayUrl[i] = _CalendarScreenState.testList[i];
+    print('replayurl $i : ${replayUrl[i]}');
   }
+
   return List<Item>.generate(numberOfItems, (int index) {
     return Item(
       /// 헤더와 본문에 들어갈 내용
@@ -218,16 +208,8 @@ List<Item> generateItems(int numberOfItems) {
   });
 }
 
-// void _disposeChewieControllers() {
-//   for (var controller in chewieControllers) {
-//     if (controller != null) {
-//       controller.dispose();
-//     }
-//   }
-// }
-
 Widget _buildVideoPlayer(String? videoUrl) {
-  print('패널의 url: $videoUrl');
+  // print('패널의 url: $videoUrl'); //null
   if (videoUrl != null) {
     VideoPlayerController videoPlayerController =
         VideoPlayerController.networkUrl(Uri.parse(videoUrl));

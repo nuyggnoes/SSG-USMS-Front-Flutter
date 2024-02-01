@@ -43,8 +43,9 @@ dependencies:
   table_calendar: ^3.0.9
   intl: ^0.18.0
 
+  flutter_hls_parser: ^2.0.1
   video_player_web_hls: ^1.1.0
-  video_player: ^2.7.0
+  video_player: ^2.8.2
   chewie: ^1.7.4
 
 

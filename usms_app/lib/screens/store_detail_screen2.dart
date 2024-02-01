@@ -63,14 +63,13 @@ class _StoreDetailState extends State<StoreDetail2> {
             // 'https://usms-media.serveftp.com/video/hls/live/0e798b6c-2b80-47d6-beae-95435399fb7d/index.m3u8',
             // "https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"),
             'https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8',
+            // 'https://moctobpltc-i.akamaihd.net/hls/live/571329/eight/playlist.m3u8',
           ),
           videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true),
           formatHint: VideoFormat.hls,
           httpHeaders: {
             'cookie': session!,
           });
-      // var videoController = VideoPlayerController.network(
-      // 'https://usms-media.serveftp.com/video/hls/live/0e798b6c-2b80-47d6-beae-95435399fb7d/index.m3u8');
 
       if (!videoController.value.isInitialized) {
         print('비디오 초기화 전');
@@ -88,7 +87,6 @@ class _StoreDetailState extends State<StoreDetail2> {
         });
       }
     } else {
-      print('isConnected false');
       return null;
     }
     return null;
@@ -280,46 +278,6 @@ class _StoreDetailState extends State<StoreDetail2> {
                 // 0e798b6c-2b80-47d6-beae-95435399fb7d
 
                 //================================================================
-                // Consumer<CCTVProvider>(
-                //   builder: (context, cctvProvider, _) {
-                //     List<CCTV> cctvList = cctvProvider.cctvList;
-                //     return SizedBox(
-                //       height: listViewHeightCalculation(cctvList.length),
-                //       child: ListView.builder(
-                //         physics: const NeverScrollableScrollPhysics(),
-                //         shrinkWrap: true,
-                //         padding: const EdgeInsets.symmetric(vertical: 30),
-                //         itemCount: cctvList.length,
-                //         itemBuilder: (context, index) {
-                //           height = height * cctvList.length;
-                //           CCTV cctv = cctvList[index];
-                //           // setStoreProvider(store);
-                //           //2. ListView를 생성할때 Store 각각을 StoreList.add() 를 통해 업데이트
-                //           return Column(
-                //             children: [
-                //               cctv.isConnected
-                //                   ? ChewieListItem(
-                //                       chewieController: chewieController,
-                //                       index: index,
-                //                       routes: Routes.cctvReplay,
-                //                     )
-                //                   : const SizedBox(
-                //                       height: 220,
-                //                       width: double.infinity,
-                //                       child: Center(
-                //                         child: Text('동영상이 연결되어있지 않습니다.'),
-                //                       ),
-                //                     ),
-                //               const SizedBox(
-                //                 height: 20,
-                //               ),
-                //             ],
-                //           );
-                //         },
-                //       ),
-                //     );
-                //   },
-                // ),
                 const SizedBox(
                   height: 30,
                 ),
@@ -514,7 +472,6 @@ class ChewieListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('=======chewieListItem build=======');
     return Card(
       child: SizedBox(
         height: 300,
@@ -559,20 +516,6 @@ class ChewieListItem extends StatelessWidget {
                       ),
                       IconButton(
                         onPressed: () {
-                          //여기
-                          // _StoreDetailState.disposeTest();
-                          // Navigator.pushNamed(
-                          //   context,
-                          //   Routes.cctvReplay,
-                          //   arguments: cctv,
-                          // );
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //     builder: (context) => CCTVReplay(
-                          //         cctv: cctv, userId: uid, storeId: storeId),
-                          //   ),
-                          // );
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(

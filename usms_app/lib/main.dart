@@ -8,10 +8,8 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 // api
 import 'package:usms_app/api/firebase_api.dart';
-import 'package:usms_app/models/cctv_model.dart';
 import 'package:usms_app/routes.dart';
 
-import 'package:usms_app/screens/cctv_replay_screen.dart';
 import 'package:usms_app/utils/cctv_provider.dart';
 
 import 'package:usms_app/utils/store_provider.dart';

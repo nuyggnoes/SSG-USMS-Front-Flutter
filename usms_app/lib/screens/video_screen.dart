@@ -17,11 +17,17 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
 
   test() {
     VideoPlayerController videoPlayerController =
-        VideoPlayerController.networkUrl(Uri.parse(
-            'https://usms-media.serveftp.com/video/hls/live/0e798b6c-2b80-47d6-beae-95435399fb7d/index.m3u8'));
+        VideoPlayerController.networkUrl(
+      Uri.parse(
+          // 'https://usms-media.serveftp.com/video/hls/live/0e798b6c-2b80-47d6-beae-95435399fb7d/index.m3u8'),
+          'https://iptv-org.github.io/iptv/index.m3u8'),
+    );
+
     ChewieController chewieController = ChewieController(
       videoPlayerController: videoPlayerController,
+      autoPlay: true,
       aspectRatio: 16 / 9,
+      autoInitialize: true,
     );
     return Chewie(controller: chewieController);
   }
