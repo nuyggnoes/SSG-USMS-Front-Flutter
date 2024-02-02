@@ -373,28 +373,44 @@ class _RegisterStoreState extends State<RegisterStore> {
                         onPressed: () async {
                           // if (_formKey.currentState?.validate() ?? false) {
                           if (_formKey.currentState!.validate() == true) {
-                            // await storeService.requestStore(
-                            //     formData: formData,
-                            //     uid: Provider.of<UserProvider>(context,
-                            //             listen: false)
-                            //         .user
-                            //         .id!,
-                            //     context: context);
-                            Get.showOverlay(
-                              asyncFunction: () => storeService.requestStore(
-                                  formData: formData,
-                                  uid: Provider.of<UserProvider>(context,
-                                          listen: false)
-                                      .user
-                                      .id!,
-                                  context: context),
-                              loadingWidget: Container(
-                                color: Colors.blueAccent,
-                                alignment: Alignment.center,
-                                child:
-                                    const SpinKitWave(color: Colors.blueAccent),
+                            showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (context) => const AlertDialog(
+                                content: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    SpinKitWave(
+                                      color: Colors.blueAccent,
+                                      duration: Duration(milliseconds: 1000),
+                                    ),
+                                  ],
+                                ),
                               ),
                             );
+                            await storeService.requestStore(
+                                formData: formData,
+                                uid: Provider.of<UserProvider>(context,
+                                        listen: false)
+                                    .user
+                                    .id!,
+                                context: context);
+
+                            // Get.showOverlay(
+                            //   asyncFunction: () => storeService.requestStore(
+                            //       formData: formData,
+                            //       uid: Provider.of<UserProvider>(context,
+                            //               listen: false)
+                            //           .user
+                            //           .id!,
+                            //       context: context),
+                            //   loadingWidget: Container(
+                            //     color: Colors.blueAccent,
+                            //     alignment: Alignment.center,
+                            //     child:
+                            //         const SpinKitWave(color: Colors.blueAccent),
+                            //   ),
+                            // );
                           }
                         },
                         style: ElevatedButton.styleFrom(

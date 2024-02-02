@@ -1,5 +1,6 @@
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
+
 import 'package:usms_app/models/cctv_model.dart';
 import 'package:usms_app/services/cctv_service.dart';
 import 'package:video_player/video_player.dart';
@@ -23,14 +24,17 @@ class _CalendarScreenState extends State<CCTVReplay> {
   static late Future<List<dynamic>> cctvReplayUrlList;
   DateTime selectedDate = DateTime.now();
   // static List<VideoPlayerController> videoList = [];
-  static List<ChewieController?> chewieControllers = [];
-  static List<VideoPlayerController?> videoControllers = [];
+  static late List<ChewieController?> chewieControllers;
+  static late List<VideoPlayerController?> videoControllers;
   static List<dynamic> testList = [];
 
-  final List<Item> data = generateItems(24);
+  // final List<Item> data = generateItems(24);
+  late List<Item> data;
 
   @override
   initState() {
+    chewieControllers = [];
+    videoControllers = [];
     selectedDate = DateTime.now();
     _fetchReplays();
     super.initState();
@@ -38,21 +42,25 @@ class _CalendarScreenState extends State<CCTVReplay> {
 
   @override
   void didChangeDependencies() {
+    print('==============didChangeDenpendecies==================');
+    // data = generateItems(testList.length);
     super.didChangeDependencies();
   }
 
-  // @override
-  // void dispose() {
-  //   print('dispose()');
-  //   for (var i = 0; i < videoList.length; i++) {
-  //     print('dispose for()');
-  //     videoList[i].dispose();
-  //     if (chewieList[i] != null) {
-  //       chewieList[i]!.dispose();
-  //     }
-  //   }
-  //   super.dispose();
-  // }
+  @override
+  void dispose() {
+    print('dispose()');
+    for (var i = 0; i < videoControllers.length; i++) {
+      print('dispose for()');
+      if (videoControllers[i] != null) {
+        videoControllers[i]!.dispose();
+      }
+      if (chewieControllers[i] != null) {
+        chewieControllers[i]!.dispose();
+      }
+    }
+    super.dispose();
+  }
 
   getUrl(int index) async {
     await _fetchReplays();
@@ -69,7 +77,7 @@ class _CalendarScreenState extends State<CCTVReplay> {
         date: selectedDate,
         cctv: widget.cctv,
       );
-      print(returnValues);
+      print('getAllCCTVReplay Return [$returnValues]');
 
       setState(() {
         cctvReplayUrlList = Future.value(returnValues);
@@ -85,6 +93,23 @@ class _CalendarScreenState extends State<CCTVReplay> {
   @override
   Widget build(BuildContext context) {
     // final List<Item> data = generateItems(24);
+    // showDialog(
+    //   context: context,
+    //   barrierDismissible: false,
+    //   builder: (context) => const AlertDialog(
+    //     content: Column(
+    //       mainAxisSize: MainAxisSize.min,
+    //       children: [
+    //         SpinKitWave(
+    //           color: Colors.blueAccent,
+    //           duration: Duration(milliseconds: 2000),
+    //         ),
+    //       ],
+    //     ),
+    //   ),
+    // );
+    data = generateItems(testList.length);
+
     return Scaffold(
       appBar: AppBar(
         title: Text('${widget.cctv.cctvName} CCTV 다시보기'),
@@ -103,11 +128,24 @@ class _CalendarScreenState extends State<CCTVReplay> {
             lastDate: DateTime.now(),
             onDateChanged: (DateTime date) async {
               setState(() {
+                for (var i = 0; i < videoControllers.length; i++) {
+                  print('dispose for()');
+                  if (videoControllers[i] != null) {
+                    videoControllers[i]!.dispose();
+                  }
+                  if (chewieControllers[i] != null) {
+                    chewieControllers[i]!.dispose();
+                  }
+                }
+                chewieControllers = [];
+                videoControllers = [];
                 selectedDate = date;
+
                 // 다시보기 api 요청
                 // 각 패널에 영상 넣기
               });
               await _fetchReplays();
+
               // 다시보기 cctv 조회
             },
           ),
@@ -121,27 +159,34 @@ class _CalendarScreenState extends State<CCTVReplay> {
                 expandedHeaderPadding: const EdgeInsets.all(0),
                 expansionCallback: (int index, bool isExpanded) {
                   print('$index번 패널의 상태 : $isExpanded');
-                  if (isExpanded) {
-                    // CCTVService.getCCTVReplay(
-                    //   context: context,
-                    //   date: selectedDate,
-                    //   index: index,
-                    // ).then({});
-                  }
-                  if (data.any((item) => item.isExpanded)) {
-                    int openedPanelIndex =
-                        data.indexWhere((item) => item.isExpanded);
-                    print(openedPanelIndex);
-                    setState(() {
-                      for (var item in data) {
-                        item.isExpanded = false;
-                      }
-                    });
-                    print('$index번 패널의 상태 : $isExpanded');
-                  }
                   setState(() {
-                    data[index].isExpanded = isExpanded;
+                    // 현재 패널의 상태를 반전하여 열기/닫기 토글
+                    data[index].isExpanded = !isExpanded;
+                    print('$index번 패널의 상태 : $isExpanded');
+
+                    // 다른 패널들은 닫기
+                    for (int i = 0; i < data.length; i++) {
+                      if (i != index) {
+                        data[i].isExpanded = false;
+                      }
+                    }
                   });
+
+                  // setState(() {
+                  //   data[index].isExpanded = !isExpanded;
+                  // });
+                  // if (data.any((item) => item.isExpanded)) {
+                  //   int openedPanelIndex =
+                  //       data.indexWhere((item) => item.isExpanded);
+                  //   print(openedPanelIndex);
+
+                  //   setState(() {
+                  //     for (var item in data) {
+                  //       item.isExpanded = false;
+                  //     }
+                  //   });
+                  //   print('$index번 패널의 상태 : $isExpanded');
+                  // }
                 },
                 children: data.map<ExpansionPanel>((Item item) {
                   return ExpansionPanel(
@@ -150,16 +195,10 @@ class _CalendarScreenState extends State<CCTVReplay> {
                         title: Text(item.headerValue),
                       );
                     },
-                    // body: ListTile(
-                    //   title: Text(item.headerValue),
-                    //   subtitle: Text(item.expandedValue),
-                    // ),
                     body: Container(
-                      height: 200,
+                      height: 300,
                       decoration: const BoxDecoration(color: Colors.grey),
                       child: Center(
-                        // child:
-                        //     Text('${item.headerValue} ${item.replayUrl} 동영상'),
                         child: _buildVideoPlayer(item.replayUrl),
                       ),
                     ),
@@ -180,7 +219,7 @@ class Item {
     this.replayUrl,
     required this.expandedValue,
     required this.headerValue,
-    this.isExpanded = false,
+    this.isExpanded = true,
   });
   String expandedValue;
   String headerValue;
@@ -189,6 +228,7 @@ class Item {
 }
 
 List<Item> generateItems(int numberOfItems) {
+  print('generate items');
   List<String?> replayUrl = [];
 
   replayUrl = List<String?>.filled(24, null);
@@ -199,9 +239,23 @@ List<Item> generateItems(int numberOfItems) {
   }
 
   return List<Item>.generate(numberOfItems, (int index) {
+    String replayTime = '';
+    int replayTimestamp = 0;
+
+    if (replayUrl[index] != null) {
+      // 타임스탬프로 headerValue 만들기
+      var tmp = replayUrl[index]!.split('-').last;
+      print('tmp : $tmp');
+      replayTimestamp = int.parse(tmp.split('.').first);
+      print(replayTimestamp);
+      replayTime = DateTime.fromMillisecondsSinceEpoch(replayTimestamp * 1000)
+          .toString();
+      print('변환한 날짜 : $replayTime');
+    }
+
     return Item(
       /// 헤더와 본문에 들어갈 내용
-      headerValue: '$index시 ~ ${index + 1}시',
+      headerValue: replayTime,
       expandedValue: 'This is item number $index',
       replayUrl: replayUrl[index],
     );
@@ -209,7 +263,6 @@ List<Item> generateItems(int numberOfItems) {
 }
 
 Widget _buildVideoPlayer(String? videoUrl) {
-  // print('패널의 url: $videoUrl'); //null
   if (videoUrl != null) {
     VideoPlayerController videoPlayerController =
         VideoPlayerController.networkUrl(Uri.parse(videoUrl));

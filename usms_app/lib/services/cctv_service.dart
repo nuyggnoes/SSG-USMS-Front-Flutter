@@ -301,7 +301,7 @@ class CCTVService {
           queryParameters: param);
       if (response.statusCode! ~/ 100 == 2) {
         print('=============CCTVLive response 200=============');
-        print(response.data);
+
         return response.data;
 
         // List<Mape<String, dynamic>> stores

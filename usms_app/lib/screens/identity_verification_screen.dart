@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 //screen
 
@@ -225,6 +226,21 @@ class _VerificationScreenState extends State<VerificationScreen>
                       //   _focusNode.requestFocus();
                       //   updateVerification(true);
                       // }
+                      // showDialog(
+                      //   context: context,
+                      //   barrierDismissible: false,
+                      //   builder: (context) => const AlertDialog(
+                      //     content: Column(
+                      //       mainAxisSize: MainAxisSize.min,
+                      //       children: [
+                      //         SpinKitWave(
+                      //           color: Colors.blueAccent,
+                      //           duration: Duration(milliseconds: 1000),
+                      //         ),
+                      //       ],
+                      //     ),
+                      //   ),
+                      // );
                       if (await userService.getVerificationNumber(
                         code: code,
                         value: _authenticationMethod,

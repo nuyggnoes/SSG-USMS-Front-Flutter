@@ -51,7 +51,6 @@ class UserService {
         var setCookieHeader = response.headers['set-cookie']!.first;
 
         print('[RESPONSE DATA] : ${response.data}');
-        print('[RESPONSE DATA(User)] : ${response.data["user"]}');
         print('[sessionid] : $jSessionId');
         print('[USERINFO] : ${jsonEncode(response.data)}');
         await storage.write(
@@ -106,11 +105,10 @@ class UserService {
         });
       } else {
         Future.microtask(() {
-          print('오류 $e');
           customShowDialog(
               context: context,
-              title: '서버 오류',
-              message: '서버 종료상태입니다.',
+              title: '로그인 실패',
+              message: '아이디 또는 비밀번호가 일치하지 않습니다.',
               onPressed: () {
                 Navigator.pop(context);
               });
@@ -322,7 +320,7 @@ class UserService {
           customShowDialog(
               context: context,
               title: '',
-              message: '본인 인증 성공',
+              message: '본인 인증에 성공하였습니다.',
               onPressed: () {
                 if (flagId == 1) {
                   Navigator.pushAndRemoveUntil(
@@ -344,8 +342,8 @@ class UserService {
         Future.microtask(() {
           customShowDialog(
               context: context,
-              title: '400 오류',
-              message: e.message!,
+              title: '본인 인증 실패',
+              message: e.response!.data['message'],
               onPressed: () {
                 Navigator.pop(context);
               });
@@ -370,6 +368,7 @@ class UserService {
     required User user,
     required Function onPressed,
   }) async {
+    print('회원가입 요청=================================================');
     print(user.toJson());
     Response response;
     var jwtToken = await storage.read(key: AppConstants.jwtAuthorizationKey);
@@ -391,7 +390,10 @@ class UserService {
             title: '환영합니다.',
             message: '회원가입 성공',
             onPressed: () {
-              Navigator.popUntil(context, ModalRoute.withName('/'));
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                Routes.login,
+                (route) => false,
+              );
             },
           );
         });
@@ -407,7 +409,7 @@ class UserService {
           customShowDialog(
             context: context,
             title: '회원가입 실패',
-            message: '${e.response?.data}',
+            message: '${e.response?.data['message']}',
             onPressed: () {
               Navigator.pop(context);
             },
@@ -415,6 +417,7 @@ class UserService {
         });
         return false;
       } else {
+        print(e.response);
         Future.microtask(() {
           customShowDialog(
             context: context,
@@ -441,7 +444,7 @@ class UserService {
     var baseoptions = BaseOptions(
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
-        'Authorization': 'Bearer $jwtToken',
+        'Authorization': '$jwtToken',
       },
       baseUrl: baseUrl,
     );
@@ -494,6 +497,75 @@ class UserService {
     //     });
     //   }
     // }
+  }
+
+  // 회원탈퇴
+  static deleteUserInfo({
+    required BuildContext context,
+    required int userId,
+  }) async {
+    print('[회원(id = $userId) 정보 삭제]');
+    Response response;
+    var jSessionId = await storage.read(key: 'cookie');
+
+    var baseoptions = BaseOptions(
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+        'cookie': jSessionId,
+      },
+      baseUrl: baseUrl,
+    );
+    Dio dio = Dio(baseoptions);
+    try {
+      response = await dio.delete('/api/users/$userId');
+
+      if (response.statusCode! ~/ 100 == 2) {
+        print('회원정보 삭제 200');
+        Future.microtask(() {
+          customShowDialog(
+            context: context,
+            title: '회원 탈퇴',
+            message: '회원 탈퇴가 완료되었습니다.\n 서비스를 이용해주셔서 감사합니다.',
+            onPressed: () {
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                Routes.login,
+                (route) => false,
+              );
+            },
+          );
+        });
+      }
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 400) {
+        print("[ERROR] : [$e]");
+        // 400 에러의 body
+        print('[ERR Body] : ${e.response?.data}');
+
+        var errorCode = e.response?.data['code'];
+        Future.microtask(() {
+          customShowDialog(
+            context: context,
+            title: '회원삭제 실패',
+            message: '${e.response?.data}',
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          );
+        });
+        return false;
+      } else {
+        Future.microtask(() {
+          customShowDialog(
+            context: context,
+            title: '서버 오류',
+            message: '${e.message}',
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          );
+        });
+      }
+    }
   }
 
   // JWT로 아이디 찾기

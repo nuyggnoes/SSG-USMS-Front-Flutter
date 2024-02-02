@@ -269,7 +269,54 @@ class _MyPageScreenState extends State<MyPageScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
                                 TextButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            title: const Text('회원탈퇴'),
+                                            content: const Text(
+                                                '회원탈퇴를 하시겠습니까?\n (탈퇴 후 계정 복구가 불가능합니다.)'),
+                                            actions: <Widget>[
+                                              TextButton(
+                                                child: const Text(
+                                                  '취소',
+                                                  style: TextStyle(
+                                                      color: Colors.blueAccent),
+                                                ),
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                              ),
+                                              ElevatedButton(
+                                                onPressed: () async {
+                                                  await UserService
+                                                      .deleteUserInfo(
+                                                    context: context,
+                                                    userId: Provider.of<
+                                                                UserProvider>(
+                                                            context,
+                                                            listen: false)
+                                                        .user
+                                                        .id!,
+                                                  );
+                                                },
+                                                style: ElevatedButton.styleFrom(
+                                                  backgroundColor:
+                                                      Colors.blueAccent,
+                                                ),
+                                                child: const Text(
+                                                  '확인',
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.w900,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          );
+                                        });
+                                  },
                                   child: const Text(
                                     '회원탈퇴',
                                     style: TextStyle(color: Colors.red),
@@ -324,81 +371,6 @@ class _MyPageScreenState extends State<MyPageScreen> {
                                 ),
                               ],
                             )
-
-                            // InkWell(
-                            //   onTap: () {
-                            //     showDialog(
-                            //         context: context,
-                            //         builder: (context) {
-                            //           return AlertDialog(
-                            //             title: const Text('로그아웃'),
-                            //             content: const Text('로그아웃 하시겠습니까?'),
-                            //             actions: <Widget>[
-                            //               TextButton(
-                            //                 child: const Text(
-                            //                   '취소',
-                            //                   style: TextStyle(
-                            //                       color: Colors.blueAccent),
-                            //                 ),
-                            //                 onPressed: () {
-                            //                   Navigator.pop(context);
-                            //                 },
-                            //               ),
-                            //               ElevatedButton(
-                            //                 onPressed: () {
-                            //                   logoutAction();
-                            //                 },
-                            //                 style: ElevatedButton.styleFrom(
-                            //                   backgroundColor:
-                            //                       Colors.blueAccent,
-                            //                 ),
-                            //                 child: const Text(
-                            //                   '확인',
-                            //                   style: TextStyle(
-                            //                     color: Colors.white,
-                            //                     fontWeight: FontWeight.w900,
-                            //                   ),
-                            //                 ),
-                            //               ),
-                            //             ],
-                            //           );
-                            //         });
-                            //   },
-                            //   child: Container(
-                            //     padding: const EdgeInsets.symmetric(
-                            //       vertical: 10,
-                            //       horizontal: 10,
-                            //     ),
-                            //     decoration: BoxDecoration(
-                            //       color: Colors.white,
-                            //       border: Border(
-                            //         bottom: BorderSide(
-                            //           color: Colors.grey.shade400,
-                            //           width: 2,
-                            //         ),
-                            //       ),
-                            //     ),
-                            //     height: 70,
-                            //     child: const Row(
-                            //       mainAxisAlignment:
-                            //           MainAxisAlignment.spaceBetween,
-                            //       children: [
-                            //         Row(
-                            //           children: [
-                            //             Icon(
-                            //               Icons.logout_rounded,
-                            //               color: Colors.grey,
-                            //             ),
-                            //             SizedBox(
-                            //               width: 25,
-                            //             ),
-                            //             Text('로그아웃'),
-                            //           ],
-                            //         ),
-                            //       ],
-                            //     ),
-                            //   ),
-                            // ),
                           ],
                         ),
                       ),

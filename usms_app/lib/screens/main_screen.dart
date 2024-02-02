@@ -65,10 +65,6 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
     super.dispose();
   }
 
-  setStoreProvider(Store storeProviders) {
-    Provider.of<StoreProvider>(context).addStore(storeProviders);
-  }
-
   checkStoreState(int storeId) async {
     Store? store = await StoreService.getStoreInfo(
         uid: Provider.of<User>(context, listen: false).id!,
@@ -256,8 +252,6 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                                   itemBuilder: (context, index) {
                                     height = height * storeList.length;
                                     Store store = storeList[index];
-                                    // setStoreProvider(store);
-                                    //2. ListView를 생성할때 Store 각각을 StoreList.add() 를 통해 업데이트
                                     return Column(
                                       children: [
                                         CurrencyCard(
@@ -286,8 +280,6 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                           );
                         },
                       ),
-                      // =========================================================================
-                      // storeState : READY(0), APPROVAL(1), DISAPPROVAL(2), STOPPED(3);
 
                       CurrencyCard(
                         name: '신세계I&C 부산캠퍼스',
