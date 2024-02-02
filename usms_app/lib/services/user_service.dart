@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:provider/provider.dart';
 import 'package:usms_app/contants/app_constants.dart';
 
 import 'package:usms_app/main.dart';
@@ -11,7 +10,6 @@ import 'package:usms_app/models/user_model.dart';
 import 'package:usms_app/routes.dart';
 import 'package:usms_app/screens/register_screen.dart';
 import 'package:usms_app/services/show_dialog.dart';
-import 'package:usms_app/utils/user_provider.dart';
 
 class UserService {
   static const baseUrl = MyApp.url;
@@ -33,8 +31,6 @@ class UserService {
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
       },
-      // baseUrl: "http://10.0.2.2:3003",
-      // baseUrl: "https://127.0.0.1:3003",
       baseUrl: baseUrl,
     );
     Dio dio = Dio(baseoptions);
@@ -47,15 +43,12 @@ class UserService {
 
     try {
       response = await dio.post('/api/login', data: param);
-      // response = await dio.post('/login', data: param);
       print(param);
       if (response.statusCode == 200) {
         String? jSessionId;
         print('==============UserService response 200=================');
-        print('[response.headers : ${response.headers}]');
 
         var setCookieHeader = response.headers['set-cookie']!.first;
-        print('[set-cookie : $setCookieHeader]');
 
         print('[RESPONSE DATA] : ${response.data}');
         print('[RESPONSE DATA(User)] : ${response.data["user"]}');
@@ -76,9 +69,9 @@ class UserService {
           );
         }
         // successLogin(context);
-        // Future.microtask(() {
-        Navigator.pushNamed(context, Routes.home);
-        // });
+        Future.microtask(() {
+          Navigator.pushNamed(context, Routes.home);
+        });
       }
     } on DioException catch (e) {
       if (e.response?.statusCode == 400) {
@@ -113,6 +106,7 @@ class UserService {
         });
       } else {
         Future.microtask(() {
+          print('오류 $e');
           customShowDialog(
               context: context,
               title: '서버 오류',
@@ -121,18 +115,55 @@ class UserService {
                 Navigator.pop(context);
               });
         });
-        print('[ERR] $e');
       }
     }
   }
 
-  // 로그아웃
-  logoutAction(Function pagePop) async {
-    await storage.delete(key: 'auto_login');
-    await storage.delete(key: 'cookie');
-    await storage.delete(key: 'userInfo');
-    print('userService.logout()');
-    pagePop();
+  static logoutAction({required BuildContext context}) async {
+    var jSessionId = await storage.read(key: 'cookie');
+    print(jSessionId);
+
+    Response response;
+
+    var baseoptions = BaseOptions(
+      headers: {
+        "Content-Type": "multipart/form-data;",
+        'cookie': jSessionId,
+      },
+      baseUrl: baseUrl,
+    );
+    Dio dio = Dio(baseoptions);
+
+    try {
+      response = await dio.post(
+        '/api/logout',
+      );
+      if (response.statusCode! ~/ 100 == 2) {
+        print('====================logout 200=====================');
+      }
+    } on DioException catch (e) {
+      if (e.response!.statusCode! ~/ 100 == 4) {
+        Future.microtask(() {
+          customShowDialog(
+              context: context,
+              title: '로그아웃 실패',
+              message: '${e.response?.data['message']}',
+              onPressed: () {
+                Navigator.pop(context);
+              });
+        });
+      } else {
+        Future.microtask(() {
+          customShowDialog(
+              context: context,
+              title: '서버 오류',
+              message: '$e',
+              onPressed: () {
+                Navigator.pop(context);
+              });
+        });
+      }
+    }
   }
 
   // 유저 정보
@@ -524,4 +555,6 @@ class UserService {
       }
     }
   }
+
+  static logout() {}
 }

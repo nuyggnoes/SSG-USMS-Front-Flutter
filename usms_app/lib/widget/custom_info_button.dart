@@ -9,20 +9,18 @@ class CustomInfoButton extends StatelessWidget {
     required this.icon,
     this.routeCode,
   });
-  // ignore: prefer_typing_uninitialized_variables
-  final buttonText;
+
+  final String buttonText;
   final BuildContext parentContext;
-  // ignore: prefer_typing_uninitialized_variables
-  final route;
-  final icon;
+
+  final dynamic route;
+  final IconData icon;
   final bool? routeCode;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        // print('hi');
-        // print('$route');
         Navigator.pushNamed(
           parentContext,
           route,
@@ -38,12 +36,12 @@ class CustomInfoButton extends StatelessWidget {
           color: Colors.white,
           border: Border(
             bottom: BorderSide(
-              color: Colors.grey.shade400,
+              color: Colors.grey.withOpacity(0.2),
               width: 2,
             ),
           ),
         ),
-        height: 70,
+        height: 85,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -56,7 +54,7 @@ class CustomInfoButton extends StatelessWidget {
                 const SizedBox(
                   width: 25,
                 ),
-                Text('$buttonText'),
+                Text(buttonText),
               ],
             ),
           ],

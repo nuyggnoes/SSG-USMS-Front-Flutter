@@ -6,8 +6,6 @@ import 'package:usms_app/models/user_model.dart';
 
 // screen
 import 'package:usms_app/screens/main_screen.dart';
-import 'package:usms_app/screens/notification_list_screen.dart';
-import 'package:usms_app/screens/statistic_screen.dart';
 import 'package:usms_app/screens/user_info_screen.dart';
 import 'package:usms_app/services/user_service.dart';
 import 'package:usms_app/utils/user_provider.dart';
@@ -69,6 +67,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       create: (context) => user,
       child: Scaffold(
         bottomNavigationBar: BottomNavigationBar(
+          selectedLabelStyle: const TextStyle(color: Colors.blueAccent),
+          unselectedLabelStyle: const TextStyle(color: Colors.grey),
           items: const [
             BottomNavigationBarItem(
               icon: Icon(Icons.home_outlined),

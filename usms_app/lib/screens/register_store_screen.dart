@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:get/route_manager.dart';
 import 'package:kpostal/kpostal.dart';
 import 'package:provider/provider.dart';
 import 'package:usms_app/services/show_dialog.dart';
@@ -369,14 +371,30 @@ class _RegisterStoreState extends State<RegisterStore> {
                       width: MediaQuery.of(context).size.width * 0.7,
                       child: ElevatedButton(
                         onPressed: () async {
-                          if (_formKey.currentState?.validate() ?? false) {
-                            await storeService.requestStore(
-                                formData: formData,
-                                uid: Provider.of<UserProvider>(context,
-                                        listen: false)
-                                    .user
-                                    .id!,
-                                context: context);
+                          // if (_formKey.currentState?.validate() ?? false) {
+                          if (_formKey.currentState!.validate() == true) {
+                            // await storeService.requestStore(
+                            //     formData: formData,
+                            //     uid: Provider.of<UserProvider>(context,
+                            //             listen: false)
+                            //         .user
+                            //         .id!,
+                            //     context: context);
+                            Get.showOverlay(
+                              asyncFunction: () => storeService.requestStore(
+                                  formData: formData,
+                                  uid: Provider.of<UserProvider>(context,
+                                          listen: false)
+                                      .user
+                                      .id!,
+                                  context: context),
+                              loadingWidget: Container(
+                                color: Colors.blueAccent,
+                                alignment: Alignment.center,
+                                child:
+                                    const SpinKitWave(color: Colors.blueAccent),
+                              ),
+                            );
                           }
                         },
                         style: ElevatedButton.styleFrom(

@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:usms_app/models/store_model.dart';
 import 'package:usms_app/models/user_model.dart';
@@ -73,7 +74,6 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
         uid: Provider.of<User>(context, listen: false).id!,
         storeId: storeId,
         context: context);
-    print("is this null? => $store");
 
     switch (store!.storeState) {
       case 0:
@@ -123,9 +123,9 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
 
   Color getRandomColor() {
     Random random = Random();
-    int red = random.nextInt(256); // 0부터 255까지의 랜덤한 빨강 값
-    int green = random.nextInt(256); // 0부터 255까지의 랜덤한 초록 값
-    int blue = random.nextInt(256); // 0부터 255까지의 랜덤한 파랑 값
+    int red = random.nextInt(256);
+    int green = random.nextInt(256);
+    int blue = random.nextInt(256);
 
     return Color.fromARGB(255, red, green, blue);
   }
@@ -145,8 +145,15 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(''),
+        title: const Text(
+          '',
+          style: TextStyle(
+            color: Colors.blueAccent,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
         automaticallyImplyLeading: false,
+        centerTitle: true,
       ),
       body: SafeArea(
         child: GestureDetector(
@@ -161,9 +168,6 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
               ),
               child: Column(
                 children: [
-                  // FutureBuilder 사용, 카드 색 랜덤
-                  // onTap callback함수 사용해서
-                  // 반려, 승인요청, 승인상태에 따라 다른페이지로 route
                   Column(
                     children: [
                       FutureBuilder(
@@ -173,7 +177,13 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                         builder: ((context, snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
-                            return const CircularProgressIndicator();
+                            return SizedBox(
+                              height: MediaQuery.of(context).size.height,
+                              width: 400,
+                              child: const SpinKitWave(
+                                color: Colors.blueAccent,
+                              ),
+                            );
                           } else if (snapshot.hasError) {
                             return Text('에러 발생: ${snapshot.error}');
                           } else if (snapshot.connectionState ==
@@ -182,41 +192,41 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                               snapshot.data != null) {
                             List<Store> storeList = snapshot.data!;
 
-                            return SizedBox(
-                              height:
-                                  listViewHeightCalculation(storeList.length),
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 30),
-                                itemCount: storeList.length,
-                                itemBuilder: (context, index) {
-                                  height = height * storeList.length;
-                                  Store store = storeList[index];
-                                  return Column(
-                                    children: [
-                                      CurrencyCard(
-                                        name: store.name,
-                                        code: store.storeState,
-                                        amount: '',
-                                        icon:
-                                            Icons.store_mall_directory_rounded,
-                                        selectedCardColors: getRandomColor(),
-                                        animationController:
-                                            _animationController,
-                                        opacityAnimation: _opacityAnimation,
-                                        onTapAction: () {
-                                          checkStoreState(store.id!);
-                                        },
-                                      ),
-                                      const SizedBox(
-                                        height: 20,
-                                      ),
-                                    ],
-                                  );
-                                },
-                              ),
-                            );
+                            return const SizedBox(
+                                // height:
+                                //     listViewHeightCalculation(storeList.length),
+                                // child: ListView.builder(
+                                //   shrinkWrap: true,
+                                //   padding:
+                                //       const EdgeInsets.symmetric(vertical: 30),
+                                //   itemCount: storeList.length,
+                                //   itemBuilder: (context, index) {
+                                //     height = height * storeList.length;
+                                //     Store store = storeList[index];
+                                //     return Column(
+                                //       children: [
+                                //         CurrencyCard(
+                                //           name: store.name,
+                                //           code: store.storeState,
+                                //           amount: '',
+                                //           icon:
+                                //               Icons.store_mall_directory_rounded,
+                                //           selectedCardColors: getRandomColor(),
+                                //           animationController:
+                                //               _animationController,
+                                //           opacityAnimation: _opacityAnimation,
+                                //           onTapAction: () {
+                                //             checkStoreState(store.id!);
+                                //           },
+                                //         ),
+                                //         const SizedBox(
+                                //           height: 20,
+                                //         ),
+                                //       ],
+                                //     );
+                                //   },
+                                // ),
+                                );
                           } else {
                             return Container();
                           }
@@ -226,64 +236,59 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                       Consumer<StoreProvider>(
                         builder: (context, storeProvider, _) {
                           List<Store> storeList = storeProvider.storeList;
-                          return SizedBox(
-                            height: listViewHeightCalculation(storeList.length),
-                            child: ListView.builder(
-                              physics: const NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              padding: const EdgeInsets.symmetric(vertical: 30),
-                              itemCount: storeList.length,
-                              itemBuilder: (context, index) {
-                                height = height * storeList.length;
-                                Store store = storeList[index];
-                                // setStoreProvider(store);
-                                //2. ListView를 생성할때 Store 각각을 StoreList.add() 를 통해 업데이트
-                                return Column(
-                                  children: [
-                                    CurrencyCard(
-                                      name: store.name,
-                                      code: store.storeState,
-                                      amount: '',
-                                      // icon: Icons.store_mall_directory_rounded,
-                                      icon: getRandomIconData(),
-                                      selectedCardColors: getRandomColor(),
-                                      animationController: _animationController,
-                                      opacityAnimation: _opacityAnimation,
-                                      onTapAction: () {
-                                        checkStoreState(store.id!);
-                                      },
-                                    ),
-                                    const SizedBox(
-                                      height: 20,
-                                    ),
-                                  ],
-                                );
-                              },
-                            ),
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                '나의 매장',
+                                style: TextStyle(
+                                    fontSize: 30, fontWeight: FontWeight.w700),
+                              ),
+                              SizedBox(
+                                height:
+                                    listViewHeightCalculation(storeList.length),
+                                child: ListView.builder(
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  shrinkWrap: true,
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 30),
+                                  itemCount: storeList.length,
+                                  itemBuilder: (context, index) {
+                                    height = height * storeList.length;
+                                    Store store = storeList[index];
+                                    // setStoreProvider(store);
+                                    //2. ListView를 생성할때 Store 각각을 StoreList.add() 를 통해 업데이트
+                                    return Column(
+                                      children: [
+                                        CurrencyCard(
+                                          name: store.name,
+                                          code: store.storeState,
+                                          amount: '',
+                                          // icon: Icons.store_mall_directory_rounded,
+                                          icon: getRandomIconData(),
+                                          selectedCardColors: getRandomColor(),
+                                          animationController:
+                                              _animationController,
+                                          opacityAnimation: _opacityAnimation,
+                                          onTapAction: () {
+                                            checkStoreState(store.id!);
+                                          },
+                                        ),
+                                        const SizedBox(
+                                          height: 20,
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
                           );
                         },
                       ),
                       // =========================================================================
                       // storeState : READY(0), APPROVAL(1), DISAPPROVAL(2), STOPPED(3);
 
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      CurrencyCard(
-                        name: 'GS25 무인매장점2',
-                        code: 1,
-                        amount: '',
-                        icon: Icons.storefront,
-                        selectedCardColors: Colors.blue.shade300,
-                        animationController: _animationController,
-                        opacityAnimation: _opacityAnimation,
-                        onTapAction: () {
-                          Navigator.pushNamed(context, Routes.storeDetail);
-                        },
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
                       CurrencyCard(
                         name: '신세계I&C 부산캠퍼스',
                         code: 2,

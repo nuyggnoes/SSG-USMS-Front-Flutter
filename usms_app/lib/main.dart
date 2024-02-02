@@ -88,16 +88,6 @@ class MyApp extends StatelessWidget {
         navigatorKey: navigatorKey,
         initialRoute: Routes.login,
         routes: Routes.routes,
-        // onGenerateRoute: (settings) {
-        //   switch (settings.name) {
-        //     case Routes.cctvReplay:
-        //       final CCTV cctv = settings.arguments as CCTV;
-        //       return MaterialPageRoute(
-        //         builder: (context) => CCTVReplay(cctv: cctv),
-        //       );
-        //   }
-        //   return null;
-        // },
       ),
     );
   }

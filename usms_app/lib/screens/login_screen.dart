@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:get/route_manager.dart';
+import 'package:get/utils.dart';
 import 'package:usms_app/screens/home_screen.dart';
 import 'package:usms_app/routes.dart';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:usms_app/screens/video_screen.dart';
+
 import 'package:usms_app/services/user_service.dart';
 
 import 'package:usms_app/widget/my_checkbox.dart';

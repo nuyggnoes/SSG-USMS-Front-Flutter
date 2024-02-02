@@ -47,7 +47,7 @@ class _StatisticScreenState extends State<StatisticScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('통계 지표'),
+        title: const Text('매장 이상행동 통계'),
         centerTitle: true,
         leading: IconButton(
           onPressed: () {

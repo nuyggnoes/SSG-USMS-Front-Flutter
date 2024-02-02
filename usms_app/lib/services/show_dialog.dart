@@ -13,13 +13,28 @@ void customShowDialog({
         title: Text(title),
         content: Text(message),
         actions: <Widget>[
-          TextButton(
+          ElevatedButton(
             onPressed: () {
               onPressed();
-              // Navigator.pop(context);
             },
-            child: const Text('확인'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.blueAccent,
+            ),
+            child: const Text(
+              '확인',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w900,
+              ),
+            ),
           ),
+          // TextButton(
+          //   onPressed: () {
+          //     onPressed();
+          //     // Navigator.pop(context);
+          //   },
+          //   child: const Text('확인'),
+          // ),
         ],
       );
     },
