@@ -151,10 +151,10 @@ class _NotificationListScreenState extends State<NotificationListScreen>
                     Row(
                       children: [
                         Expanded(
-                          child: ElevatedButton(
+                          child: TextButton(
                             style: ButtonStyle(
-                              side: const MaterialStatePropertyAll(
-                                BorderSide(color: Colors.grey),
+                              side: MaterialStateProperty.all(
+                                const BorderSide(color: Colors.grey),
                               ),
                               fixedSize: MaterialStateProperty.all(
                                 const Size(80, 50),
@@ -179,24 +179,30 @@ class _NotificationListScreenState extends State<NotificationListScreen>
                                 });
                               }
                             },
-                            child: Text(
-                              _startDate == null
-                                  ? ''
-                                  : DateFormat('yyyy-MM-dd')
-                                      .format(_startDate!),
-                              style: const TextStyle(color: Colors.black),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Icon(
+                                  Icons.calendar_today,
+                                  color: Colors.grey,
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  _startDate == null
+                                      ? ''
+                                      : DateFormat('yyyy년 M월d일')
+                                          .format(_startDate!),
+                                  style: const TextStyle(color: Colors.black),
+                                ),
+                              ],
                             ),
                           ),
                         ),
-                        // const SizedBox(
-                        //   width: 20,
-                        //   child: Text(' -- '),
-                        // ),
                         Expanded(
-                          child: ElevatedButton(
+                          child: TextButton(
                             style: ButtonStyle(
-                              side: const MaterialStatePropertyAll(
-                                BorderSide(color: Colors.grey),
+                              side: MaterialStateProperty.all(
+                                const BorderSide(color: Colors.grey),
                               ),
                               fixedSize: MaterialStateProperty.all(
                                 const Size(80, 50),
@@ -221,21 +227,32 @@ class _NotificationListScreenState extends State<NotificationListScreen>
                                 });
                               }
                             },
-                            child: Text(
-                              _endDate == null
-                                  ? ''
-                                  : DateFormat('yyyy-MM-dd').format(_endDate!),
-                              style: const TextStyle(color: Colors.black),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Icon(
+                                  Icons.calendar_today,
+                                  color: Colors.grey,
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  _endDate == null
+                                      ? ''
+                                      : DateFormat('yyyy년 M월d일')
+                                          .format(_endDate!),
+                                  style: const TextStyle(color: Colors.black),
+                                ),
+                              ],
                             ),
                           ),
                         ),
-                        // const SizedBox(
-                        //   width: 20,
-                        // ),
                         ElevatedButton(
                           style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(
+                              Colors.blueAccent,
+                            ),
                             side: const MaterialStatePropertyAll(
-                              BorderSide(color: Colors.grey),
+                              BorderSide(color: Colors.blueAccent),
                             ),
                             fixedSize: MaterialStateProperty.all(
                               const Size(80, 50),
@@ -286,7 +303,7 @@ class _NotificationListScreenState extends State<NotificationListScreen>
                           },
                           child: const Text(
                             '조회',
-                            style: TextStyle(color: Colors.black),
+                            style: TextStyle(color: Colors.white),
                           ),
                         ),
                       ],

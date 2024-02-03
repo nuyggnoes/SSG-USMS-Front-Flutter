@@ -18,59 +18,84 @@ class BehaviorChart extends StatefulWidget {
 
 class BehaviorChartState extends State<BehaviorChart> {
   int touchedIndex = -1;
+  double allCounts = 0.0;
 
   @override
   Widget build(BuildContext context) {
     print('behavior datas ${widget.behaviorDatas}');
-    return AspectRatio(
-      aspectRatio: 1.3,
-      child: Row(
-        children: <Widget>[
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        children: [
           const SizedBox(
             height: 18,
           ),
-          Expanded(
-            child: AspectRatio(
-              aspectRatio: 1,
-              child: PieChart(
-                PieChartData(
-                  pieTouchData: PieTouchData(
-                    touchCallback: (FlTouchEvent event, pieTouchResponse) {
-                      setState(() {
-                        if (!event.isInterestedForInteractions ||
-                            pieTouchResponse == null ||
-                            pieTouchResponse.touchedSection == null) {
-                          touchedIndex = -1;
-                          return;
-                        }
-                        touchedIndex = pieTouchResponse
-                            .touchedSection!.touchedSectionIndex;
-                      });
-                    },
-                  ),
-                  borderData: FlBorderData(
-                    show: false,
-                  ),
-                  sectionsSpace: 0,
-                  centerSpaceRadius: 40,
-                  sections: showingSections(),
+          AspectRatio(
+            aspectRatio: 1,
+            child: PieChart(
+              PieChartData(
+                pieTouchData: PieTouchData(
+                  touchCallback: (FlTouchEvent event, pieTouchResponse) {
+                    setState(() {
+                      if (!event.isInterestedForInteractions ||
+                          pieTouchResponse == null ||
+                          pieTouchResponse.touchedSection == null) {
+                        touchedIndex = -1;
+                        return;
+                      }
+                      touchedIndex =
+                          pieTouchResponse.touchedSection!.touchedSectionIndex;
+                    });
+                  },
                 ),
+                borderData: FlBorderData(
+                  show: false,
+                ),
+                sectionsSpace: 3,
+                centerSpaceRadius: 80,
+                sections: showingSections(),
               ),
             ),
           ),
+          widget.behaviorDatas.isNotEmpty
+              ? SizedBox(
+                  height: 55,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        '총 ',
+                        style: TextStyle(
+                          fontSize: 20,
+                        ),
+                      ),
+                      Text(
+                        '${allCounts.round()}회',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 25,
+                        ),
+                      ),
+                      const Text(
+                        '의 이상행동 발생',
+                        style: TextStyle(
+                          fontSize: 20,
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              : Container(),
+          const SizedBox(
+            height: 20,
+          ),
           Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: List.generate(
               widget.behaviorDatas.length,
-              (index) => Column(
-                children: [
-                  Indicator(
-                    color: colorList[index]!,
-                    statDataList: widget.behaviorDatas,
-                    index: index,
-                  ),
-                ],
+              (index) => Indicator(
+                color: colorList[index]!,
+                statDataList: widget.behaviorDatas,
+                index: index,
               ),
             ),
           ),
@@ -83,8 +108,7 @@ class BehaviorChartState extends State<BehaviorChart> {
   }
 
   List<PieChartSectionData> showingSections() {
-    double allCounts =
-        widget.behaviorDatas.fold(0, (sum, model) => sum + model.count);
+    allCounts = widget.behaviorDatas.fold(0, (sum, model) => sum + model.count);
     List<int> percents = widget.behaviorDatas
         .map((e) => (e.count / allCounts * 100).round())
         .toList();
@@ -171,15 +195,38 @@ class Indicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Map<int, String> intToString = StoreService.reversedMap;
-    return Row(
-      children: [
-        Container(
-          height: 10,
-          width: 10,
-          decoration: BoxDecoration(color: color),
+    return Container(
+      decoration: const BoxDecoration(
+        border: Border(
+          bottom: BorderSide(color: Colors.grey),
         ),
-        Text('${intToString[statDataList[index].behavior]}'),
-      ],
+      ),
+      height: 50,
+      width: MediaQuery.of(context).size.width,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              Container(
+                height: 30,
+                width: 30,
+                decoration: BoxDecoration(
+                  color: color,
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(12),
+                  ),
+                ),
+              ),
+              const SizedBox(
+                width: 5,
+              ),
+              Text('${intToString[statDataList[index].behavior]}'),
+            ],
+          ),
+          Text('${statDataList[index].count} 회'),
+        ],
+      ),
     );
   }
 }
