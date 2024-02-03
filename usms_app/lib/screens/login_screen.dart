@@ -191,7 +191,7 @@ class _LoginState extends State<Login> {
                             ),
                           ),
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Row(
                                 children: [
@@ -211,9 +211,12 @@ class _LoginState extends State<Login> {
                                   ),
                                 ],
                               ),
-                              const MyCheckBox(
-                                checkboxText: '아이디 저장',
+                              const SizedBox(
+                                width: 30,
                               ),
+                              // const MyCheckBox(
+                              //   checkboxText: '아이디 저장',
+                              // ),
                             ],
                           ),
                         ],
@@ -237,26 +240,26 @@ class _LoginState extends State<Login> {
                           ),
                         ),
                       ),
-                      const SizedBox(
-                        child: Text('|'),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const HomeScreen(),
-                            ),
-                          );
-                        },
-                        child: const Text(
-                          '비밀번호 찾기',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 12,
-                          ),
-                        ),
-                      ),
+                      // const SizedBox(
+                      //   child: Text('|'),
+                      // ),
+                      // TextButton(
+                      //   onPressed: () {
+                      //     Navigator.push(
+                      //       context,
+                      //       MaterialPageRoute(
+                      //         builder: (context) => const HomeScreen(),
+                      //       ),
+                      //     );
+                      //   },
+                      //   child: const Text(
+                      //     '비밀번호 찾기',
+                      //     style: TextStyle(
+                      //       color: Colors.black,
+                      //       fontSize: 12,
+                      //     ),
+                      //   ),
+                      // ),
                       const SizedBox(
                         child: Text('|'),
                       ),

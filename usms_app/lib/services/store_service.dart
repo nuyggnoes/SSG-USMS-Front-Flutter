@@ -44,6 +44,7 @@ class StoreService {
       print('[$cnt] ${file.key}: ${file.value}');
       cnt += 1;
     }
+    print(formData);
     Response response;
     var baseoptions = BaseOptions(
       headers: {
@@ -74,12 +75,14 @@ class StoreService {
       }
     } on DioException catch (e) {
       if (e.response?.statusCode == 400) {
+        print('${e.response?.data}');
         Future.microtask(() {
           customShowDialog(
               context: context,
               title: '매장 생성 오류',
               message: '${e.response?.data['message']}',
               onPressed: () {
+                Navigator.pop(context);
                 Navigator.pop(context);
               });
         });
@@ -376,7 +379,7 @@ class StoreService {
           customShowDialog(
               context: context,
               title: '이상행동 조회를 실패하였습니다.',
-              message: '$e',
+              message: '${e.response!.data['message']}',
               onPressed: () {
                 Navigator.pop(context);
               });

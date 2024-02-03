@@ -5,7 +5,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:usms_app/models/store_model.dart';
 import 'package:usms_app/models/user_model.dart';
-import 'package:usms_app/routes.dart';
+
 import 'package:usms_app/screens/store_detail_screen2.dart';
 import 'package:usms_app/services/show_dialog.dart';
 import 'package:usms_app/services/store_service.dart';
@@ -186,8 +186,6 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                                   ConnectionState.done &&
                               snapshot.hasData &&
                               snapshot.data != null) {
-                            List<Store> storeList = snapshot.data!;
-
                             return const SizedBox(
                                 // height:
                                 //     listViewHeightCalculation(storeList.length),
@@ -232,14 +230,10 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                       Consumer<StoreProvider>(
                         builder: (context, storeProvider, _) {
                           List<Store> storeList = storeProvider.storeList;
+
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
-                                '나의 매장',
-                                style: TextStyle(
-                                    fontSize: 30, fontWeight: FontWeight.w700),
-                              ),
                               SizedBox(
                                 height:
                                     listViewHeightCalculation(storeList.length),
@@ -278,19 +272,6 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                               ),
                             ],
                           );
-                        },
-                      ),
-
-                      CurrencyCard(
-                        name: '신세계I&C 부산캠퍼스',
-                        code: 2,
-                        amount: '',
-                        icon: Icons.filter_vintage_outlined,
-                        selectedCardColors: Colors.red.shade400,
-                        animationController: _animationController,
-                        opacityAnimation: _opacityAnimation,
-                        onTapAction: () {
-                          Navigator.pushNamed(context, Routes.cctvReplay);
                         },
                       ),
                     ],

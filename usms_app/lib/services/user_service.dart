@@ -38,7 +38,7 @@ class UserService {
     var param = {
       'username': username,
       'password': password,
-      'token': myToken,
+      'token': 'myToken',
     };
 
     try {

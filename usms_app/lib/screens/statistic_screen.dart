@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -5,6 +8,7 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:usms_app/models/statistic_model.dart';
 
 import 'package:usms_app/services/store_service.dart';
+import 'package:usms_app/widget/pie_chart_widget.dart';
 
 class StatisticScreen extends StatefulWidget {
   const StatisticScreen({super.key, required this.storeId, required this.uid});
@@ -112,10 +116,6 @@ class _StatisticScreenState extends State<StatisticScreen> {
                   ),
                 ),
               ),
-              const SizedBox(
-                width: 20,
-                child: Text(' -- '),
-              ),
               Expanded(
                 child: ElevatedButton(
                   style: ButtonStyle(
@@ -152,9 +152,6 @@ class _StatisticScreenState extends State<StatisticScreen> {
                     style: const TextStyle(color: Colors.black),
                   ),
                 ),
-              ),
-              const SizedBox(
-                width: 20,
               ),
               ElevatedButton(
                 style: ButtonStyle(
@@ -224,7 +221,7 @@ class _StatisticScreenState extends State<StatisticScreen> {
                   final List<StatisticModel> data = snapshot.data!;
                   final Map<String, int> behaviorCount = {};
                   final Map<int, int> wordCountByDay = {};
-                  print(StoreService.reversedMap);
+                  print('이상행동 : ${StoreService.reversedMap}');
 
                   for (var stat in data) {
                     final behavior = StoreService.reversedMap[stat.behavior]!;
@@ -236,22 +233,23 @@ class _StatisticScreenState extends State<StatisticScreen> {
                     final code = data.behavior;
                     wordCountByDay[code] = (wordCountByDay[code] ?? 0) + 1;
                   }
-                  return SfCircularChart(
-                    legend: const Legend(isVisible: true),
-                    series: <DoughnutSeries<MapEntry<String, int>, String>>[
-                      DoughnutSeries<MapEntry<String, int>, String>(
-                        dataSource: behaviorCount.entries.toList(),
-                        xValueMapper: (entry, _) => entry.key.toString(),
-                        yValueMapper: (entry, _) => entry.value,
-                        dataLabelMapper: (entry, _) =>
-                            '${entry.key} : ${entry.value}개',
-                        enableTooltip: true,
-                        dataLabelSettings:
-                            const DataLabelSettings(isVisible: true),
-                        // explode: true,
-                      ),
-                    ],
-                  );
+                  // return SfCircularChart(
+                  //   legend: const Legend(isVisible: true),
+                  //   series: <DoughnutSeries<MapEntry<String, int>, String>>[
+                  //     DoughnutSeries<MapEntry<String, int>, String>(
+                  //       dataSource: behaviorCount.entries.toList(),
+                  //       xValueMapper: (entry, _) => entry.key.toString(),
+                  //       yValueMapper: (entry, _) => entry.value,
+                  //       dataLabelMapper: (entry, _) =>
+                  //           '${entry.key} : ${entry.value}개',
+                  //       enableTooltip: true,
+                  //       dataLabelSettings:
+                  //           const DataLabelSettings(isVisible: true),
+                  //       // explode: true,
+                  //     ),
+                  //   ],
+                  // );
+                  return BehaviorChart(behaviorDatas: data);
                 }
               },
             ),
@@ -259,5 +257,61 @@ class _StatisticScreenState extends State<StatisticScreen> {
         ],
       ),
     );
+  }
+}
+
+List<Sector> testSector = [
+  Sector(),
+  Sector(),
+  Sector(),
+  Sector(),
+  Sector(),
+];
+
+Color getRandomColor() {
+  Random random = Random();
+  int red = random.nextInt(256);
+  int green = random.nextInt(256);
+  int blue = random.nextInt(256);
+
+  return Color.fromARGB(255, red, green, blue);
+}
+
+class Sector {
+  Color color = getRandomColor();
+  double value = 12.0;
+}
+
+class PieChartWidget extends StatelessWidget {
+  final List<Sector> sectors;
+
+  const PieChartWidget(this.sectors, {Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AspectRatio(
+      aspectRatio: 1.0,
+      child: PieChart(
+        PieChartData(
+          sections: _chartSections(sectors),
+          centerSpaceRadius: 50.0,
+        ),
+      ),
+    );
+  }
+
+  List<PieChartSectionData> _chartSections(List<Sector> sectors) {
+    final List<PieChartSectionData> list = [];
+    for (var sector in sectors) {
+      const double radius = 40.0;
+      final data = PieChartSectionData(
+        color: sector.color,
+        value: sector.value,
+        radius: radius,
+        title: 'hello',
+      );
+      list.add(data);
+    }
+    return list;
   }
 }

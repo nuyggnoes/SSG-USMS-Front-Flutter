@@ -188,10 +188,10 @@ class _NotificationListScreenState extends State<NotificationListScreen>
                             ),
                           ),
                         ),
-                        const SizedBox(
-                          width: 20,
-                          child: Text(' -- '),
-                        ),
+                        // const SizedBox(
+                        //   width: 20,
+                        //   child: Text(' -- '),
+                        // ),
                         Expanded(
                           child: ElevatedButton(
                             style: ButtonStyle(
@@ -229,9 +229,9 @@ class _NotificationListScreenState extends State<NotificationListScreen>
                             ),
                           ),
                         ),
-                        const SizedBox(
-                          width: 20,
-                        ),
+                        // const SizedBox(
+                        //   width: 20,
+                        // ),
                         ElevatedButton(
                           style: ButtonStyle(
                             side: const MaterialStatePropertyAll(

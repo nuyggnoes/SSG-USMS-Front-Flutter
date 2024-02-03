@@ -118,7 +118,7 @@ class _MyPageScreenState extends State<MyPageScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const SizedBox(
-                        height: 40,
+                        height: 30,
                       ),
                       Container(
                         decoration: const BoxDecoration(
@@ -194,14 +194,14 @@ class _MyPageScreenState extends State<MyPageScreen> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
-                                    '보유 CCTV 개수',
+                                    '보유 매장 개수',
                                     style: TextStyle(
                                       color: Colors.grey[600],
                                     ),
                                   ),
-                                  const Text(
-                                    '0개',
-                                    style: TextStyle(
+                                  Text(
+                                    '${Provider.of<StoreProvider>(context).storeList.length}개',
+                                    style: const TextStyle(
                                         fontWeight: FontWeight.w800,
                                         fontSize: 30),
                                   ),
@@ -213,14 +213,14 @@ class _MyPageScreenState extends State<MyPageScreen> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
-                                    '보유 매장 개수',
+                                    '보유 CCTV 개수',
                                     style: TextStyle(
                                       color: Colors.grey[600],
                                     ),
                                   ),
-                                  Text(
-                                    '${Provider.of<StoreProvider>(context).storeList.length}개',
-                                    style: const TextStyle(
+                                  const Text(
+                                    '0개',
+                                    style: TextStyle(
                                         fontWeight: FontWeight.w800,
                                         fontSize: 30),
                                   ),
@@ -239,12 +239,54 @@ class _MyPageScreenState extends State<MyPageScreen> {
                           children: [
                             Column(
                               children: [
-                                CustomInfoButton(
-                                  buttonText: '회원정보 수정',
-                                  parentContext: context,
-                                  route: Routes.registerUser,
-                                  icon: Icons.manage_accounts,
+                                // CustomInfoButton(
+                                //   buttonText: '회원정보 수정',
+                                //   parentContext: context,
+                                //   route: Routes.registerUser,
+                                //   icon: Icons.manage_accounts,
+                                // ),
+                                InkWell(
+                                  onTap: () {
+                                    Navigator.pushNamed(
+                                        context, Routes.identityVerification,
+                                        arguments: 2);
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 10,
+                                      horizontal: 10,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      border: Border(
+                                        bottom: BorderSide(
+                                          color: Colors.grey.withOpacity(0.2),
+                                          width: 2,
+                                        ),
+                                      ),
+                                    ),
+                                    height: 85,
+                                    child: const Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Icon(
+                                              Icons.manage_accounts,
+                                              color: Colors.grey,
+                                            ),
+                                            SizedBox(
+                                              width: 25,
+                                            ),
+                                            Text('회원정보 수정'),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                 ),
+
                                 CustomInfoButton(
                                   buttonText: '보안레벨 설정',
                                   parentContext: context,

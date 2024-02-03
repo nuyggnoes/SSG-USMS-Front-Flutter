@@ -78,6 +78,7 @@ dependencies:
   google_fonts: ^6.1.0
 
   syncfusion_flutter_charts: ^24.1.45+2
+  fl_chart: ^0.66.1
   
   date_field: ^4.0.0
   flutter_datetime_picker: ^1.5.1

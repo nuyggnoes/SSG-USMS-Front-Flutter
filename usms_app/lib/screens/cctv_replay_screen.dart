@@ -17,10 +17,10 @@ class CCTVReplay extends StatefulWidget {
   final int storeId;
 
   @override
-  State<CCTVReplay> createState() => _CalendarScreenState();
+  State<CCTVReplay> createState() => CCTVReplayState();
 }
 
-class _CalendarScreenState extends State<CCTVReplay> {
+class CCTVReplayState extends State<CCTVReplay> {
   static late Future<List<dynamic>> cctvReplayUrlList;
   DateTime selectedDate = DateTime.now();
   // static List<VideoPlayerController> videoList = [];
@@ -92,23 +92,9 @@ class _CalendarScreenState extends State<CCTVReplay> {
 
   @override
   Widget build(BuildContext context) {
-    // final List<Item> data = generateItems(24);
-    // showDialog(
-    //   context: context,
-    //   barrierDismissible: false,
-    //   builder: (context) => const AlertDialog(
-    //     content: Column(
-    //       mainAxisSize: MainAxisSize.min,
-    //       children: [
-    //         SpinKitWave(
-    //           color: Colors.blueAccent,
-    //           duration: Duration(milliseconds: 2000),
-    //         ),
-    //       ],
-    //     ),
-    //   ),
-    // );
     data = generateItems(testList.length);
+    print('chewie 길이 : ${CCTVReplayState.chewieControllers.length}');
+    print('video 길이 : ${CCTVReplayState.videoControllers.length}');
 
     return Scaffold(
       appBar: AppBar(
@@ -140,73 +126,63 @@ class _CalendarScreenState extends State<CCTVReplay> {
                 chewieControllers = [];
                 videoControllers = [];
                 selectedDate = date;
-
-                // 다시보기 api 요청
-                // 각 패널에 영상 넣기
               });
               await _fetchReplays();
-
-              // 다시보기 cctv 조회
             },
           ),
           const SizedBox(
             height: 20,
           ),
           Expanded(
-            child: SingleChildScrollView(
-              child: ExpansionPanelList(
-                elevation: 1,
-                expandedHeaderPadding: const EdgeInsets.all(0),
-                expansionCallback: (int index, bool isExpanded) {
-                  print('$index번 패널의 상태 : $isExpanded');
-                  setState(() {
-                    // 현재 패널의 상태를 반전하여 열기/닫기 토글
-                    data[index].isExpanded = !isExpanded;
-                    print('$index번 패널의 상태 : $isExpanded');
+            child: data.isNotEmpty
+                ? ExpansionPanelListExample(
+                    // getAllreplay
+                    datas: testList,
+                  )
+                // ? ExpansionPanelList(
+                //     elevation: 1,
+                //     expandedHeaderPadding: const EdgeInsets.all(0),
+                //     expansionCallback: (int index, bool isExpanded) {
+                //       setState(() {
+                //         // 현재 패널의 상태를 반전하여 열기/닫기 토글
+                //         // 다른 패널들은 닫기
+                //         // for (int i = 0; i < data.length; i++) {
+                //         //   if (i != index) {
+                //         // data[i].isExpanded = false;
+                //         // print('$i번 패널의 상태 : $isExpanded');
+                //         //   }
+                //         // }
+                //         data[index].isExpanded = isExpanded;
 
-                    // 다른 패널들은 닫기
-                    for (int i = 0; i < data.length; i++) {
-                      if (i != index) {
-                        data[i].isExpanded = false;
-                      }
-                    }
-                  });
-
-                  // setState(() {
-                  //   data[index].isExpanded = !isExpanded;
-                  // });
-                  // if (data.any((item) => item.isExpanded)) {
-                  //   int openedPanelIndex =
-                  //       data.indexWhere((item) => item.isExpanded);
-                  //   print(openedPanelIndex);
-
-                  //   setState(() {
-                  //     for (var item in data) {
-                  //       item.isExpanded = false;
-                  //     }
-                  //   });
-                  //   print('$index번 패널의 상태 : $isExpanded');
-                  // }
-                },
-                children: data.map<ExpansionPanel>((Item item) {
-                  return ExpansionPanel(
-                    headerBuilder: (BuildContext context, bool isExpanded) {
-                      return ListTile(
-                        title: Text(item.headerValue),
-                      );
-                    },
-                    body: Container(
-                      height: 300,
-                      decoration: const BoxDecoration(color: Colors.grey),
-                      child: Center(
-                        child: _buildVideoPlayer(item.replayUrl),
-                      ),
-                    ),
-                    isExpanded: item.isExpanded,
-                  );
-                }).toList(),
-              ),
-            ),
+                //         print('$index번 패널의 상태 : $isExpanded');
+                //       });
+                //     },
+                //     children: data.map<ExpansionPanel>((Item item) {
+                //       return ExpansionPanel(
+                //         headerBuilder:
+                //             (BuildContext context, bool isExpanded) {
+                //           return ListTile(
+                //             title: Text(item.headerValue),
+                //           );
+                //         },
+                //         // body: Container(
+                //         //   height: 300,
+                //         //   decoration: const BoxDecoration(color: Colors.grey),
+                //         //   child: Center(
+                //         //     child: _buildVideoPlayer(item.replayUrl),
+                //         //   ),
+                //         // ),
+                //         body: Container(
+                //           height: 300,
+                //           decoration: const BoxDecoration(color: Colors.grey),
+                //         ),
+                //         isExpanded: item.isExpanded,
+                //       );
+                //     }).toList(),
+                //   )
+                : const Center(
+                    child: Text('다시보기 기록이 없습니다.'),
+                  ),
           ),
         ],
       ),
@@ -219,7 +195,7 @@ class Item {
     this.replayUrl,
     required this.expandedValue,
     required this.headerValue,
-    this.isExpanded = true,
+    this.isExpanded = false,
   });
   String expandedValue;
   String headerValue;
@@ -231,11 +207,9 @@ List<Item> generateItems(int numberOfItems) {
   print('generate items');
   List<String?> replayUrl = [];
 
-  replayUrl = List<String?>.filled(24, null);
-  print('testList 길이 : ${_CalendarScreenState.testList.length}');
-  for (int i = 0; i < _CalendarScreenState.testList.length; i++) {
-    replayUrl[i] = _CalendarScreenState.testList[i];
-    print('replayurl $i : ${replayUrl[i]}');
+  print('testList 길이 : ${CCTVReplayState.testList.length}');
+  for (int i = 0; i < CCTVReplayState.testList.length; i++) {
+    replayUrl.add(CCTVReplayState.testList[i]);
   }
 
   return List<Item>.generate(numberOfItems, (int index) {
@@ -243,21 +217,17 @@ List<Item> generateItems(int numberOfItems) {
     int replayTimestamp = 0;
 
     if (replayUrl[index] != null) {
-      // 타임스탬프로 headerValue 만들기
       var tmp = replayUrl[index]!.split('-').last;
-      print('tmp : $tmp');
       replayTimestamp = int.parse(tmp.split('.').first);
-      print(replayTimestamp);
       replayTime = DateTime.fromMillisecondsSinceEpoch(replayTimestamp * 1000)
           .toString();
-      print('변환한 날짜 : $replayTime');
     }
 
     return Item(
-      /// 헤더와 본문에 들어갈 내용
       headerValue: replayTime,
       expandedValue: 'This is item number $index',
       replayUrl: replayUrl[index],
+      isExpanded: false,
     );
   });
 }
@@ -268,13 +238,69 @@ Widget _buildVideoPlayer(String? videoUrl) {
         VideoPlayerController.networkUrl(Uri.parse(videoUrl));
     ChewieController chewieController = ChewieController(
       videoPlayerController: videoPlayerController,
-      // 다양한 설정들을 추가할 수 있습니다.
     );
-    _CalendarScreenState.chewieControllers.add(chewieController);
-    _CalendarScreenState.videoControllers.add(videoPlayerController);
+    CCTVReplayState.chewieControllers.add(chewieController);
+    CCTVReplayState.videoControllers.add(videoPlayerController);
 
     return Chewie(controller: chewieController);
   } else {
     return const Text('다시보기 파일이 존재하지 않습니다.');
+  }
+}
+
+class ExpansionPanelListExample extends StatefulWidget {
+  const ExpansionPanelListExample({super.key, required this.datas});
+  final List<dynamic> datas;
+
+  @override
+  State<ExpansionPanelListExample> createState() =>
+      _ExpansionPanelListExampleState();
+}
+
+class _ExpansionPanelListExampleState extends State<ExpansionPanelListExample> {
+  late final List<Item> _data = generateItems(widget.datas.length);
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Container(
+        child: _buildPanel(),
+      ),
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  Widget _buildPanel() {
+    return ExpansionPanelList(
+      expansionCallback: (int index, bool isExpanded) {
+        setState(() {
+          for (int i = 0; i < _data.length; i++) {
+            if (i != index) {
+              _data[i].isExpanded = false;
+            }
+          }
+          _data[index].isExpanded = isExpanded;
+        });
+      },
+      children: _data.map<ExpansionPanel>((Item item) {
+        return ExpansionPanel(
+          headerBuilder: (BuildContext context, bool isExpanded) {
+            return ListTile(
+              title: Text(item.headerValue),
+            );
+          },
+          body: Container(
+            height: 300,
+            decoration: const BoxDecoration(color: Colors.grey),
+            child: _buildVideoPlayer(item.replayUrl), //List에 저장을 분리?
+          ),
+          isExpanded: item.isExpanded,
+        );
+      }).toList(),
+    );
   }
 }
