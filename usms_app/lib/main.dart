@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:month_year_picker/month_year_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
@@ -62,6 +63,7 @@ class MyApp extends StatelessWidget {
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
+          MonthYearPickerLocalizations.delegate,
         ],
         title: 'Push Notification',
         theme: ThemeData(
@@ -71,8 +73,8 @@ class MyApp extends StatelessWidget {
             brightness: Brightness.light,
             primary: Colors.blueAccent,
             onPrimary: Colors.black,
-            secondary: Colors.green,
-            onSecondary: Colors.amber,
+            secondary: Colors.white,
+            onSecondary: Colors.blueAccent,
             error: Colors.red,
             onError: Colors.red,
             onBackground: Colors.blueAccent,

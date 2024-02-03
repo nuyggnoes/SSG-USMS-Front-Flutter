@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:month_year_picker/month_year_picker.dart';
 
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:usms_app/models/statistic_model.dart';
@@ -95,9 +96,9 @@ class _StatisticScreenState extends State<StatisticScreen> {
                     ),
                   ),
                   onPressed: () async {
-                    final selectedDate = await showDatePicker(
+                    final selectedDate = await showMonthYearPicker(
                       context: context,
-                      initialDate: _startDate,
+                      initialDate: DateTime.now(),
                       firstDate: DateTime(2000),
                       lastDate: DateTime.now(),
                       locale: const Locale('ko', 'KR'),
@@ -111,7 +112,7 @@ class _StatisticScreenState extends State<StatisticScreen> {
                   child: Text(
                     _startDate == null
                         ? ''
-                        : DateFormat('yyyy-MM-dd').format(_startDate!),
+                        : DateFormat('yy년 M월').format(_startDate!),
                     style: const TextStyle(color: Colors.black),
                   ),
                 ),
@@ -132,23 +133,26 @@ class _StatisticScreenState extends State<StatisticScreen> {
                     ),
                   ),
                   onPressed: () async {
-                    final selectedDate = await showDatePicker(
+                    final selectedDate = await showMonthYearPicker(
                       context: context,
-                      initialDate: _endDate,
+                      initialDate: DateTime.now(),
                       firstDate: DateTime(2000),
                       lastDate: DateTime.now(),
                       locale: const Locale('ko', 'KR'),
                     );
                     if (selectedDate != null) {
+                      var lastDayOfMonth = DateTime(
+                          selectedDate.year, selectedDate.month + 1, 0);
+                      print(lastDayOfMonth);
                       setState(() {
-                        _endDate = selectedDate;
+                        _endDate = lastDayOfMonth;
                       });
                     }
                   },
                   child: Text(
                     _endDate == null
                         ? ''
-                        : DateFormat('yyyy-MM-dd').format(_endDate!),
+                        : DateFormat('yy년 M월').format(_endDate!),
                     style: const TextStyle(color: Colors.black),
                   ),
                 ),
@@ -209,50 +213,48 @@ class _StatisticScreenState extends State<StatisticScreen> {
           //     ),
           //   ],
           // ),
-          Expanded(
-            child: FutureBuilder(
-              future: statisticData,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
-                } else {
-                  final List<StatisticModel> data = snapshot.data!;
-                  final Map<String, int> behaviorCount = {};
-                  final Map<int, int> wordCountByDay = {};
-                  print('이상행동 : ${StoreService.reversedMap}');
+          FutureBuilder(
+            future: statisticData,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              } else {
+                final List<StatisticModel> data = snapshot.data!;
+                final Map<String, int> behaviorCount = {};
+                final Map<int, int> wordCountByDay = {};
+                print('이상행동 : ${StoreService.reversedMap}');
 
-                  for (var stat in data) {
-                    final behavior = StoreService.reversedMap[stat.behavior]!;
-                    behaviorCount[behavior] =
-                        (behaviorCount[behavior] ?? 0) + stat.count;
-                  }
-
-                  for (var data in snapshot.data!) {
-                    final code = data.behavior;
-                    wordCountByDay[code] = (wordCountByDay[code] ?? 0) + 1;
-                  }
-                  // return SfCircularChart(
-                  //   legend: const Legend(isVisible: true),
-                  //   series: <DoughnutSeries<MapEntry<String, int>, String>>[
-                  //     DoughnutSeries<MapEntry<String, int>, String>(
-                  //       dataSource: behaviorCount.entries.toList(),
-                  //       xValueMapper: (entry, _) => entry.key.toString(),
-                  //       yValueMapper: (entry, _) => entry.value,
-                  //       dataLabelMapper: (entry, _) =>
-                  //           '${entry.key} : ${entry.value}개',
-                  //       enableTooltip: true,
-                  //       dataLabelSettings:
-                  //           const DataLabelSettings(isVisible: true),
-                  //       // explode: true,
-                  //     ),
-                  //   ],
-                  // );
-                  return BehaviorChart(behaviorDatas: data);
+                for (var stat in data) {
+                  final behavior = StoreService.reversedMap[stat.behavior]!;
+                  behaviorCount[behavior] =
+                      (behaviorCount[behavior] ?? 0) + stat.count;
                 }
-              },
-            ),
+
+                for (var data in snapshot.data!) {
+                  final code = data.behavior;
+                  wordCountByDay[code] = (wordCountByDay[code] ?? 0) + 1;
+                }
+                // return SfCircularChart(
+                //   legend: const Legend(isVisible: true),
+                //   series: <DoughnutSeries<MapEntry<String, int>, String>>[
+                //     DoughnutSeries<MapEntry<String, int>, String>(
+                //       dataSource: behaviorCount.entries.toList(),
+                //       xValueMapper: (entry, _) => entry.key.toString(),
+                //       yValueMapper: (entry, _) => entry.value,
+                //       dataLabelMapper: (entry, _) =>
+                //           '${entry.key} : ${entry.value}개',
+                //       enableTooltip: true,
+                //       dataLabelSettings:
+                //           const DataLabelSettings(isVisible: true),
+                //       // explode: true,
+                //     ),
+                //   ],
+                // );
+                return BehaviorChart(behaviorDatas: data);
+              }
+            },
           ),
         ],
       ),

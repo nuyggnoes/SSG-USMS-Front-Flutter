@@ -82,6 +82,7 @@ dependencies:
   
   date_field: ^4.0.0
   flutter_datetime_picker: ^1.5.1
+  month_year_picker: ^0.3.0+1
 
   flutter_native_splash: ^2.3.10
 
