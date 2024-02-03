@@ -2,6 +2,8 @@ import 'package:fl_chart/fl_chart.dart';
 
 import 'package:flutter/material.dart';
 import 'package:usms_app/models/statistic_model.dart';
+import 'package:usms_app/services/store_service.dart';
+import 'package:usms_app/utils/random_color.dart';
 
 class BehaviorChart extends StatefulWidget {
   const BehaviorChart({
@@ -59,36 +61,18 @@ class BehaviorChartState extends State<BehaviorChart> {
           Column(
             mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Indicator(
-                color: Colors.red,
-                statDataList: widget.behaviorDatas,
+            children: List.generate(
+              widget.behaviorDatas.length,
+              (index) => Column(
+                children: [
+                  Indicator(
+                    color: colorList[index]!,
+                    statDataList: widget.behaviorDatas,
+                    index: index,
+                  ),
+                ],
               ),
-              const SizedBox(
-                height: 4,
-              ),
-              Indicator(
-                color: Colors.red,
-                statDataList: widget.behaviorDatas,
-              ),
-              const SizedBox(
-                height: 4,
-              ),
-              Indicator(
-                color: Colors.red,
-                statDataList: widget.behaviorDatas,
-              ),
-              const SizedBox(
-                height: 4,
-              ),
-              Indicator(
-                color: Colors.red,
-                statDataList: widget.behaviorDatas,
-              ),
-              const SizedBox(
-                height: 18,
-              ),
-            ],
+            ),
           ),
           const SizedBox(
             width: 28,
@@ -99,8 +83,13 @@ class BehaviorChartState extends State<BehaviorChart> {
   }
 
   List<PieChartSectionData> showingSections() {
+    double allCounts =
+        widget.behaviorDatas.fold(0, (sum, model) => sum + model.count);
+    List<int> percents = widget.behaviorDatas
+        .map((e) => (e.count / allCounts * 100).round())
+        .toList();
     return List.generate(
-      4,
+      widget.behaviorDatas.length,
       (i) {
         final isTouched = i == touchedIndex;
         final fontSize = isTouched ? 25.0 : 16.0;
@@ -109,9 +98,9 @@ class BehaviorChartState extends State<BehaviorChart> {
         switch (i) {
           case 0:
             return PieChartSectionData(
-              color: Colors.red,
-              value: 40,
-              title: '40%',
+              color: colorList[i],
+              value: percents[i].toDouble(),
+              title: '${percents[i]} %\n(${widget.behaviorDatas[i].count})',
               radius: radius,
               titleStyle: TextStyle(
                 fontSize: fontSize,
@@ -122,9 +111,9 @@ class BehaviorChartState extends State<BehaviorChart> {
             );
           case 1:
             return PieChartSectionData(
-              color: Colors.blue,
-              value: 30,
-              title: '30%',
+              color: colorList[i],
+              value: percents[i].toDouble(),
+              title: '${percents[i]} %\n(${widget.behaviorDatas[i].count})',
               radius: radius,
               titleStyle: TextStyle(
                 fontSize: fontSize,
@@ -135,9 +124,9 @@ class BehaviorChartState extends State<BehaviorChart> {
             );
           case 2:
             return PieChartSectionData(
-              color: Colors.green,
-              value: 15,
-              title: '15%',
+              color: colorList[i],
+              value: percents[i].toDouble(),
+              title: '${percents[i]} %\n(${widget.behaviorDatas[i].count})',
               radius: radius,
               titleStyle: TextStyle(
                 fontSize: fontSize,
@@ -148,9 +137,9 @@ class BehaviorChartState extends State<BehaviorChart> {
             );
           case 3:
             return PieChartSectionData(
-              color: Colors.purple,
-              value: 15,
-              title: '15%',
+              color: colorList[i],
+              value: percents[i].toDouble(),
+              title: '${percents[i]} %\n(${widget.behaviorDatas[i].count})',
               radius: radius,
               titleStyle: TextStyle(
                 fontSize: fontSize,
@@ -169,17 +158,19 @@ class BehaviorChartState extends State<BehaviorChart> {
 
 class Indicator extends StatelessWidget {
   final Color color;
-
   final List<StatisticModel> statDataList;
+  final int index;
 
   const Indicator({
     super.key,
     required this.color,
     required this.statDataList,
+    required this.index,
   });
 
   @override
   Widget build(BuildContext context) {
+    Map<int, String> intToString = StoreService.reversedMap;
     return Row(
       children: [
         Container(
@@ -187,7 +178,7 @@ class Indicator extends StatelessWidget {
           width: 10,
           decoration: BoxDecoration(color: color),
         ),
-        Text('${statDataList[0].count}'),
+        Text('${intToString[statDataList[index].behavior]}'),
       ],
     );
   }
