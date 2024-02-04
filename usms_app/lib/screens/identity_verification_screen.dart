@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 //screen
 
@@ -67,93 +66,91 @@ class _VerificationScreenState extends State<VerificationScreen>
           title: const Text('본인 인증'),
           centerTitle: true,
         ),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TabBar(
-                onTap: (value) {
-                  FocusScope.of(context).unfocus();
-                  setState(() {
-                    phoneVerfication = false;
-                    emailVerification = false;
-                    methodState = !methodState;
-                    print('methodState : $methodState');
-                  });
-                },
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            TabBar(
+              onTap: (value) {
+                FocusScope.of(context).unfocus();
+                setState(() {
+                  phoneVerfication = false;
+                  emailVerification = false;
+                  methodState = !methodState;
+                  print('methodState : $methodState');
+                });
+              },
+              controller: _tabController,
+              indicatorColor: Colors.blueAccent,
+              labelColor: Colors.blueAccent,
+              unselectedLabelColor: Colors.black54,
+              // isScrollable: true,
+              tabs: const <Widget>[
+                Tab(
+                  text: "휴대폰 인증",
+                ),
+                Tab(
+                  text: "이메일 인증",
+                ),
+              ],
+            ),
+            Container(
+              height: 400,
+              margin: const EdgeInsets.only(left: 16.0, right: 16.0),
+              child: TabBarView(
+                physics: const NeverScrollableScrollPhysics(),
                 controller: _tabController,
-                indicatorColor: Colors.blueAccent,
-                labelColor: Colors.blueAccent,
-                unselectedLabelColor: Colors.black54,
-                // isScrollable: true,
-                tabs: const <Widget>[
-                  Tab(
-                    text: "휴대폰 인증",
+                children: <Widget>[
+                  Container(
+                    margin: const EdgeInsets.symmetric(
+                      vertical: 50,
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 30,
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: _textForm(
+                      '휴대폰 번호',
+                      TextInputType.number,
+                      1,
+                      phoneVerfication,
+                      _phoneFormKey,
+                      (value) {
+                        setState(() {
+                          phoneVerfication = value;
+                        });
+                      },
+                    ),
                   ),
-                  Tab(
-                    text: "이메일 인증",
+                  Container(
+                    width: 400,
+                    margin: const EdgeInsets.symmetric(
+                      vertical: 50,
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 30,
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: _textForm(
+                      '이메일 주소',
+                      TextInputType.emailAddress,
+                      0,
+                      emailVerification,
+                      _emailFormKey,
+                      (value) {
+                        setState(() {
+                          emailVerification = value;
+                        });
+                      },
+                    ),
                   ),
                 ],
               ),
-              Container(
-                height: 400,
-                margin: const EdgeInsets.only(left: 16.0, right: 16.0),
-                child: TabBarView(
-                  physics: const NeverScrollableScrollPhysics(),
-                  controller: _tabController,
-                  children: <Widget>[
-                    Container(
-                      margin: const EdgeInsets.symmetric(
-                        vertical: 50,
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 30,
-                      ),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: _textForm(
-                        '휴대폰 번호',
-                        TextInputType.number,
-                        1,
-                        phoneVerfication,
-                        _phoneFormKey,
-                        (value) {
-                          setState(() {
-                            phoneVerfication = value;
-                          });
-                        },
-                      ),
-                    ),
-                    Container(
-                      width: 400,
-                      margin: const EdgeInsets.symmetric(
-                        vertical: 50,
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 30,
-                      ),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      child: _textForm(
-                        '이메일 주소',
-                        TextInputType.emailAddress,
-                        0,
-                        emailVerification,
-                        _emailFormKey,
-                        (value) {
-                          setState(() {
-                            emailVerification = value;
-                          });
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

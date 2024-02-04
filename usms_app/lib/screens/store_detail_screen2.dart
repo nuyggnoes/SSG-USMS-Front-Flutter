@@ -2,7 +2,6 @@ import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:get/route_manager.dart';
 
 import 'package:provider/provider.dart';
 import 'package:usms_app/models/cctv_model.dart';
@@ -109,7 +108,7 @@ class _StoreDetailState extends State<StoreDetail2> {
   @override
   void dispose() {
     print('dispose()');
-    for (var i = 0; i < videoList.length; i++) {
+    for (var i = 0; i < chewieList.length; i++) {
       print('dispose for()');
       if (chewieList[i] != null) {
         videoList[i].dispose();
@@ -244,15 +243,9 @@ class _StoreDetailState extends State<StoreDetail2> {
             child: Column(
               children: [
                 FutureBuilder(
-                  // future: cctvService.getAllcctvList(
-                  //   context: context,
-                  //   storeId: widget.storeId,
-                  //   uid: widget.uid,
-                  // ),
                   future: futureCCTVList,
                   builder: ((context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      // return const CircularProgressIndicator();
                       return SizedBox(
                         height: MediaQuery.of(context).size.height,
                         width: 400,
@@ -263,8 +256,9 @@ class _StoreDetailState extends State<StoreDetail2> {
                     } else if (snapshot.hasError) {
                       return Text('에러발생 : ${snapshot.error}');
                     } else if (snapshot.hasData) {
-                      print('snapshot.hasData');
+                      print('futureCCVList.hasData');
                       cctvList = snapshot.data!;
+
                       return FutureBuilder<List<ChewieController?>>(
                         future: setControllers(cctvList),
                         builder: (context, snapshot) {
@@ -287,6 +281,7 @@ class _StoreDetailState extends State<StoreDetail2> {
                             List<ChewieController?> chewieControllers =
                                 snapshot.data ?? [];
                             print('chewieControllerList : $chewieControllers');
+
                             return SizedBox(
                               height: 600,
                               child: ListView.separated(
@@ -314,13 +309,12 @@ class _StoreDetailState extends State<StoreDetail2> {
                                 },
                               ),
                             );
-                            // } else {
-                            //   return const CircularProgressIndicator();
-                            // }
                           }
-                          return Container();
+                          return const Text('here');
                         },
                       );
+                    } else if (snapshot.hasData && snapshot.data!.isEmpty) {
+                      return const NoCCTV();
                     } else {
                       return const NoCCTV();
                     }
@@ -361,7 +355,7 @@ class _StoreDetailState extends State<StoreDetail2> {
                       color: Colors.white,
                       border: Border(
                         bottom: BorderSide(
-                          color: Colors.grey.shade400,
+                          color: Colors.grey.withOpacity(0.2),
                           width: 2,
                         ),
                       ),
@@ -407,7 +401,7 @@ class _StoreDetailState extends State<StoreDetail2> {
                       color: Colors.white,
                       border: Border(
                         bottom: BorderSide(
-                          color: Colors.grey.shade400,
+                          color: Colors.grey.withOpacity(0.2),
                           width: 2,
                         ),
                       ),
@@ -471,7 +465,7 @@ class _StoreDetailState extends State<StoreDetail2> {
                       color: Colors.white,
                       border: Border(
                         bottom: BorderSide(
-                          color: Colors.grey.shade400,
+                          color: Colors.grey.withOpacity(0.2),
                           width: 2,
                         ),
                       ),
@@ -578,11 +572,50 @@ class ChewieListItem extends StatelessWidget {
                     children: [
                       IconButton(
                         onPressed: () {
-                          CCTVService.deleteCCTV(
+                          showDialog(
                               context: context,
-                              uid: uid,
-                              storeId: storeId,
-                              cctvId: cctv.cctvId);
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: const Text('CCTV 삭제'),
+                                  content: const Text('CCTV를 삭제하시겠습니까?'),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      child: const Text(
+                                        '취소',
+                                        style:
+                                            TextStyle(color: Colors.blueAccent),
+                                      ),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                    ElevatedButton(
+                                      onPressed: () async {
+                                        await CCTVService.deleteCCTV(
+                                            context: context,
+                                            uid: uid,
+                                            storeId: storeId,
+                                            cctvId: cctv.cctvId);
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.blueAccent,
+                                      ),
+                                      child: const Text(
+                                        '확인',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w900,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              });
+                          // CCTVService.deleteCCTV(
+                          //     context: context,
+                          //     uid: uid,
+                          //     storeId: storeId,
+                          //     cctvId: cctv.cctvId);
                         },
                         icon: const Icon(Icons.delete),
                       ),

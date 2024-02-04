@@ -257,6 +257,7 @@ class StoreService {
               onPressed: () {
                 Navigator.pop(context);
                 Navigator.pop(context);
+                Navigator.pop(context);
               });
         });
       }

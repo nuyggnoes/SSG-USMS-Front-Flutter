@@ -42,6 +42,9 @@ class CCTVService {
         // List<Mape<String, dynamic>> stores
         print(response.data);
         List<CCTV> cctvList = CCTV.fromMapToCCTVModel(response.data);
+        if (cctvList.isEmpty) {
+          return null;
+        }
         return cctvList;
       }
     } on DioException catch (e) {

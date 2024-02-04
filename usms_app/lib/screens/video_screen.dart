@@ -19,8 +19,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
     VideoPlayerController videoPlayerController =
         VideoPlayerController.networkUrl(
       Uri.parse(
-          // 'https://usms-media.serveftp.com/video/hls/live/0e798b6c-2b80-47d6-beae-95435399fb7d/index.m3u8'),
-          'https://iptv-org.github.io/iptv/index.m3u8'),
+          'https://usms.serveftp.com/video/hls/live/0e798b6c-2b80-47d6-beae-95435399fb7d/index.m3u8'),
     );
 
     ChewieController chewieController = ChewieController(

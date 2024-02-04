@@ -32,8 +32,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Firebase SDK 초기화단계 (App을 Firebase 서비스를 사용할 수 있는 상태로 설정)
-  // await Firebase.initializeApp();
-  // await FirebaseApi().initNotifications();
+  await Firebase.initializeApp();
+  await FirebaseApi().initNotifications();
 
   // initializeNotification();
   runApp(const MyApp());
@@ -59,6 +59,7 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         localizationsDelegates: const [
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
@@ -73,8 +74,8 @@ class MyApp extends StatelessWidget {
             brightness: Brightness.light,
             primary: Colors.blueAccent,
             onPrimary: Colors.black,
-            secondary: Colors.white,
-            onSecondary: Colors.blueAccent,
+            secondary: Colors.grey,
+            onSecondary: Colors.black,
             error: Colors.red,
             onError: Colors.red,
             onBackground: Colors.blueAccent,
@@ -88,7 +89,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
         navigatorKey: navigatorKey,
-        initialRoute: Routes.login,
+        initialRoute: Routes.splash,
         routes: Routes.routes,
       ),
     );

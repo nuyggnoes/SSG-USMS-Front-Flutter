@@ -66,6 +66,19 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     return ChangeNotifierProvider(
       create: (context) => user,
       child: Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          title: SizedBox(
+            height: 50,
+            width: 250,
+            child: Image.asset(
+              'assets/usmslogo1.png',
+              fit: BoxFit.fill,
+            ),
+          ),
+          centerTitle: true,
+          surfaceTintColor: Colors.white,
+        ),
         bottomNavigationBar: BottomNavigationBar(
           selectedLabelStyle: const TextStyle(color: Colors.blueAccent),
           unselectedLabelStyle: const TextStyle(color: Colors.grey),

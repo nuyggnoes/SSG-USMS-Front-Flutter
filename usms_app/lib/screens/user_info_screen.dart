@@ -249,7 +249,7 @@ class _MyPageScreenState extends State<MyPageScreen> {
                                   onTap: () {
                                     Navigator.pushNamed(
                                         context, Routes.identityVerification,
-                                        arguments: 2);
+                                        arguments: 3);
                                   },
                                   child: Container(
                                     padding: const EdgeInsets.symmetric(
@@ -304,6 +304,12 @@ class _MyPageScreenState extends State<MyPageScreen> {
                                   parentContext: context,
                                   route: Routes.secondaryPassword,
                                   icon: Icons.password_rounded,
+                                ),
+                                CustomInfoButton(
+                                  buttonText: '테스트',
+                                  parentContext: context,
+                                  route: Routes.payInfo,
+                                  icon: Icons.science,
                                 ),
                               ],
                             ),

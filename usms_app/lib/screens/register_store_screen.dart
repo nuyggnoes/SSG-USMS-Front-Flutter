@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:get/route_manager.dart';
 import 'package:kpostal/kpostal.dart';
 import 'package:provider/provider.dart';
 import 'package:usms_app/services/show_dialog.dart';
@@ -40,7 +39,7 @@ class _RegisterStoreState extends State<RegisterStore> {
   final List<Map<String, String>> fileList = [];
 
   var filePaths = [];
-  var filePath;
+  dynamic filePath;
 
   void callCustomDialog(String title, String message, Function onPressed) {
     customShowDialog(
@@ -87,6 +86,21 @@ class _RegisterStoreState extends State<RegisterStore> {
     }
   }
 
+  String formatBytes(int bytes) {
+    const int kb = 1024;
+    const int mb = 1024 * kb;
+
+    if (bytes >= mb) {
+      double sizeInMB = bytes / mb;
+      return '${sizeInMB.toStringAsFixed(2)} MB';
+    } else if (bytes >= kb) {
+      double sizeInKB = bytes / kb;
+      return '${sizeInKB.toStringAsFixed(2)} KB';
+    } else {
+      return '$bytes bytes';
+    }
+  }
+
   Widget buildFileList() {
     if (filePath == null) {
       return Container(
@@ -104,8 +118,8 @@ class _RegisterStoreState extends State<RegisterStore> {
         itemBuilder: (context, index) {
           Map<String, String> map = fileList[index];
           String fileName;
-          if (map['file']!.length > 5) {
-            fileName = "${map['file']!.substring(0, 5)} ...";
+          if (map['file']!.length > 10) {
+            fileName = "${map['file']!.substring(0, 10)} ...";
           } else {
             fileName = map['file']!;
           }
@@ -440,16 +454,16 @@ class _RegisterStoreState extends State<RegisterStore> {
       children: [
         Expanded(
           child: SizedBox(
-            height: 60,
+            height: 49,
             width: 200,
             child: buildFileList(),
           ),
         ),
         Container(
-          height: 40,
+          height: 50,
           decoration: BoxDecoration(
             color: Colors.grey[300],
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.zero,
           ),
           child: TextButton(
             onPressed: () {
@@ -463,12 +477,16 @@ class _RegisterStoreState extends State<RegisterStore> {
                         Navigator.pop(context);
                       });
             },
-            child: const Text(
-              '파일선택',
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 12,
-              ),
+            // child: const Text(
+            //   '파일선택',
+            //   style: TextStyle(
+            //     color: Colors.black,
+            //     fontSize: 12,
+            //   ),
+            // ),
+            child: Icon(
+              Icons.upload_file_rounded,
+              color: Colors.black.withOpacity(0.5),
             ),
           ),
         ),

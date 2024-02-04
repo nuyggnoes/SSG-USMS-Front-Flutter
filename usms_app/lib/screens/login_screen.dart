@@ -1,15 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:get/route_manager.dart';
-import 'package:get/utils.dart';
-import 'package:usms_app/screens/home_screen.dart';
 import 'package:usms_app/routes.dart';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'package:usms_app/services/user_service.dart';
-
-import 'package:usms_app/widget/my_checkbox.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -92,6 +86,7 @@ class _LoginState extends State<Login> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  const Spacer(),
                   Container(
                     padding: const EdgeInsets.only(
                       top: 90,
@@ -214,9 +209,6 @@ class _LoginState extends State<Login> {
                               const SizedBox(
                                 width: 30,
                               ),
-                              // const MyCheckBox(
-                              //   checkboxText: '아이디 저장',
-                              // ),
                             ],
                           ),
                         ],
@@ -240,26 +232,6 @@ class _LoginState extends State<Login> {
                           ),
                         ),
                       ),
-                      // const SizedBox(
-                      //   child: Text('|'),
-                      // ),
-                      // TextButton(
-                      //   onPressed: () {
-                      //     Navigator.push(
-                      //       context,
-                      //       MaterialPageRoute(
-                      //         builder: (context) => const HomeScreen(),
-                      //       ),
-                      //     );
-                      //   },
-                      //   child: const Text(
-                      //     '비밀번호 찾기',
-                      //     style: TextStyle(
-                      //       color: Colors.black,
-                      //       fontSize: 12,
-                      //     ),
-                      //   ),
-                      // ),
                       const SizedBox(
                         child: Text('|'),
                       ),
@@ -278,6 +250,16 @@ class _LoginState extends State<Login> {
                         ),
                       ),
                     ],
+                  ),
+                  const Spacer(),
+                  const Padding(
+                    padding: EdgeInsets.all(15),
+                    child: Text(
+                      "© 2024. USMS all rights reserved.",
+                      style: TextStyle(
+                        color: Colors.grey,
+                      ),
+                    ),
                   ),
                 ],
               ),

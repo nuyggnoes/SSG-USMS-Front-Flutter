@@ -43,7 +43,6 @@ dependencies:
   table_calendar: ^3.0.9
   intl: ^0.18.0
 
-  flutter_hls_parser: ^2.0.1
   video_player_web_hls: ^1.1.0
   video_player: ^2.8.2
   chewie: ^1.7.4
@@ -77,7 +76,6 @@ dependencies:
 
   google_fonts: ^6.1.0
 
-  syncfusion_flutter_charts: ^24.1.45+2
   fl_chart: ^0.66.1
   
   date_field: ^4.0.0
@@ -125,6 +123,12 @@ flutter:
     - assets/cctv_img.png
     - assets/promotion1.png
     - assets/logo1.png
+    - assets/applogo.png
+    - assets/applogo1.png
+    - assets/usmslogo1.png
+    - assets/usmsmainlogo.png
+    - assets/usmsmainlogo1.png
+    
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

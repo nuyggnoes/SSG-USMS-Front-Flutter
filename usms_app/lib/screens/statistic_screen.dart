@@ -6,7 +6,6 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 import 'package:month_year_picker/month_year_picker.dart';
 
-import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:usms_app/models/statistic_model.dart';
 
 import 'package:usms_app/services/store_service.dart';
@@ -90,7 +89,7 @@ class _StatisticScreenState extends State<StatisticScreen> {
                       final selectedDate = await showMonthYearPicker(
                         context: context,
                         initialDate: DateTime.now(),
-                        firstDate: DateTime(2000),
+                        firstDate: DateTime(1970),
                         lastDate: DateTime.now(),
                         locale: const Locale('ko', 'KR'),
                       );
@@ -103,25 +102,9 @@ class _StatisticScreenState extends State<StatisticScreen> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        IconButton(
-                          onPressed: () async {
-                            final selectedDate = await showMonthYearPicker(
-                              context: context,
-                              initialDate: DateTime.now(),
-                              firstDate: DateTime(2000),
-                              lastDate: DateTime.now(),
-                              locale: const Locale('ko', 'KR'),
-                            );
-                            if (selectedDate != null) {
-                              setState(() {
-                                _startDate = selectedDate;
-                              });
-                            }
-                          },
-                          icon: const Icon(
-                            Icons.calendar_today,
-                            color: Colors.grey,
-                          ),
+                        const Icon(
+                          Icons.calendar_today,
+                          color: Colors.grey,
                         ),
                         const SizedBox(width: 8),
                         Text(
@@ -218,116 +201,6 @@ class _StatisticScreenState extends State<StatisticScreen> {
                 ),
               ],
             ),
-            // Row(
-            //   children: [
-            //     Expanded(
-            //       child: ElevatedButton(
-            //         style: ButtonStyle(
-            //           side: const MaterialStatePropertyAll(
-            //             BorderSide(color: Colors.grey),
-            //           ),
-            //           fixedSize: MaterialStateProperty.all(
-            //             const Size(80, 50),
-            //           ),
-            //           shape: MaterialStateProperty.all(
-            //             const RoundedRectangleBorder(
-            //               borderRadius: BorderRadius.zero,
-            //             ),
-            //           ),
-            //         ),
-            //         onPressed: () async {
-            //           final selectedDate = await showMonthYearPicker(
-            //             context: context,
-            //             initialDate: DateTime.now(),
-            //             firstDate: DateTime(2000),
-            //             lastDate: DateTime.now(),
-            //             locale: const Locale('ko', 'KR'),
-            //           );
-            //           if (selectedDate != null) {
-            //             setState(() {
-            //               _startDate = selectedDate;
-            //             });
-            //           }
-            //         },
-            //         child: Text(
-            //           _startDate == null
-            //               ? ''
-            //               : DateFormat('yy년 M월').format(_startDate!),
-            //           style: const TextStyle(color: Colors.black),
-            //         ),
-            //       ),
-            //     ),
-            //     Expanded(
-            //       child: ElevatedButton(
-            //         style: ButtonStyle(
-            //           side: const MaterialStatePropertyAll(
-            //             BorderSide(color: Colors.grey),
-            //           ),
-            //           fixedSize: MaterialStateProperty.all(
-            //             const Size(80, 50),
-            //           ),
-            //           shape: MaterialStateProperty.all(
-            //             const RoundedRectangleBorder(
-            //               borderRadius: BorderRadius.zero,
-            //             ),
-            //           ),
-            //         ),
-            //         onPressed: () async {
-            //           final selectedDate = await showMonthYearPicker(
-            //             context: context,
-            //             initialDate: DateTime.now(),
-            //             firstDate: DateTime(2000),
-            //             lastDate: DateTime.now(),
-            //             locale: const Locale('ko', 'KR'),
-            //           );
-            //           if (selectedDate != null) {
-            //             var lastDayOfMonth = DateTime(
-            //                 selectedDate.year, selectedDate.month + 1, 0);
-            //             print(lastDayOfMonth);
-            //             setState(() {
-            //               _endDate = lastDayOfMonth;
-            //             });
-            //           }
-            //         },
-            //         child: Text(
-            //           _endDate == null
-            //               ? ''
-            //               : DateFormat('yy년 M월').format(_endDate!),
-            //           style: const TextStyle(color: Colors.black),
-            //         ),
-            //       ),
-            //     ),
-            //     ElevatedButton(
-            //       style: ButtonStyle(
-            //         side: const MaterialStatePropertyAll(
-            //           BorderSide(color: Colors.grey),
-            //         ),
-            //         fixedSize: MaterialStateProperty.all(
-            //           const Size(80, 50),
-            //         ),
-            //         shape: MaterialStateProperty.all(
-            //           const RoundedRectangleBorder(
-            //             borderRadius: BorderRadius.zero,
-            //           ),
-            //         ),
-            //       ),
-            //       onPressed: () async {
-            //         String startDateString;
-            //         String endtDateString;
-            //         startDateString = _startDate.toString().split(" ").first;
-            //         endtDateString = _endDate.toString().split(" ").first;
-            //         print('[SELECT DATE] : $_startDate ~ $_endDate');
-            //         print('[SELECT DATE] : $startDateString,$endtDateString');
-            //         statisticData = _fetchStatistic();
-            //         setState(() {});
-            //       },
-            //       child: const Text(
-            //         '조회',
-            //         style: TextStyle(color: Colors.black),
-            //       ),
-            //     ),
-            //   ],
-            // ),
             FutureBuilder(
               future: statisticData,
               builder: (context, snapshot) {
@@ -348,7 +221,6 @@ class _StatisticScreenState extends State<StatisticScreen> {
                   final List<StatisticModel> data = snapshot.data!;
                   final Map<String, int> behaviorCount = {};
                   final Map<int, int> wordCountByDay = {};
-                  print('이상행동 : ${StoreService.reversedMap}');
 
                   for (var stat in data) {
                     final behavior = StoreService.reversedMap[stat.behavior]!;

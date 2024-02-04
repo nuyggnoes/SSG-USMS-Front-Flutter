@@ -203,8 +203,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       textController: _passwordTextEditController,
                       textType: TextInputType.text,
                       validator: (value) {
-                        if (value?.isEmpty ?? true) {
-                          return '비밀번호를 입력해주세요!';
+                        if (widget.flag != null) {
+                          if (value?.isEmpty ?? true) {
+                            return '비밀번호를 입력해주세요!';
+                          }
                         }
                         return null;
                       },
@@ -231,8 +233,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       },
                       textType: TextInputType.text,
                       validator: (value) {
-                        if (value?.isEmpty ?? true) {
-                          return '비밀번호를 한 번 더 입력해주세요!';
+                        if (widget.flag != null) {
+                          if (value?.isEmpty ?? true) {
+                            return '비밀번호를 한 번 더 입력해주세요!';
+                          }
                         }
                         return _passwordMatchError;
                       },

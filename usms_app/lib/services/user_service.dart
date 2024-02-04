@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:provider/provider.dart';
 import 'package:usms_app/contants/app_constants.dart';
 
 import 'package:usms_app/main.dart';
@@ -10,6 +11,7 @@ import 'package:usms_app/models/user_model.dart';
 import 'package:usms_app/routes.dart';
 import 'package:usms_app/screens/register_screen.dart';
 import 'package:usms_app/services/show_dialog.dart';
+import 'package:usms_app/utils/user_provider.dart';
 
 class UserService {
   static const baseUrl = MyApp.url;
@@ -43,7 +45,6 @@ class UserService {
 
     try {
       response = await dio.post('/api/login', data: param);
-      print(param);
       if (response.statusCode == 200) {
         String? jSessionId;
         print('==============UserService response 200=================');
@@ -117,6 +118,7 @@ class UserService {
     }
   }
 
+  // 로그아웃
   static logoutAction({required BuildContext context}) async {
     var jSessionId = await storage.read(key: 'cookie');
     print(jSessionId);
@@ -329,8 +331,11 @@ class UserService {
                           builder: (context) => RegisterScreen(
                               data: data, flag: type, routeCode: routeCode)),
                       (route) => false);
-                } else {
+                } else if (flagId == 2) {
                   findUserId(context: context);
+                } else {
+                  Navigator.pop(context);
+                  Navigator.pushNamed(context, Routes.registerUser);
                 }
               });
         });
@@ -438,7 +443,6 @@ class UserService {
     required User user,
     required Function onPressed,
   }) async {
-    print('[회원(id = ${user.id}) 정보 수정] => ${user.toJson()}');
     Response response;
     var jwtToken = await storage.read(key: 'Authorization');
     var baseoptions = BaseOptions(
@@ -448,55 +452,58 @@ class UserService {
       },
       baseUrl: baseUrl,
     );
+    var body = user.toJson();
+    if (body['password'] == '') {
+      body.remove('password');
+    }
     Dio dio = Dio(baseoptions);
-    // try {
-    //   response = await dio.patch('/api/users/${user.id}', data: user.toJson());
+    try {
+      response = await dio.patch('/api/users/${user.id}', data: body);
 
-    //   if (response.statusCode == 200) {
-    //     print('회원정보 수정 200');
-    //     Future.microtask(() {
-    //       // Provider.of<UserProvider>(context).updateUser(user);
-    //     });
-    //     // Future.microtask(() {
-    //     //   customShowDialog(
-    //     //     context: context,
-    //     //     title: '',
-    //     //     message: '회원 정보 수정 완료',
-    //     //     onPressed: () {},
-    //     //   );
-    //     // });
-    //   }
-    // } on DioException catch (e) {
-    //   if (e.response?.statusCode == 400) {
-    //     print("[ERROR] : [$e]");
-    //     // 400 에러의 body
-    //     print('[ERR Body] : ${e.response?.data}');
+      if (response.statusCode == 200) {
+        print('회원정보 수정 200');
+        Future.microtask(() {
+          Provider.of<UserProvider>(context).updateUser(user);
+          customShowDialog(
+            context: context,
+            title: '',
+            message: '회원 정보 수정 완료',
+            onPressed: () {
+              Navigator.pop(context);
+              Navigator.pop(context);
+            },
+          );
+        });
+      }
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 400) {
+        print('[ERR Body] : ${e.response?.data}');
 
-    //     var errorCode = e.response?.data['code'];
-    //     Future.microtask(() {
-    //       customShowDialog(
-    //         context: context,
-    //         title: '회원가입 실패',
-    //         message: '${e.response?.data}',
-    //         onPressed: () {
-    //           Navigator.pop(context);
-    //         },
-    //       );
-    //     });
-    //     return false;
-    //   } else {
-    //     Future.microtask(() {
-    //       customShowDialog(
-    //         context: context,
-    //         title: '서버 오류',
-    //         message: '${e.message}',
-    //         onPressed: () {
-    //           Navigator.pop(context);
-    //         },
-    //       );
-    //     });
-    //   }
-    // }
+        var errorCode = e.response?.data['code'];
+        Future.microtask(() {
+          customShowDialog(
+            context: context,
+            title: '회원가입 실패',
+            message: '${e.response?.data}',
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          );
+        });
+        return false;
+      } else {
+        Future.microtask(() {
+          customShowDialog(
+            context: context,
+            title: '서버 오류',
+            message: '${e.message}',
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          );
+        });
+      }
+    }
   }
 
   // 회원탈퇴
@@ -586,13 +593,14 @@ class UserService {
       response = await dio.get('/api/user');
 
       if (response.statusCode! ~/ 100 == 2) {
+        var idList = response.data;
+        print('여기다 여기 =============== ${idList.runtimeType}');
         Future.microtask(() {
           customShowDialog(
             context: context,
             title: '아이디 찾기',
             message: '인증된 수단으로 가입된 아이디 : ${response.data}',
             onPressed: () {
-              // Navigator.pop(context);
               Navigator.pop(context);
               Navigator.pop(context);
               Navigator.pop(context);

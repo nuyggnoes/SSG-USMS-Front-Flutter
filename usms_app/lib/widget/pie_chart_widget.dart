@@ -124,7 +124,7 @@ class BehaviorChartState extends State<BehaviorChart> {
             return PieChartSectionData(
               color: colorList[i],
               value: percents[i].toDouble(),
-              title: '${percents[i]} %\n(${widget.behaviorDatas[i].count})',
+              title: '${percents[i]} %',
               radius: radius,
               titleStyle: TextStyle(
                 fontSize: fontSize,
@@ -137,7 +137,7 @@ class BehaviorChartState extends State<BehaviorChart> {
             return PieChartSectionData(
               color: colorList[i],
               value: percents[i].toDouble(),
-              title: '${percents[i]} %\n(${widget.behaviorDatas[i].count})',
+              title: '${percents[i]} %',
               radius: radius,
               titleStyle: TextStyle(
                 fontSize: fontSize,
@@ -150,7 +150,7 @@ class BehaviorChartState extends State<BehaviorChart> {
             return PieChartSectionData(
               color: colorList[i],
               value: percents[i].toDouble(),
-              title: '${percents[i]} %\n(${widget.behaviorDatas[i].count})',
+              title: '${percents[i]} %',
               radius: radius,
               titleStyle: TextStyle(
                 fontSize: fontSize,
@@ -163,7 +163,7 @@ class BehaviorChartState extends State<BehaviorChart> {
             return PieChartSectionData(
               color: colorList[i],
               value: percents[i].toDouble(),
-              title: '${percents[i]} %\n(${widget.behaviorDatas[i].count})',
+              title: '${percents[i]} %',
               radius: radius,
               titleStyle: TextStyle(
                 fontSize: fontSize,

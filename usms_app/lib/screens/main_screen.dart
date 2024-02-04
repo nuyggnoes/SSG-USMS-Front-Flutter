@@ -140,17 +140,6 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
     var height = 150.0;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          '',
-          style: TextStyle(
-            color: Colors.blueAccent,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        automaticallyImplyLeading: false,
-        centerTitle: true,
-      ),
       body: SafeArea(
         child: GestureDetector(
           onTap: () {
@@ -254,7 +243,8 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                                           amount: '',
                                           // icon: Icons.store_mall_directory_rounded,
                                           icon: getRandomIconData(),
-                                          selectedCardColors: getRandomColor(),
+                                          selectedCardColors:
+                                              Colors.blue.shade200,
                                           animationController:
                                               _animationController,
                                           opacityAnimation: _opacityAnimation,
