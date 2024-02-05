@@ -27,8 +27,6 @@ class UserService {
     Response response;
 
     var myToken = await storage.read(key: 'token');
-    print('MY TOKEN: $myToken');
-
     var baseoptions = BaseOptions(
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
@@ -46,14 +44,7 @@ class UserService {
     try {
       response = await dio.post('/api/login', data: param);
       if (response.statusCode == 200) {
-        String? jSessionId;
-        print('==============UserService response 200=================');
-
         var setCookieHeader = response.headers['set-cookie']!.first;
-
-        print('[RESPONSE DATA] : ${response.data}');
-        print('[sessionid] : $jSessionId');
-        print('[USERINFO] : ${jsonEncode(response.data)}');
         await storage.write(
           key: 'cookie',
           value: setCookieHeader,
@@ -68,7 +59,7 @@ class UserService {
             value: username,
           );
         }
-        // successLogin(context);
+
         Future.microtask(() {
           Navigator.pushNamed(context, Routes.home);
         });
@@ -121,7 +112,6 @@ class UserService {
   // 로그아웃
   static logoutAction({required BuildContext context}) async {
     var jSessionId = await storage.read(key: 'cookie');
-    print(jSessionId);
 
     Response response;
 
@@ -139,7 +129,7 @@ class UserService {
         '/api/logout',
       );
       if (response.statusCode! ~/ 100 == 2) {
-        print('====================logout 200=====================');
+        // loggout
       }
     } on DioException catch (e) {
       if (e.response!.statusCode! ~/ 100 == 4) {
@@ -169,7 +159,6 @@ class UserService {
   // 유저 정보
   Future<User?> getUserInfo() async {
     final jsonString = await storage.read(key: 'userInfo');
-    print('[유저 정보] : $jsonString');
     User? user;
     if (jsonString != null) {
       final Map<String, dynamic> userMap = jsonDecode(jsonString);
@@ -198,13 +187,11 @@ class UserService {
     try {
       response = await dio.post('/api/identification', data: body);
       if (response.statusCode! ~/ 100 == 2) {
-        print('==================== 본인 인증 번호 발송 성공 =====================');
-        print('response headers : ${response.headers}');
         Map<String, List<String>> headers = response.headers.map;
 
         String authenticateKey =
             headers[AppConstants.xAuthenticateKey]?.first ?? '';
-        print('인증 키 : $authenticateKey');
+
         await storage.write(
             key: AppConstants.xAuthenticateKey, value: authenticateKey);
 
@@ -220,51 +207,16 @@ class UserService {
         return true;
       }
     } on DioException catch (e) {
-      if (e.response?.statusCode == 400) {
-        // 400 에러의 body
-        print('[ERR Body] : ${e.response?.data}');
-
-        var errorCode = e.response?.data['code'];
-
-        switch (errorCode) {
-          // 코드 번호 상관없이 Body의 message를 dialog에 띄우는거면 한 줄로 처리해도 되지 않을까
-          case 605:
-            // 존재하지 않는 요청 code인 경우
-            Future.microtask(() {
-              customShowDialog(
-                  context: context,
-                  title: '605 실패',
-                  message: e.response!.data['message'],
-                  onPressed: () {
-                    Navigator.pop(context);
-                  });
-            });
-            break;
-          case 606:
-            // 요청 code에 부적절한 value 양식일 경우
-            Future.microtask(() {
-              customShowDialog(
-                  context: context,
-                  title: '606 실패',
-                  message: e.response!.data['message'],
-                  onPressed: () {
-                    Navigator.pop(context);
-                  });
-            });
-            break;
-          case 607:
-            // value 값이 DB에 저장되지 않은 경우
-            Future.microtask(() {
-              customShowDialog(
-                  context: context,
-                  title: '607 실패',
-                  message: e.response!.data['message'],
-                  onPressed: () {
-                    Navigator.pop(context);
-                  });
-            });
-            break;
-        }
+      if (e.response!.statusCode! ~/ 100 == 4) {
+        Future.microtask(() {
+          customShowDialog(
+              context: context,
+              title: '인증번호 요청 실패',
+              message: e.response!.data['message'],
+              onPressed: () {
+                Navigator.pop(context);
+              });
+        });
         return false;
       } else {
         Future.microtask(() {
@@ -278,7 +230,7 @@ class UserService {
         });
       }
     }
-    return false; // 나중에 false로 수정
+    return false;
   }
 
   // 인증번호로 본인 인증 시도
@@ -290,7 +242,6 @@ class UserService {
     required String code,
     required int flagId,
   }) async {
-    print('[인증번호] : $code');
     var xKey = await storage.read(key: AppConstants.xAuthenticateKey);
     Response response;
     var baseoptions = BaseOptions(
@@ -310,11 +261,9 @@ class UserService {
         queryParameters: param,
       );
       if (response.statusCode == 201) {
-        print('==================== 인증번호로 본인 인증 성공 =====================');
-        print('[response headers ${response.headers}]');
         String jwtToken =
             response.headers[AppConstants.jwtAuthorizationKey]?.first ?? '';
-        print('[jwt Token] : $jwtToken');
+
         await storage.write(
             key: AppConstants.jwtAuthorizationKey, value: jwtToken);
 
@@ -341,9 +290,7 @@ class UserService {
         });
       }
     } on DioException catch (e) {
-      if (e.response?.statusCode == 400) {
-        print("[ERROR] : [$e]");
-        print('[ERR Body] : ${e.response?.data}');
+      if (e.response!.statusCode! ~/ 100 == 4) {
         Future.microtask(() {
           customShowDialog(
               context: context,
@@ -373,8 +320,6 @@ class UserService {
     required User user,
     required Function onPressed,
   }) async {
-    print('회원가입 요청=================================================');
-    print(user.toJson());
     Response response;
     var jwtToken = await storage.read(key: AppConstants.jwtAuthorizationKey);
     var baseoptions = BaseOptions(
@@ -405,10 +350,6 @@ class UserService {
       }
     } on DioException catch (e) {
       if (e.response!.statusCode! ~/ 100 == 4) {
-        print("[ERROR] : [$e]");
-        // 400 에러의 body
-        print('[ERR Body] : ${e.response?.data}');
-
         Future.microtask(() {
           customShowDialog(
             context: context,
@@ -421,7 +362,6 @@ class UserService {
         });
         return false;
       } else {
-        print(e.response);
         Future.microtask(() {
           customShowDialog(
             context: context,
@@ -509,7 +449,6 @@ class UserService {
     required BuildContext context,
     required int userId,
   }) async {
-    print('[회원(id = $userId) 정보 삭제]');
     Response response;
     var jSessionId = await storage.read(key: 'cookie');
 
@@ -525,7 +464,6 @@ class UserService {
       response = await dio.delete('/api/users/$userId');
 
       if (response.statusCode! ~/ 100 == 2) {
-        print('회원정보 삭제 200');
         Future.microtask(() {
           customShowDialog(
             context: context,
@@ -542,10 +480,6 @@ class UserService {
       }
     } on DioException catch (e) {
       if (e.response?.statusCode == 400) {
-        print("[ERROR] : [$e]");
-        // 400 에러의 body
-        print('[ERR Body] : ${e.response?.data}');
-
         Future.microtask(() {
           customShowDialog(
             context: context,
@@ -580,7 +514,6 @@ class UserService {
     var jwtToken = await storage.read(key: AppConstants.jwtAuthorizationKey);
     var baseoptions = BaseOptions(
       headers: {
-        // 'Content-Type': 'application/json; charset=utf-8',
         AppConstants.jwtAuthorizationKey: '$jwtToken',
       },
       baseUrl: baseUrl,
@@ -593,18 +526,6 @@ class UserService {
         var idList = User.fromMapToUserModel(response.data);
 
         Future.microtask(() {
-          // customShowDialog(
-          //   context: context,
-          //   title: '아이디 찾기',
-          //   message: '인증된 수단으로 가입된 아이디 : ${response.data}',
-          //   btnText: '로그인하러가기',
-          //   onPressed: () {
-          //     Navigator.pop(context);
-          //     Navigator.pop(context);
-          //     Navigator.pop(context);
-          //   },
-          // );
-
           showDialog(
             context: context,
             builder: (BuildContext context) {
@@ -651,7 +572,6 @@ class UserService {
       }
     } on DioException catch (e) {
       if (e.response!.statusCode! ~/ 100 == 4) {
-        print('[ERR Body] : ${e.response?.data}');
         Future.microtask(() {
           customShowDialog(
             context: context,
