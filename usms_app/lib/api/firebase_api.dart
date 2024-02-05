@@ -13,6 +13,7 @@ Future<void> backgroundMessageHandler(RemoteMessage message) async {
   print('Title : ${message.notification?.title}');
   print('Body : ${message.notification?.body}');
   print('Payload : ${message.data}');
+  print('Payload : ${message.sentTime}');
 }
 
 class FirebaseApi {

@@ -193,14 +193,17 @@ List<Item> generateItems(int numberOfItems) {
 }
 
 Future<Widget> _getVideoPlayer(String videoUrl) async {
+  print(videoUrl);
   String? session;
+  var streamKey = videoUrl.split('-').take(5).join('-');
+
   const FlutterSecureStorage storage = FlutterSecureStorage();
 
   session = await storage.read(key: 'cookie');
   VideoPlayerController videoPlayerController =
       VideoPlayerController.networkUrl(
     Uri.parse(
-        'https://usms.serveftp.com/video/hls/replay/0e798b6c-2b80-47d6-beae-95435399fb7d/$videoUrl'),
+        'https://usms.serveftp.com/video/hls/replay/$streamKey/$videoUrl'),
     formatHint: VideoFormat.hls,
     httpHeaders: {'cookie': session!},
   );

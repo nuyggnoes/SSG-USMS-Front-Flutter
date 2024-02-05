@@ -7,7 +7,8 @@ class CCTVManual extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(''),
+        title: const Text('CCTV 설치 가이드'),
+        centerTitle: true,
         automaticallyImplyLeading: false,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new_rounded),
@@ -16,9 +17,15 @@ class CCTVManual extends StatelessWidget {
           },
         ),
       ),
-      body: const SafeArea(
-        child: Center(
-          child: Text('CCTV 설치방법'),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Center(
+              child: Column(
+            children: [
+              Image.asset('assets/stream_manual1.jpg'),
+              Image.asset('assets/stream_manual2.jpg'),
+            ],
+          )),
         ),
       ),
     );

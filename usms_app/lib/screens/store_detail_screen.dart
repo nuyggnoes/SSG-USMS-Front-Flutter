@@ -321,15 +321,9 @@ class _StoreDetailState extends State<StoreDetail> {
                     }
                   }),
                 ),
-                // Stream Key Example
-                // f6cddf98-777c-4bd5-9289-ce298bdd6140
-                // 0e798b6c-2b80-47d6-beae-95435399fb7d
-
-                //================================================================
                 const SizedBox(
                   height: 30,
                 ),
-
                 CustomInfoButton(
                   buttonText: 'CCTV 설치 및 연결 방법',
                   parentContext: context,
@@ -427,7 +421,6 @@ class _StoreDetailState extends State<StoreDetail> {
                     ),
                   ),
                 ),
-
                 InkWell(
                   onTap: () {
                     showDialog(
@@ -637,6 +630,7 @@ class ChewieListItem extends StatelessWidget {
                           Future.microtask(() {
                             customShowDialog(
                                 context: context,
+                                btnText: '복사하기',
                                 title: 'CCTV Stream Key값',
                                 message: cctv.cctvStreamKey,
                                 onPressed: () {

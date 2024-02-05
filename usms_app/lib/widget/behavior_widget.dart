@@ -15,7 +15,7 @@ class Behavior extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var timestamp = DateTime.fromMillisecondsSinceEpoch(time);
+    var timestamp = DateTime.fromMillisecondsSinceEpoch(time * 1000);
     var originalDateTimeString =
         DateFormat('yyyy-MM-dd HH:mm:ss').format(timestamp);
     DateTime originalDateTime = DateTime.parse(originalDateTimeString);
