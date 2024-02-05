@@ -88,7 +88,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => StoreDetail2(
+              builder: (context) => StoreDetail(
                 uid: Provider.of<UserProvider>(context, listen: false).user.id,
                 storeId: storeId,
                 storeInfo: store,

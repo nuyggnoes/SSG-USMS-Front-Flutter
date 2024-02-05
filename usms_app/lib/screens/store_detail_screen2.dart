@@ -5,6 +5,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import 'package:provider/provider.dart';
 import 'package:usms_app/models/cctv_model.dart';
+import 'package:usms_app/models/store_model.dart';
 import 'package:usms_app/screens/cctv_replay_screen.dart';
 import 'package:usms_app/screens/no_cctv_screen.dart';
 
@@ -21,8 +22,8 @@ import 'package:usms_app/widget/custom_info_button.dart';
 import 'package:usms_app/widget/custom_textFormField.dart';
 import 'package:video_player/video_player.dart';
 
-class StoreDetail2 extends StatefulWidget {
-  const StoreDetail2({
+class StoreDetail extends StatefulWidget {
+  const StoreDetail({
     super.key,
     required this.storeId,
     required this.uid,
@@ -33,10 +34,10 @@ class StoreDetail2 extends StatefulWidget {
   final storeInfo;
 
   @override
-  State<StoreDetail2> createState() => _StoreDetailState();
+  State<StoreDetail> createState() => _StoreDetailState();
 }
 
-class _StoreDetailState extends State<StoreDetail2> {
+class _StoreDetailState extends State<StoreDetail> {
   late Future<dynamic> futureCCTVList;
 
   late Future<List<String>> liveUrlList;
@@ -147,7 +148,7 @@ class _StoreDetailState extends State<StoreDetail2> {
           },
         ),
         centerTitle: true,
-        title: Text('${widget.storeInfo.name}'),
+        title: Text(widget.storeInfo.name),
         actions: [
           IconButton(
             onPressed: () {

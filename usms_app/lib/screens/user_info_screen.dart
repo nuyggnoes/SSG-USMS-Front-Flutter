@@ -43,22 +43,6 @@ class _MyPageScreenState extends State<MyPageScreen> {
 
   @override
   void initState() {
-    // try {
-    //   userService.getUserInfo().then((value) {
-    //     setState(() {
-    //       user = value;
-    //       name = user!.nickname;
-    //       phone = user!.phoneNumber;
-    //       username = user!.username;
-    //       email = user!.email;
-    //       securityState = user!.securityLevel;
-    //       getSecurityLevel();
-    //     });
-    //   });
-    // } catch (e) {
-    //   print("Error in initState: $e");
-    // }
-
     super.initState();
   }
 
@@ -304,12 +288,6 @@ class _MyPageScreenState extends State<MyPageScreen> {
                                   parentContext: context,
                                   route: Routes.secondaryPassword,
                                   icon: Icons.password_rounded,
-                                ),
-                                CustomInfoButton(
-                                  buttonText: '테스트',
-                                  parentContext: context,
-                                  route: Routes.payInfo,
-                                  icon: Icons.science,
                                 ),
                               ],
                             ),

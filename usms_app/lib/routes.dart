@@ -56,7 +56,7 @@ class Routes {
       home: (context) => const HomeScreen(),
       securitySetting: (context) => const SecurityLevel(),
       // registerStore: (context) => const RegisterStore(),
-      storeDetail: (context) => const StoreDetail(),
+      // storeDetail: (context) => const StoreDetail(),
       payInfo: (context) => const PayInfoScreen(),
       secondaryPassword: (context) => const SecondaryPasswordScreen(),
       cctvDetail: (context) => const CCTVScreen(),
@@ -66,6 +66,8 @@ class Routes {
       // },
       cctvManual: (context) => const CCTVManual(),
       provider: (context) => const ProviderTest(),
+
+      // heroTest: (context) => const VideoPlayerScreen(),
 
       // storeNotification: (context) => const StoreNotification(),
       // storeDetail2: (context) => const StoreDetail2()

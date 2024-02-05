@@ -350,27 +350,6 @@ class StoreService {
         notiList =
             StoreNotification.fromMapToStoreNotificationModel(response.data);
         print('notiList = $notiList');
-        // List<Mape<String, dynamic>> stores
-        // var list = [
-        //   StoreNotification(
-        //     eventTimestamp:
-        //         DateTime.fromMicrosecondsSinceEpoch(1702352316 * 1000),
-        //     cctvId: 3,
-        //     behaviorCode: 0,
-        //   ),
-        //   StoreNotification(
-        //     eventTimestamp:
-        //         DateTime.fromMicrosecondsSinceEpoch(170235237754 * 1000),
-        //     cctvId: 4,
-        //     behaviorCode: 5,
-        //   ),
-        //   StoreNotification(
-        //     eventTimestamp:
-        //         DateTime.fromMicrosecondsSinceEpoch(17025223316 * 1000),
-        //     cctvId: 3,
-        //     behaviorCode: 1,
-        //   ),
-        // ];
         return notiList;
       }
     } on DioException catch (e) {

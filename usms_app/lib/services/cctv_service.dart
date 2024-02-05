@@ -236,7 +236,7 @@ class CCTVService {
         var m3u8Content = response.data;
         List<String> tsUrls = extractTsUrlsFromM3u8(m3u8Content);
         // return tsUrls;
-        return [response.data];
+        return response.data;
 
         // List<Mape<String, dynamic>> stores
       }
@@ -332,6 +332,43 @@ class CCTVService {
                 Navigator.pop(context);
               });
         });
+      }
+    }
+  }
+
+  // 다시보기 조회
+  static getCCTVreplayOne(String key) async {
+    var jSessionId = await storage.read(key: 'cookie');
+    Response response;
+
+    var baseoptions = BaseOptions(
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+        'cookie': jSessionId,
+      },
+      baseUrl: baseUrl,
+    );
+
+    Dio dio = Dio(baseoptions);
+
+    try {
+      response = await dio.get(
+        '/video/hls/replay/stores/$key/$key-1707031802.m3u8',
+      );
+      if (response.statusCode! ~/ 100 == 2) {
+        print('=============CCTVLive response 200=============');
+        print(response.data);
+        return response.data;
+
+        // List<Mape<String, dynamic>> stores
+      }
+    } on DioException catch (e) {
+      if (e.response!.statusCode! ~/ 100 == 4) {
+        print('${e.response!.data}');
+
+        return [];
+      } else {
+        print('[$e]');
       }
     }
   }
