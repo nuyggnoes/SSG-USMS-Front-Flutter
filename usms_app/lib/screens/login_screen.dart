@@ -106,6 +106,7 @@ class _LoginState extends State<Login> {
                           SizedBox(
                             height: 70,
                             child: TextFormField(
+                              maxLength: 22,
                               controller: _idTextEditController,
                               keyboardType: TextInputType.text,
                               decoration: InputDecoration(
@@ -114,6 +115,7 @@ class _LoginState extends State<Login> {
                                 ),
                                 labelText: '아이디',
                                 helperText: "",
+                                counterText: '',
                               ),
                               validator: (String? value) {
                                 if (value?.isEmpty ?? true) {
@@ -129,6 +131,7 @@ class _LoginState extends State<Login> {
                           SizedBox(
                             height: 70,
                             child: TextFormField(
+                              maxLength: 22,
                               controller: _passwordTextEditController,
                               obscureText: true,
                               keyboardType: TextInputType.text,
@@ -138,6 +141,7 @@ class _LoginState extends State<Login> {
                                 ),
                                 labelText: '비밀번호',
                                 helperText: "",
+                                counterText: '',
                               ),
                               validator: (String? value) {
                                 if (value?.isEmpty ?? true) {
@@ -222,7 +226,7 @@ class _LoginState extends State<Login> {
                         onPressed: () {
                           Navigator.pushNamed(
                               context, Routes.identityVerification,
-                              arguments: 0);
+                              arguments: 2);
                         },
                         child: const Text(
                           '아이디 찾기 ',

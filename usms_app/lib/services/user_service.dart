@@ -40,7 +40,7 @@ class UserService {
     var param = {
       'username': username,
       'password': password,
-      'token': 'myToken',
+      'token': myToken,
     };
 
     try {
@@ -404,12 +404,11 @@ class UserService {
         });
       }
     } on DioException catch (e) {
-      if (e.response?.statusCode == 400) {
+      if (e.response!.statusCode! ~/ 100 == 4) {
         print("[ERROR] : [$e]");
         // 400 에러의 body
         print('[ERR Body] : ${e.response?.data}');
 
-        var errorCode = e.response?.data['code'];
         Future.microtask(() {
           customShowDialog(
             context: context,
@@ -479,7 +478,6 @@ class UserService {
       if (e.response?.statusCode == 400) {
         print('[ERR Body] : ${e.response?.data}');
 
-        var errorCode = e.response?.data['code'];
         Future.microtask(() {
           customShowDialog(
             context: context,
@@ -548,7 +546,6 @@ class UserService {
         // 400 에러의 body
         print('[ERR Body] : ${e.response?.data}');
 
-        var errorCode = e.response?.data['code'];
         Future.microtask(() {
           customShowDialog(
             context: context,
@@ -593,18 +590,62 @@ class UserService {
       response = await dio.get('/api/user');
 
       if (response.statusCode! ~/ 100 == 2) {
-        var idList = response.data;
-        print('여기다 여기 =============== ${idList.runtimeType}');
+        var idList = User.fromMapToUserModel(response.data);
+
         Future.microtask(() {
-          customShowDialog(
+          // customShowDialog(
+          //   context: context,
+          //   title: '아이디 찾기',
+          //   message: '인증된 수단으로 가입된 아이디 : ${response.data}',
+          //   btnText: '로그인하러가기',
+          //   onPressed: () {
+          //     Navigator.pop(context);
+          //     Navigator.pop(context);
+          //     Navigator.pop(context);
+          //   },
+          // );
+
+          showDialog(
             context: context,
-            title: '아이디 찾기',
-            message: '인증된 수단으로 가입된 아이디 : ${response.data}',
-            onPressed: () {
-              Navigator.pop(context);
-              Navigator.pop(context);
-              Navigator.pop(context);
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text('아이디 찾기'),
+                content: SizedBox(
+                  width: double.maxFinite,
+                  height: 200,
+                  child: ListView(
+                    children: idList.map(
+                      (id) {
+                        return ListTile(
+                          title: const Text('아이디'),
+                          subtitle: Text(id.username),
+                        );
+                      },
+                    ).toList(),
+                  ),
+                ),
+                actions: <Widget>[
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blueAccent,
+                    ),
+                    child: const Text(
+                      '로그인하러가기',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                  ),
+                ],
+              );
             },
+            barrierDismissible: false,
           );
         });
       }

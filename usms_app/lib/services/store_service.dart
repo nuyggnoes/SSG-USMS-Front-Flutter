@@ -19,9 +19,8 @@ class StoreService {
     '폭행, 싸움': 2,
     '절도, 강도': 3,
     '기물 파손': 4,
-    '실신': 5,
-    '투기': 6,
-    '주취행동': 7,
+    '투기': 5,
+    '주취행동': 6,
   };
   static Map<int, String> reversedMap = Map.fromEntries(
       switchStringToCode.entries.map((e) => MapEntry(e.value, e.key)));

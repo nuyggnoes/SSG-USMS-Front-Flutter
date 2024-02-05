@@ -22,7 +22,6 @@ class BehaviorChartState extends State<BehaviorChart> {
 
   @override
   Widget build(BuildContext context) {
-    print('behavior datas ${widget.behaviorDatas}');
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(

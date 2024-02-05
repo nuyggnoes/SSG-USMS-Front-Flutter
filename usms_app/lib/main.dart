@@ -83,7 +83,7 @@ class MyApp extends StatelessWidget {
             onSurface: Colors.black,
           ),
           primarySwatch: Colors.blue,
-          highlightColor: Colors.blue[200],
+          highlightColor: Colors.grey[100],
           textTheme: const TextTheme(
             bodyMedium: TextStyle(fontSize: 16),
           ),

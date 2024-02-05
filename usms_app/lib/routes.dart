@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:usms_app/models/cctv_model.dart';
 import 'package:usms_app/screens/cctv_%20manual_screen.dart';
 import 'package:usms_app/screens/cctv_detail_screen.dart';
 import 'package:usms_app/screens/cctv_replay_screen.dart';
-import 'package:usms_app/screens/hero_test_screen.dart';
+
 import 'package:usms_app/screens/home_screen.dart';
 import 'package:usms_app/screens/identity_verification_screen.dart';
 import 'package:usms_app/screens/login_screen.dart';
@@ -14,8 +13,6 @@ import 'package:usms_app/screens/secondary_password_screen.dart';
 import 'package:usms_app/screens/set_security_level_screen.dart';
 import 'package:usms_app/screens/splash_screen.dart';
 import 'package:usms_app/screens/store_detail_screen.dart';
-import 'package:usms_app/screens/store_detail_screen2.dart';
-import 'package:usms_app/screens/store_notification_screen.dart';
 
 class Routes {
   static const String splash = '/spash';
@@ -37,11 +34,7 @@ class Routes {
 
   static const String securitySetting = '/security-setting';
   static const String secondaryPassword = '/secondary-password';
-
   static const String payInfo = '/pay-info';
-  // test
-  static const String heroTest = '/hero-test';
-  static const String provider = '/provider';
 
   static Map<String, WidgetBuilder> get routes {
     return {
@@ -65,12 +58,6 @@ class Routes {
       //   return CCTVReplay(cctv: cctv, userId: null,);
       // },
       cctvManual: (context) => const CCTVManual(),
-      provider: (context) => const ProviderTest(),
-
-      // heroTest: (context) => const VideoPlayerScreen(),
-
-      // storeNotification: (context) => const StoreNotification(),
-      // storeDetail2: (context) => const StoreDetail2()
     };
   }
 }

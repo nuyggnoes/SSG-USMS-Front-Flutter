@@ -20,6 +20,7 @@ class CustomInfoButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
+      onTapDown: (details) {},
       onTap: () {
         Navigator.pushNamed(
           parentContext,
@@ -33,7 +34,7 @@ class CustomInfoButton extends StatelessWidget {
           horizontal: 10,
         ),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Colors.transparent,
           border: Border(
             bottom: BorderSide(
               color: Colors.grey.withOpacity(0.2),

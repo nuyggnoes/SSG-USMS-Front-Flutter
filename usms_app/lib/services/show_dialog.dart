@@ -5,6 +5,7 @@ void customShowDialog({
   required String title,
   required String message,
   required Function onPressed,
+  String btnText = '확인',
 }) {
   showDialog(
     context: context,
@@ -20,21 +21,14 @@ void customShowDialog({
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.blueAccent,
             ),
-            child: const Text(
-              '확인',
-              style: TextStyle(
+            child: Text(
+              btnText,
+              style: const TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w900,
               ),
             ),
           ),
-          // TextButton(
-          //   onPressed: () {
-          //     onPressed();
-          //     // Navigator.pop(context);
-          //   },
-          //   child: const Text('확인'),
-          // ),
         ],
       );
     },

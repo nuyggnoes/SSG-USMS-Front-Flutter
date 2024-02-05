@@ -6,13 +6,13 @@ import 'package:provider/provider.dart';
 import 'package:usms_app/models/store_model.dart';
 import 'package:usms_app/models/user_model.dart';
 
-import 'package:usms_app/screens/store_detail_screen2.dart';
+import 'package:usms_app/screens/store_detail_screen.dart';
 import 'package:usms_app/services/show_dialog.dart';
 import 'package:usms_app/services/store_service.dart';
 import 'package:usms_app/utils/store_provider.dart';
 import 'package:usms_app/utils/user_provider.dart';
 import 'package:usms_app/widget/store_register_widget.dart';
-import 'package:usms_app/widget/test_card.dart';
+import 'package:usms_app/widget/store_card.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({

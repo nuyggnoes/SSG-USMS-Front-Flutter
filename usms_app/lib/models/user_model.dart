@@ -44,4 +44,12 @@ class User with ChangeNotifier {
       securityLevel: map['securityState'],
     );
   }
+
+  static List<User> fromMapToUserModel(List<dynamic> list) {
+    List<User> usernameList = list.map((json) {
+      return User.fromMap(json);
+    }).toList();
+
+    return usernameList;
+  }
 }

@@ -1,6 +1,7 @@
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:intl/intl.dart';
 
 import 'package:usms_app/models/cctv_model.dart';
 import 'package:usms_app/services/cctv_service.dart';
@@ -170,18 +171,20 @@ List<Item> generateItems(int numberOfItems) {
   }
 
   return List<Item>.generate(numberOfItems, (int index) {
-    String replayTime = '';
+    String formattedDate = '';
     int replayTimestamp = 0;
 
     if (replayUrl[index] != null) {
       var tmp = replayUrl[index]!.split('-').last;
       replayTimestamp = int.parse(tmp.split('.').first);
-      replayTime = DateTime.fromMillisecondsSinceEpoch(replayTimestamp * 1000)
-          .toString();
+      var replayTime =
+          DateTime.fromMillisecondsSinceEpoch(replayTimestamp * 1000);
+      print(replayTime.toString());
+      formattedDate = DateFormat('yyyy년 M월 d일 HH시 mm분').format(replayTime);
     }
 
     return Item(
-      headerValue: replayTime,
+      headerValue: formattedDate,
       expandedValue: 'This is item number $index',
       replayUrl: replayUrl[index],
       isExpanded: false,
@@ -204,6 +207,7 @@ Future<Widget> _getVideoPlayer(String videoUrl) async {
 
   ChewieController chewieController = ChewieController(
     videoPlayerController: videoPlayerController,
+    aspectRatio: 16 / 9,
   );
 
   CCTVReplayState.chewieControllers.add(chewieController);

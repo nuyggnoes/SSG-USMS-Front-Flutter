@@ -283,7 +283,7 @@ class _VerificationScreenState extends State<VerificationScreen>
                       Expanded(
                         child: TextFormField(
                           focusNode: _focusNode,
-                          keyboardType: TextInputType.text,
+                          keyboardType: TextInputType.number,
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.only(

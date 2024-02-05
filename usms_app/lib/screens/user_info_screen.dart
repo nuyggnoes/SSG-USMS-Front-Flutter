@@ -8,6 +8,7 @@ import 'package:usms_app/services/user_service.dart';
 import 'package:usms_app/utils/store_provider.dart';
 import 'package:usms_app/utils/user_provider.dart';
 import 'package:usms_app/widget/custom_info_button.dart';
+import 'package:usms_app/widget/show_dialog.dart';
 
 class MyPageScreen extends StatefulWidget {
   const MyPageScreen({super.key});
@@ -97,67 +98,62 @@ class _MyPageScreenState extends State<MyPageScreen> {
                     vertical: 30,
                   ),
                   width: MediaQuery.of(context).size.width * 0.8,
-                  height: MediaQuery.of(context).size.height * 0.91,
+                  height: MediaQuery.of(context).size.height * 0.87,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const SizedBox(
                         height: 30,
                       ),
-                      Container(
-                        decoration: const BoxDecoration(
-                            // color: securityColor.withOpacity(0.5),
-                            ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                const Icon(
-                                  Icons.account_circle,
-                                  size: 80,
-                                  color: Colors.white,
-                                ),
-                                const SizedBox(
-                                  width: 15,
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      Provider.of<User>(context).nickname,
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 30,
-                                        fontWeight: FontWeight.w700,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              const Icon(
+                                Icons.account_circle,
+                                size: 80,
+                                color: Colors.white,
+                              ),
+                              const SizedBox(
+                                width: 15,
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    Provider.of<User>(context).nickname,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 30,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 1, horizontal: 4),
+                                    decoration: BoxDecoration(
+                                      color: securityColor.withOpacity(0.8),
+                                      borderRadius: const BorderRadius.all(
+                                        Radius.circular(5),
                                       ),
                                     ),
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 1, horizontal: 4),
-                                      decoration: BoxDecoration(
-                                        color: securityColor.withOpacity(0.8),
-                                        borderRadius: const BorderRadius.all(
-                                          Radius.circular(5),
+                                    child: Row(
+                                      children: [
+                                        securityIcon,
+                                        Text(
+                                          '보안 Lv. ${Provider.of<User>(context).securityLevel} ',
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.w700),
                                         ),
-                                      ),
-                                      child: Row(
-                                        children: [
-                                          securityIcon,
-                                          Text(
-                                            '보안 Lv. ${Provider.of<User>(context).securityLevel} ',
-                                            style: const TextStyle(
-                                                fontWeight: FontWeight.w700),
-                                          ),
-                                        ],
-                                      ),
+                                      ],
                                     ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                       const SizedBox(
                         height: 20,
@@ -223,17 +219,56 @@ class _MyPageScreenState extends State<MyPageScreen> {
                           children: [
                             Column(
                               children: [
-                                // CustomInfoButton(
-                                //   buttonText: '회원정보 수정',
-                                //   parentContext: context,
-                                //   route: Routes.registerUser,
-                                //   icon: Icons.manage_accounts,
-                                // ),
                                 InkWell(
+                                  onTapDown: (details) {},
                                   onTap: () {
-                                    Navigator.pushNamed(
-                                        context, Routes.identityVerification,
-                                        arguments: 3);
+                                    print(
+                                        '${Provider.of<UserProvider>(context, listen: false).user.nickname} / ${Provider.of<UserProvider>(context, listen: false).user.phoneNumber}');
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            title: const Text('회원정보'),
+                                            content: Text(
+                                                '이름 : ${Provider.of<UserProvider>(context, listen: false).user.nickname}\n'
+                                                '아이디 :  ${Provider.of<UserProvider>(context, listen: false).user.username}\n'
+                                                '휴대폰번호 :  ${Provider.of<UserProvider>(context, listen: false).user.phoneNumber}\n'
+                                                '이메일 :  ${Provider.of<UserProvider>(context, listen: false).user.email}\n'
+                                                '보안레벨 :  ${Provider.of<UserProvider>(context, listen: false).user.securityLevel}\n'),
+                                            actions: <Widget>[
+                                              TextButton(
+                                                child: const Text(
+                                                  '닫기',
+                                                  style: TextStyle(
+                                                      color: Colors.blueAccent),
+                                                ),
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                              ),
+                                              ElevatedButton(
+                                                onPressed: () {
+                                                  Navigator.pushNamed(
+                                                      context,
+                                                      Routes
+                                                          .identityVerification,
+                                                      arguments: 3);
+                                                },
+                                                style: ElevatedButton.styleFrom(
+                                                  backgroundColor:
+                                                      Colors.blueAccent,
+                                                ),
+                                                child: const Text(
+                                                  '수정',
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.w900,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          );
+                                        });
                                   },
                                   child: Container(
                                     padding: const EdgeInsets.symmetric(
@@ -241,7 +276,7 @@ class _MyPageScreenState extends State<MyPageScreen> {
                                       horizontal: 10,
                                     ),
                                     decoration: BoxDecoration(
-                                      color: Colors.white,
+                                      color: Colors.transparent,
                                       border: Border(
                                         bottom: BorderSide(
                                           color: Colors.grey.withOpacity(0.2),
@@ -270,7 +305,6 @@ class _MyPageScreenState extends State<MyPageScreen> {
                                     ),
                                   ),
                                 ),
-
                                 CustomInfoButton(
                                   buttonText: '보안레벨 설정',
                                   parentContext: context,
