@@ -15,13 +15,6 @@ class CCTV {
     this.isConnected = false,
   });
 
-  // CCTV.fromJson(Map<String, dynamic> json)
-  //     : cctvId = json['cctvId'],
-  //       storeId = json["storeId"],
-  //       cctvName = json['cctvName'],
-  //       cctvStreamKey = json['cctvStreamKey'],
-  //       isExpire = json['isExpire'];
-
   Map<String, dynamic> toJson() => {
         'cctvId': cctvId,
         'cctvName': cctvName,

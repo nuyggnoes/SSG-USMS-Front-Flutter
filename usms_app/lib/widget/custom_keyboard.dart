@@ -35,14 +35,11 @@ class _KeyboardKeyState extends State<KeyboardKey> {
     return InkWell(
       onTap: () {
         widget.onTap(widget.value);
-        print(widget.value);
       },
       child: AspectRatio(
         aspectRatio: 2,
-        child: Container(
-          child: Center(
-            child: renderLabel(),
-          ),
+        child: Center(
+          child: renderLabel(),
         ),
       ),
     );

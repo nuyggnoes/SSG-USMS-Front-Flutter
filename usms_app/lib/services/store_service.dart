@@ -7,7 +7,7 @@ import 'package:usms_app/models/behavior_model.dart';
 import 'package:usms_app/models/region_notification_model.dart';
 import 'package:usms_app/models/statistic_model.dart';
 import 'package:usms_app/models/store_model.dart';
-import 'package:usms_app/services/show_dialog.dart';
+import 'package:usms_app/widget/custom_dialog.dart';
 import 'package:usms_app/utils/store_provider.dart';
 
 class StoreService {
@@ -32,18 +32,6 @@ class StoreService {
     required int uid,
   }) async {
     var jSessionId = await storage.read(key: 'cookie');
-    print('sessionid : $jSessionId');
-    var cnt = 0;
-    for (var field in formData.fields) {
-      print('[$cnt] ${field.key}: ${field.value}');
-      cnt += 1;
-    }
-
-    for (var file in formData.files) {
-      print('[$cnt] ${file.key}: ${file.value}');
-      cnt += 1;
-    }
-    print(formData);
     Response response;
     var baseoptions = BaseOptions(
       headers: {
@@ -57,8 +45,6 @@ class StoreService {
     try {
       response = await dio.post('/api/users/$uid/stores', data: formData);
       if (response.statusCode! ~/ 100 == 2) {
-        print('====================requestStore 200=====================');
-        // print(response.data);
         Store newStore = Store.fromMap(response.data);
 
         Future.microtask(() {
@@ -74,7 +60,6 @@ class StoreService {
       }
     } on DioException catch (e) {
       if (e.response?.statusCode == 400) {
-        print('${e.response?.data}');
         Future.microtask(() {
           customShowDialog(
               context: context,
@@ -103,8 +88,6 @@ class StoreService {
   Future<List<Store>?> getStoresByUserId(
       {required BuildContext context, required int uid}) async {
     var jSessionId = await storage.read(key: 'cookie');
-    print('[PROVIDER UID = $uid] ');
-    print('[JSESSION_ID = $jSessionId] ');
 
     Response response;
     var baseoptions = BaseOptions(
@@ -128,17 +111,11 @@ class StoreService {
         queryParameters: param,
       );
       if (response.statusCode == 200) {
-        print('=================특정 회원이 소유한 매장들 조회 200=================');
-        // List<Mape<String, dynamic>> stores
-        print('${response.data}');
         storeList = Store.fromMapToStoreModel(response.data);
-        for (Store store in storeList) {
-          print(
-              'Store ID: ${store.id}, Name: ${store.name}, Address: ${store.address} BusinessLicenseCode: ${store.businessLicenseCode}, storeState: ${store.storeState}');
-        }
-        Provider.of<StoreProvider>(context, listen: false).storeList =
-            storeList;
-
+        Future.microtask(() {
+          Provider.of<StoreProvider>(context, listen: false).storeList =
+              storeList;
+        });
         return storeList;
       }
     } on DioException catch (e) {
@@ -189,10 +166,6 @@ class StoreService {
     try {
       response = await dio.get('/api/users/$uid/stores/$storeId');
       if (response.statusCode! ~/ 100 == 2) {
-        // print(
-        //     '====================StoreGetService response 200=====================');
-        // List<Mape<String, dynamic>> stores
-        print(response.data);
         Store store = Store.fromMap(response.data);
         return store;
       }
@@ -243,9 +216,6 @@ class StoreService {
     try {
       response = await dio.delete('/api/users/$uid/stores/$storeId');
       if (response.statusCode! ~/ 100 == 2) {
-        print('=============StoreDelete response 200=============');
-
-        // List<Mape<String, dynamic>> stores
         Future.microtask(() {
           Provider.of<StoreProvider>(context, listen: false)
               .removeStore(storeId);
@@ -300,13 +270,6 @@ class StoreService {
         codeList.add(switchStringToCode[code]!);
       }
     }
-    print('파라미터 코드 리스트 : $codeList');
-
-    List<StoreNotification> behaviors = [];
-    print('storeId : $storeId, userId : $userId');
-    print(
-        'startDate : $startDate, endDate : $endDate, BehaviorCode : $behaviorCodes');
-
     var jSessionId = await storage.read(key: 'cookie');
     Response response;
     var baseoptions = BaseOptions(
@@ -321,7 +284,7 @@ class StoreService {
 
     Map<String, dynamic> param = {
       'offset': 0,
-      'size': 40,
+      'size': 200,
     };
     if (behaviorCodes.isNotEmpty) {
       param['behavior'] = codeList;
@@ -335,7 +298,6 @@ class StoreService {
       param['endDate'] = endDate;
     }
 
-    print(param);
     List<StoreNotification> notiList;
 
     try {
@@ -344,16 +306,12 @@ class StoreService {
         queryParameters: param,
       );
       if (response.statusCode! ~/ 100 == 2) {
-        print('==========매장알림 response 200===========');
-        print(response.data);
         notiList =
             StoreNotification.fromMapToStoreNotificationModel(response.data);
-        print('notiList = $notiList');
         return notiList;
       }
     } on DioException catch (e) {
       if (e.response!.statusCode! ~/ 100 == 4) {
-        // print("[Error] : [$e]");
         Future.microtask(() {
           customShowDialog(
               context: context,
@@ -374,7 +332,6 @@ class StoreService {
                 Navigator.pop(context);
               });
         });
-        print('서버 없음 : $e');
         return [];
       }
     }
@@ -406,12 +363,6 @@ class StoreService {
         codeList.add(switchStringToCode[code]!);
       }
     }
-    print('파라미터 코드 리스트 : $codeList');
-
-    print('storeId : $storeId, userId : $userId');
-    print(
-        'startDate : $startDate, endDate : $endDate, BehaviorCode : $behaviorCodes');
-
     var jSessionId = await storage.read(key: 'cookie');
     Response response;
     var baseoptions = BaseOptions(
@@ -426,7 +377,7 @@ class StoreService {
 
     Map<String, dynamic> param = {
       'offset': 0,
-      'size': 20,
+      'size': 200,
     };
 
     if (startDate != 'null') {
@@ -437,28 +388,19 @@ class StoreService {
       param['endDate'] = endDate;
     }
 
-    print(param);
-
-    print('지역 알림 : /api/users/$userId/stores/$storeId/accidents/region');
-
     try {
       response = await dio.get(
         '/api/users/$userId/stores/$storeId/accidents/region',
         queryParameters: param,
       );
       if (response.statusCode! ~/ 100 == 2) {
-        print('==========지역알림 200===========');
-        // List<Mape<String, dynamic>> stores
-
         List<RegionNotification> regionNotificationList =
             RegionNotification.fromMapToRegionModel(response.data);
-        print('responseData to List => $regionNotificationList');
 
         return regionNotificationList;
       }
     } on DioException catch (e) {
       if (e.response!.statusCode! ~/ 100 == 4) {
-        // print("[Error] : [$e]");
         Future.microtask(() {
           customShowDialog(
               context: context,
@@ -479,7 +421,6 @@ class StoreService {
                 Navigator.pop(context);
               });
         });
-        print('지역 알림 조회 서버 오류');
         return null;
       }
     }
@@ -494,9 +435,6 @@ class StoreService {
     required String startDate,
     required String endDate,
   }) async {
-    print('storeId : $storeId, userId : $userId');
-    print('startDate : $startDate, endDate : $endDate, ');
-
     var jSessionId = await storage.read(key: 'cookie');
     Response response;
     var baseoptions = BaseOptions(
@@ -519,28 +457,19 @@ class StoreService {
       param['endDate'] = endDate;
     }
 
-    print(param);
-
     try {
       response = await dio.get(
         '/api/users/$userId/stores/$storeId/cctvs/accidents/stats',
         queryParameters: param,
       );
       if (response.statusCode! ~/ 100 == 2) {
-        print('==========이상행동 통계정보 200===========');
-
         List<StatisticModel> statisticsDataList =
             StatisticModel.fromMapToRegionModel(response.data);
-        for (var a in statisticsDataList) {
-          print(
-              '행동 코드 : ${a.behavior} / 횟수 : ${a.count} / ${a.startDate},${a.endDate}');
-        }
 
         return statisticsDataList;
       }
     } on DioException catch (e) {
       if (e.response!.statusCode! ~/ 100 == 4) {
-        print("[Error] : [$e]");
         Future.microtask(() {
           customShowDialog(
               context: context,

@@ -9,13 +9,7 @@ import 'package:usms_app/main.dart';
 import 'package:usms_app/routes.dart';
 // import 'package:usms_app/screens/notification_screen.dart';
 
-Future<void> backgroundMessageHandler(RemoteMessage message) async {
-  print("=================앱이 백그라운드에서 실행 중==================");
-  print('Title : ${message.notification?.title}');
-  print('Body : ${message.notification?.body}');
-  print('Payload : ${message.data}');
-  print('Payload : ${message.sentTime}');
-}
+Future<void> backgroundMessageHandler(RemoteMessage message) async {}
 
 class FirebaseApi {
   final _firebaseMessaging = FirebaseMessaging.instance;

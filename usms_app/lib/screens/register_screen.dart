@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:usms_app/models/user_model.dart';
 import 'package:usms_app/services/user_service.dart';
-import 'package:usms_app/widget/custom_textFormField.dart';
+import 'package:usms_app/widget/custom_text_form_field.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({

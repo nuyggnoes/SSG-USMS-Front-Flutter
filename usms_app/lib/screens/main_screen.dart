@@ -7,7 +7,7 @@ import 'package:usms_app/models/store_model.dart';
 import 'package:usms_app/models/user_model.dart';
 
 import 'package:usms_app/screens/store_detail_screen.dart';
-import 'package:usms_app/services/show_dialog.dart';
+import 'package:usms_app/widget/custom_dialog.dart';
 import 'package:usms_app/services/store_service.dart';
 import 'package:usms_app/utils/store_provider.dart';
 import 'package:usms_app/utils/user_provider.dart';
@@ -202,10 +202,9 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                                     Store store = storeList[index];
                                     return Column(
                                       children: [
-                                        CurrencyCard(
+                                        StoreCard(
                                           name: store.name,
                                           code: store.storeState,
-                                          amount: '',
                                           icon: getRandomIconData(),
                                           selectedCardColors:
                                               Colors.blue.shade200,

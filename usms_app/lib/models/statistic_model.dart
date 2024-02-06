@@ -13,11 +13,6 @@ class StatisticModel {
     required this.behavior,
   });
 
-  // Map<String, dynamic> toJson() => {
-  //       'behavior': behaviorCodeList,
-  //       'startDate': startDate,
-  //       'endDate': endDate,
-  //     };
   factory StatisticModel.fromMap(Map<String, dynamic> map) {
     return StatisticModel(
       storeId: map['storeId'],

@@ -10,7 +10,7 @@ import 'package:usms_app/main.dart';
 import 'package:usms_app/models/user_model.dart';
 import 'package:usms_app/routes.dart';
 import 'package:usms_app/screens/register_screen.dart';
-import 'package:usms_app/services/show_dialog.dart';
+import 'package:usms_app/widget/custom_dialog.dart';
 import 'package:usms_app/utils/user_provider.dart';
 
 class UserService {
@@ -130,6 +130,13 @@ class UserService {
       );
       if (response.statusCode! ~/ 100 == 2) {
         // loggout
+        await storage.delete(key: 'auto_login');
+        await storage.delete(key: 'cookie');
+        await storage.delete(key: 'userInfo');
+        Future.microtask(() {
+          Navigator.pop(context);
+          Navigator.pop(context);
+        });
       }
     } on DioException catch (e) {
       if (e.response!.statusCode! ~/ 100 == 4) {
@@ -596,6 +603,4 @@ class UserService {
       }
     }
   }
-
-  static logout() {}
 }

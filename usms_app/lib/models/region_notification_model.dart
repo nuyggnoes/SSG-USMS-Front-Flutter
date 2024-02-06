@@ -15,11 +15,6 @@ class RegionNotification {
     required this.behaviorCode,
   });
 
-  // Map<String, dynamic> toJson() => {
-  //       'behaviorCode': behaviorCodeList,
-  //       'startDate': startDate,
-  //       'endDate': endDate,
-  //     };
   factory RegionNotification.fromMap(Map<String, dynamic> map) {
     return RegionNotification(
       region: map['region'],

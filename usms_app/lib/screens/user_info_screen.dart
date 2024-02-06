@@ -30,17 +30,6 @@ class _MyPageScreenState extends State<MyPageScreen> {
   Icon securityIcon = const Icon(Icons.gpp_bad_outlined);
   Color securityColor = Colors.grey;
 
-  logoutAction() async {
-    await storage.delete(key: 'auto_login');
-    await storage.delete(key: 'cookie');
-    await storage.delete(key: 'userInfo');
-
-    Future.microtask(() {
-      Navigator.pop(context);
-      Navigator.pop(context);
-    });
-  }
-
   @override
   void initState() {
     super.initState();
@@ -403,7 +392,7 @@ class _MyPageScreenState extends State<MyPageScreen> {
                                                   await UserService
                                                       .logoutAction(
                                                           context: context);
-                                                  logoutAction();
+                                                  // logoutAction();
                                                 },
                                                 style: ElevatedButton.styleFrom(
                                                   backgroundColor:

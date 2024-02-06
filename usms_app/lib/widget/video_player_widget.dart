@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:usms_app/models/cctv_model.dart';
 import 'package:usms_app/screens/cctv_replay_screen.dart';
 import 'package:usms_app/services/cctv_service.dart';
-import 'package:usms_app/services/show_dialog.dart';
+import 'package:usms_app/widget/custom_dialog.dart';
 
 class ChewieListItem extends StatelessWidget {
   final ChewieController? chewieController;

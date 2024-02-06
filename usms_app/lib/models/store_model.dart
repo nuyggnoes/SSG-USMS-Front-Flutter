@@ -21,15 +21,6 @@ class Store with ChangeNotifier {
     required this.storeState,
   });
 
-  Store.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
-        userId = json["userId"],
-        name = json['name'],
-        address = json['address'],
-        businessLicenseCode = json['businessLicenseCode'],
-        businessLicenseImgId = json['businessLicenseImgId'],
-        storeState = json['storeState'];
-
   Map<String, dynamic> toJson() => {
         'userId': userId,
         'name': name,

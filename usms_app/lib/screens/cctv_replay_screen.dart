@@ -1,6 +1,7 @@
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 
 import 'package:usms_app/models/cctv_model.dart';
@@ -202,12 +203,18 @@ Widget _buildVideoPlayer(String? videoUrl) {
     return FutureBuilder(
       future: _getVideoPlayer(videoUrl),
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: SpinKitWave(
+              color: Colors.blueAccent,
+            ),
+          );
+        } else if (snapshot.connectionState == ConnectionState.done) {
           return snapshot.data as Widget;
         } else if (snapshot.hasError) {
           return Text('에러 발생: ${snapshot.error}');
         } else {
-          return const CircularProgressIndicator();
+          return Container();
         }
       },
     );

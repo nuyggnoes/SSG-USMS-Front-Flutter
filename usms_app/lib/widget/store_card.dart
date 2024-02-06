@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class CurrencyCard extends StatelessWidget {
-  final String name, amount;
+class StoreCard extends StatelessWidget {
+  final String name;
   final IconData icon;
   final int code;
 
@@ -10,11 +10,10 @@ class CurrencyCard extends StatelessWidget {
   final Animation<double> opacityAnimation;
   final void Function()? onTapAction;
 
-  const CurrencyCard({
+  const StoreCard({
     super.key,
     required this.name,
     required this.code,
-    required this.amount,
     required this.icon,
     required this.selectedCardColors,
     required this.animationController,
@@ -102,13 +101,6 @@ class CurrencyCard extends StatelessWidget {
                               ),
                               Row(
                                 children: [
-                                  Text(
-                                    amount,
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 20,
-                                    ),
-                                  ),
                                   const SizedBox(
                                     width: 5,
                                   ),

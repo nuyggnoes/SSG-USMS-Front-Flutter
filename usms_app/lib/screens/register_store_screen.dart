@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:kpostal/kpostal.dart';
 import 'package:provider/provider.dart';
-import 'package:usms_app/services/show_dialog.dart';
+import 'package:usms_app/widget/custom_dialog.dart';
 import 'package:usms_app/services/store_service.dart';
 import 'package:usms_app/utils/user_provider.dart';
-import 'package:usms_app/widget/custom_textFormField.dart';
+import 'package:usms_app/widget/custom_text_form_field.dart';
 
 class RegisterStore extends StatefulWidget {
   const RegisterStore({

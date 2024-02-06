@@ -27,7 +27,6 @@ class RegisterStoreWidget extends StatelessWidget {
               width: MediaQuery.of(context).size.width * 0.8,
               height: 520,
               decoration: BoxDecoration(
-                // color: const Color.fromARGB(255, 170, 214, 211),
                 color: Colors.blue[300],
                 borderRadius: BorderRadius.circular(14),
               ),
@@ -66,7 +65,6 @@ class RegisterStoreWidget extends StatelessWidget {
                     child: Container(
                       width: double.infinity,
                       decoration: const BoxDecoration(
-                        // color: Color.fromARGB(255, 130, 186, 182),
                         color: Colors.blueAccent,
                         borderRadius: BorderRadius.only(
                           bottomLeft: Radius.circular(14),

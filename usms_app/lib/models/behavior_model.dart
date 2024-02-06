@@ -18,11 +18,6 @@ class StoreNotification {
     this.behaviorCode = -1,
   });
 
-  Map<String, dynamic> toJson() => {
-        'behaviorCode': behaviorCodeList,
-        'startDate': startDate,
-        'endDate': endDate,
-      };
   factory StoreNotification.fromMap(Map<String, dynamic> map) {
     return StoreNotification(
       id: map['id'],

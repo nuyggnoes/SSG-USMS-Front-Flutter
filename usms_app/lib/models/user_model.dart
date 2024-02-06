@@ -19,14 +19,6 @@ class User with ChangeNotifier {
     this.id,
   });
 
-  User.fromJson(Map<String, dynamic> json)
-      : username = json["username"],
-        password = json['password'],
-        nickname = json['nickname'],
-        email = json['email'],
-        phoneNumber = json['phoneNumber'],
-        securityLevel = json['securityLevel'];
-
   Map<String, dynamic> toJson() => {
         'username': username,
         'password': password,
