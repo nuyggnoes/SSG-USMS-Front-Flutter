@@ -53,7 +53,6 @@ class _SecurityLevelState extends State<SecurityLevel> {
                         security1 = Colors.grey;
                         security2 = Colors.grey;
                         descriptColor = security0;
-                        print(selectedIconIndex);
                       });
                     },
                     child: Column(
@@ -85,7 +84,6 @@ class _SecurityLevelState extends State<SecurityLevel> {
                         security1 = Colors.amber;
                         security2 = Colors.grey;
                         descriptColor = security1;
-                        print(selectedIconIndex);
                       });
                     },
                     child: Column(
@@ -117,8 +115,6 @@ class _SecurityLevelState extends State<SecurityLevel> {
                         security1 = Colors.grey;
                         security2 = Colors.green;
                         descriptColor = security2;
-                        print(selectedIconIndex);
-                        print(securityMap[selectedIconIndex]);
                       });
                     },
                     child: Column(
@@ -175,9 +171,7 @@ class _SecurityLevelState extends State<SecurityLevel> {
                 height: 20,
               ),
               ElevatedButton(
-                onPressed: () {
-                  print('btn clicked');
-                },
+                onPressed: () {},
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blueAccent,
                   minimumSize: const Size(350, 40),
@@ -197,17 +191,3 @@ class _SecurityLevelState extends State<SecurityLevel> {
     );
   }
 }
-/*MaterialApp(
-      title: 'Security Level',
-      theme: ThemeData(
-        textTheme: const TextTheme(
-          bodyMedium: TextStyle(
-            fontSize: 30,
-          ),
-        ),
-        iconTheme: const IconThemeData(
-          color: Colors.grey,
-          size: 100,
-        ),
-      ),
-      home:  */

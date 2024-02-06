@@ -35,12 +35,9 @@ class _LoginState extends State<Login> {
     userInfo = await storage.read(key: 'auto_login');
 
     if (userInfo != null) {
-      print("자동로그인!");
       if (mounted) {
         Navigator.pushNamed(context, Routes.home);
       }
-    } else {
-      print('로그인이 필요합니다');
     }
   }
 
@@ -51,7 +48,7 @@ class _LoginState extends State<Login> {
     super.dispose();
   }
 
-  bool _AutoLoginChecked = false;
+  bool autoLoginCheck = false;
 
   @override
   Widget build(BuildContext context) {
@@ -163,18 +160,9 @@ class _LoginState extends State<Login> {
                                   userService.loginAction(
                                     username: _idTextEditController.text,
                                     password: _passwordTextEditController.text,
-                                    autoLogin: _AutoLoginChecked,
+                                    autoLogin: autoLoginCheck,
                                     context: context,
                                   );
-
-                                  // if (await userService.loginAction(
-                                  //   username: _idTextEditController.text,
-                                  //   password: _passwordTextEditController.text,
-                                  //   autoLogin: _AutoLoginChecked,
-                                  //   context: context,
-                                  // )) {
-                                  //   Navigator.pushNamed(context, Routes.home);
-                                  // }
                                 }
                               },
                               style: ElevatedButton.styleFrom(
@@ -195,10 +183,10 @@ class _LoginState extends State<Login> {
                               Row(
                                 children: [
                                   Checkbox(
-                                    value: _AutoLoginChecked,
+                                    value: autoLoginCheck,
                                     onChanged: (value) {
                                       setState(() {
-                                        _AutoLoginChecked = value!;
+                                        autoLoginCheck = value!;
                                       });
                                     },
                                   ),

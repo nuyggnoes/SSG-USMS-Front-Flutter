@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:usms_app/models/behavior_model.dart';
@@ -26,9 +27,6 @@ class NotificationListScreen extends StatefulWidget {
 class _NotificationListScreenState extends State<NotificationListScreen>
     with TickerProviderStateMixin {
   late final TabController _tabController;
-  // final Future<List<WordModel>> words = WordJson.getWords();
-  // final Future<List<StoreNotification>> abnormalBehaviors =
-  //     CCTVService.getAllBehaviorsByStore();
   late Future<List<StoreNotification>?> _behaviorsFuture;
   late Future<List<RegionNotification>?> _regionFuture;
   late Map<String, bool> filterButtonStates;
@@ -117,7 +115,6 @@ class _NotificationListScreenState extends State<NotificationListScreen>
               TabBar(
                 onTap: (value) {
                   tabBarIndex = value;
-                  print(value);
                   setState(() {
                     filterButtonStates = {
                       '입실': false,
@@ -275,31 +272,6 @@ class _NotificationListScreenState extends State<NotificationListScreen>
                               _regionFuture = _fetchRegions();
                               setState(() {});
                             }
-                            print('paramList : $paramList');
-                            String startDateString;
-                            String endtDateString;
-                            startDateString =
-                                _startDate.toString().split(" ").first;
-                            endtDateString =
-                                _endDate.toString().split(" ").first;
-                            print('[SELECT DATE] : $_startDate ~ $_endDate');
-                            print(
-                                '[SELECT DATE] : $startDateString,$endtDateString');
-
-                            print('tabbarIndex = $tabBarIndex');
-                            if (tabBarIndex == 0) {
-                              for (var entry in filterButtonStates.entries) {
-                                if (entry.value == true) {
-                                  print('개인 알림 기록 Category: ${entry.key}');
-                                }
-                              }
-                            } else {
-                              for (var entry in filterButtonStates.entries) {
-                                if (entry.value == true) {
-                                  print('업주 긴급 알림 Category: ${entry.key}');
-                                }
-                              }
-                            }
                           },
                           child: const Text(
                             '조회',
@@ -311,21 +283,6 @@ class _NotificationListScreenState extends State<NotificationListScreen>
                     const SizedBox(
                       height: 20,
                     ),
-                    // SizedBox(
-                    //   height: 100,
-                    //   child: GridView.count(
-                    //     crossAxisCount: 4,
-                    //     mainAxisSpacing: 8,
-                    //     crossAxisSpacing: 8,
-                    //     shrinkWrap: true,
-                    //     childAspectRatio: 3 / 1,
-                    //     physics: const NeverScrollableScrollPhysics(),
-                    //     padding: const EdgeInsets.all(8.0),
-                    //     children: filterButtonStates.keys.map((String text) {
-                    //       return buildToggleButton(text);
-                    //     }).toList(),
-                    //   ),
-                    // ),
                   ],
                 ),
               ),
@@ -356,8 +313,14 @@ class _NotificationListScreenState extends State<NotificationListScreen>
                           child: FutureBuilder(
                             future: _behaviorsFuture,
                             builder: (context, snapshot) {
-                              if (snapshot.hasError) {
-                                print('snapshot error');
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const Center(
+                                  child: SpinKitWave(
+                                    color: Colors.blueAccent,
+                                  ),
+                                );
+                              } else if (snapshot.hasError) {
                                 return Center(
                                   child: Text(snapshot.error.toString()),
                                 );
@@ -386,7 +349,7 @@ class _NotificationListScreenState extends State<NotificationListScreen>
                                   shrinkWrap: true,
                                   padding: const EdgeInsets.symmetric(
                                       vertical: 10, horizontal: 20),
-                                  itemCount: snapshot.data!.length, // 36
+                                  itemCount: snapshot.data!.length,
                                   itemBuilder: (context, index) {
                                     var notification = snapshot.data![index];
                                     return Behavior(
@@ -411,29 +374,11 @@ class _NotificationListScreenState extends State<NotificationListScreen>
                     ),
                     Column(
                       children: [
-                        // SizedBox(
-                        //   height: 100,
-                        //   child: GridView.count(
-                        //     crossAxisCount: 4,
-                        //     mainAxisSpacing: 8,
-                        //     crossAxisSpacing: 8,
-                        //     shrinkWrap: true,
-                        //     childAspectRatio: 3 / 1,
-                        //     physics: const NeverScrollableScrollPhysics(),
-                        //     padding: const EdgeInsets.all(8.0),
-                        //     children: filterButtonStates.keys
-                        //         .skip(2)
-                        //         .map((String text) {
-                        //       return buildToggleButton(text);
-                        //     }).toList(),
-                        //   ),
-                        // ),
                         Expanded(
                           child: FutureBuilder(
                             future: _regionFuture,
                             builder: (context, snapshot) {
                               if (snapshot.hasError) {
-                                print('snapshot error');
                                 return Center(
                                   child: Text(snapshot.error.toString()),
                                 );
@@ -497,7 +442,6 @@ class _NotificationListScreenState extends State<NotificationListScreen>
       onTap: () {
         setState(() {
           filterButtonStates[buttonText] = !filterButtonStates[buttonText]!;
-          print('$buttonText 의 상태 : ${filterButtonStates[buttonText]}');
         });
       },
       child: Container(

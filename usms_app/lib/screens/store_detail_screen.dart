@@ -5,8 +5,6 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import 'package:provider/provider.dart';
 import 'package:usms_app/models/cctv_model.dart';
-import 'package:usms_app/models/store_model.dart';
-import 'package:usms_app/screens/cctv_replay_screen.dart';
 import 'package:usms_app/screens/no_cctv_screen.dart';
 
 import 'package:usms_app/routes.dart';
@@ -14,12 +12,12 @@ import 'package:usms_app/screens/notification_list_screen.dart';
 import 'package:usms_app/screens/statistic_screen.dart';
 
 import 'package:usms_app/services/cctv_service.dart';
-import 'package:usms_app/services/show_dialog.dart';
 import 'package:usms_app/services/store_service.dart';
 import 'package:usms_app/utils/user_provider.dart';
 
 import 'package:usms_app/widget/custom_info_button.dart';
 import 'package:usms_app/widget/custom_textFormField.dart';
+import 'package:usms_app/widget/video_player_widget.dart';
 import 'package:video_player/video_player.dart';
 
 class StoreDetail extends StatefulWidget {
@@ -60,8 +58,6 @@ class _StoreDetailState extends State<StoreDetail> {
   Future<ChewieController?> setController(CCTV cctv) async {
     var session = await storage.read(key: 'cookie');
     if (cctv.isConnected) {
-      print('isConnected true');
-
       var videoController = VideoPlayerController.networkUrl(
         Uri.parse(
           'https://usms.serveftp.com/video/hls/live/${cctv.cctvStreamKey}/index.m3u8',
@@ -74,17 +70,13 @@ class _StoreDetailState extends State<StoreDetail> {
       );
 
       if (!videoController.value.isInitialized) {
-        print('비디오 초기화 전');
         return await videoController.initialize().then((value) {
           videoList.add(videoController);
-          print('videoList : $videoList');
           var chewieController = ChewieController(
             videoPlayerController: videoController,
             autoPlay: true,
             aspectRatio: 16 / 9,
           );
-          print(chewieController);
-          print('비디오 초기화 완료');
           return chewieController;
         });
       }
@@ -95,12 +87,8 @@ class _StoreDetailState extends State<StoreDetail> {
   }
 
   Future<List<ChewieController?>> setControllers(List<CCTV> cctvList) async {
-    print('setControllers');
-    print('cctvList : $cctvList');
-
     for (CCTV cctv in cctvList) {
       ChewieController? controller = await setController(cctv);
-      print('${cctv.cctvName} controller : $controller');
       chewieList.add(controller);
     }
     return chewieList;
@@ -108,9 +96,7 @@ class _StoreDetailState extends State<StoreDetail> {
 
   @override
   void dispose() {
-    print('dispose()');
     for (var i = 0; i < chewieList.length; i++) {
-      print('dispose for()');
       if (chewieList[i] != null) {
         videoList[i].dispose();
         chewieList[i]!.dispose();
@@ -137,6 +123,7 @@ class _StoreDetailState extends State<StoreDetail> {
   @override
   Widget build(BuildContext context) {
     chewieList = [];
+    // ignore: unused_local_variable
     var height = 300.0;
 
     return Scaffold(
@@ -209,22 +196,6 @@ class _StoreDetailState extends State<StoreDetail> {
                             ),
                           ),
                         ),
-                        // TextButton(
-                        //   child: const Text('확인'),
-                        //   onPressed: () {
-                        //     if (_formKey.currentState?.validate() ?? false) {
-                        //       cctvService.registerCCTV(
-                        //         context: context,
-                        //         storeId: widget.storeId,
-                        //         uid: Provider.of<UserProvider>(context,
-                        //                 listen: false)
-                        //             .user
-                        //             .id!,
-                        //         name: cctvNameController.text,
-                        //       );
-                        //     }
-                        //   },
-                        // )
                       ],
                     );
                   });
@@ -273,16 +244,14 @@ class _StoreDetailState extends State<StoreDetail> {
                               ),
                             );
                           } else if (snapshot.hasError) {
-                            print('컨트롤러 에러 발생: ${snapshot.error}');
-                            return (Text('컨트롤러 에러 발생: ${snapshot.error}'));
-
-                            // return Text('컨트롤러 에러발생 : ${snapshot.error}');
+                            return const Center(
+                              child: Text(
+                                '연결에 실패하였습니다. \n스트리밍 URL을 다시 한 번 확인해주세요',
+                              ),
+                            );
                           } else if (snapshot.hasData) {
-                            print('snapshot : ${snapshot.data}');
                             List<ChewieController?> chewieControllers =
                                 snapshot.data ?? [];
-                            print('chewieControllerList : $chewieControllers');
-
                             return SizedBox(
                               height: 600,
                               child: ListView.separated(
@@ -493,242 +462,156 @@ class _StoreDetailState extends State<StoreDetail> {
   }
 }
 
-class ChewieListItem extends StatelessWidget {
-  final ChewieController? chewieController;
-  final int index;
-  final String routes;
-  final CCTV cctv;
-  final int uid;
-  final int storeId;
+// class ChewieListItem extends StatelessWidget {
+//   final ChewieController? chewieController;
+//   final int index;
+//   final String routes;
+//   final CCTV cctv;
+//   final int uid;
+//   final int storeId;
 
-  const ChewieListItem({
-    super.key,
-    required this.chewieController,
-    required this.index,
-    required this.routes,
-    required this.cctv,
-    required this.uid,
-    required this.storeId,
-  });
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: SizedBox(
-        height: 300,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            cctv.isConnected && chewieController != null
-                ? FutureBuilder(
-                    future:
-                        chewieController!.videoPlayerController.initialize(),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const SizedBox(
-                          height: 220,
-                          width: double.infinity,
-                          child: Center(child: CircularProgressIndicator()),
-                        );
-                      } else if (snapshot.hasError) {
-                        return const SizedBox(
-                          height: 220,
-                          width: double.infinity,
-                          child: Center(child: Text('동영상을 불러오지 못했습니다.')),
-                        );
-                      } else {
-                        return SizedBox(
-                          height: 220,
-                          width: double.infinity,
-                          child: Chewie(controller: chewieController!),
-                        );
-                      }
-                    },
-                  )
-                : const SizedBox(
-                    height: 220,
-                    width: double.infinity,
-                    child: Center(
-                      child: Text('동영상이 연결되어있지 않습니다.'),
-                    ),
-                  ),
-            Padding(
-              padding: const EdgeInsets.all(12),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    cctv.cctvName,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  Row(
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  title: const Text('CCTV 삭제'),
-                                  content: const Text('CCTV를 삭제하시겠습니까?'),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      child: const Text(
-                                        '취소',
-                                        style:
-                                            TextStyle(color: Colors.blueAccent),
-                                      ),
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                    ),
-                                    ElevatedButton(
-                                      onPressed: () async {
-                                        await CCTVService.deleteCCTV(
-                                            context: context,
-                                            uid: uid,
-                                            storeId: storeId,
-                                            cctvId: cctv.cctvId);
-                                      },
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.blueAccent,
-                                      ),
-                                      child: const Text(
-                                        '확인',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w900,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                );
-                              });
-                          // CCTVService.deleteCCTV(
-                          //     context: context,
-                          //     uid: uid,
-                          //     storeId: storeId,
-                          //     cctvId: cctv.cctvId);
-                        },
-                        icon: const Icon(Icons.delete),
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => CCTVReplay(
-                                  cctv: cctv, userId: uid, storeId: storeId),
-                            ),
-                          );
-                        },
-                        icon: const Icon(Icons.replay),
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          Future.microtask(() {
-                            customShowDialog(
-                                context: context,
-                                btnText: '복사하기',
-                                title: 'CCTV Stream Key값',
-                                message: cctv.cctvStreamKey,
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                });
-                          });
-                        },
-                        icon: const Icon(Icons.key),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-
-  // @override
-  // Widget build(BuildContext context) {
-  //   return Card(
-  //     child: SizedBox(
-  //       height: 300,
-  //       child: Column(
-  //         mainAxisAlignment: MainAxisAlignment.spaceAround,
-  //         children: [
-  //           cctv.isConnected && chewieController != null
-  //               ? SizedBox(
-  //                   height: 220,
-  //                   width: double.infinity,
-  //                   child: Chewie(controller: chewieController!),
-  //                 )
-  //               : const SizedBox(
-  //                   height: 220,
-  //                   width: double.infinity,
-  //                   child: Center(
-  //                     child: Text('동영상이 연결되어있지 않습니다.'),
-  //                   ),
-  //                 ),
-  //           Padding(
-  //             padding: const EdgeInsets.all(12),
-  //             child: Row(
-  //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //               children: [
-  //                 Text(
-  //                   cctv.cctvName,
-  //                   style: const TextStyle(
-  //                     fontWeight: FontWeight.w700,
-  //                   ),
-  //                 ),
-  //                 Row(
-  //                   children: [
-  //                     IconButton(
-  //                       onPressed: () {
-  //                         CCTVService.deleteCCTV(
-  //                             context: context,
-  //                             uid: uid,
-  //                             storeId: storeId,
-  //                             cctvId: cctv.cctvId);
-  //                       },
-  //                       icon: const Icon(Icons.delete),
-  //                     ),
-  //                     IconButton(
-  //                       onPressed: () {
-  //                         Navigator.pushReplacement(
-  //                           context,
-  //                           MaterialPageRoute(
-  //                             builder: (context) => CCTVReplay(
-  //                                 cctv: cctv, userId: uid, storeId: storeId),
-  //                           ),
-  //                         );
-  //                       },
-  //                       icon: const Icon(Icons.replay),
-  //                     ),
-  //                     IconButton(
-  //                       onPressed: () {
-  //                         Future.microtask(() {
-  //                           customShowDialog(
-  //                               context: context,
-  //                               title: 'CCTV Stream Key값',
-  //                               message: cctv.cctvStreamKey,
-  //                               onPressed: () {
-  //                                 Navigator.pop(context);
-  //                               });
-  //                         });
-  //                       },
-  //                       icon: const Icon(Icons.key),
-  //                     ),
-  //                   ],
-  //                 ),
-  //               ],
-  //             ),
-  //           )
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
-}
+//   const ChewieListItem({
+//     super.key,
+//     required this.chewieController,
+//     required this.index,
+//     required this.routes,
+//     required this.cctv,
+//     required this.uid,
+//     required this.storeId,
+//   });
+//   @override
+//   Widget build(BuildContext context) {
+//     return Card(
+//       child: SizedBox(
+//         height: 300,
+//         child: Column(
+//           mainAxisAlignment: MainAxisAlignment.spaceAround,
+//           children: [
+//             cctv.isConnected && chewieController != null
+//                 ? FutureBuilder(
+//                     future:
+//                         chewieController!.videoPlayerController.initialize(),
+//                     builder: (context, snapshot) {
+//                       if (snapshot.connectionState == ConnectionState.waiting) {
+//                         return const SizedBox(
+//                           height: 220,
+//                           width: double.infinity,
+//                           child: Center(child: CircularProgressIndicator()),
+//                         );
+//                       } else if (snapshot.hasError) {
+//                         return const SizedBox(
+//                           height: 220,
+//                           width: double.infinity,
+//                           child: Center(child: Text('동영상을 불러오지 못했습니다.')),
+//                         );
+//                       } else {
+//                         return SizedBox(
+//                           height: 220,
+//                           width: double.infinity,
+//                           child: Chewie(controller: chewieController!),
+//                         );
+//                       }
+//                     },
+//                   )
+//                 : const SizedBox(
+//                     height: 220,
+//                     width: double.infinity,
+//                     child: Center(
+//                       child: Text('동영상이 연결되어있지 않습니다.'),
+//                     ),
+//                   ),
+//             Padding(
+//               padding: const EdgeInsets.all(12),
+//               child: Row(
+//                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                 children: [
+//                   Text(
+//                     cctv.cctvName,
+//                     style: const TextStyle(
+//                       fontWeight: FontWeight.w700,
+//                     ),
+//                   ),
+//                   Row(
+//                     children: [
+//                       IconButton(
+//                         onPressed: () {
+//                           showDialog(
+//                               context: context,
+//                               builder: (context) {
+//                                 return AlertDialog(
+//                                   title: const Text('CCTV 삭제'),
+//                                   content: const Text('CCTV를 삭제하시겠습니까?'),
+//                                   actions: <Widget>[
+//                                     TextButton(
+//                                       child: const Text(
+//                                         '취소',
+//                                         style:
+//                                             TextStyle(color: Colors.blueAccent),
+//                                       ),
+//                                       onPressed: () {
+//                                         Navigator.pop(context);
+//                                       },
+//                                     ),
+//                                     ElevatedButton(
+//                                       onPressed: () async {
+//                                         await CCTVService.deleteCCTV(
+//                                             context: context,
+//                                             uid: uid,
+//                                             storeId: storeId,
+//                                             cctvId: cctv.cctvId);
+//                                       },
+//                                       style: ElevatedButton.styleFrom(
+//                                         backgroundColor: Colors.blueAccent,
+//                                       ),
+//                                       child: const Text(
+//                                         '확인',
+//                                         style: TextStyle(
+//                                           color: Colors.white,
+//                                           fontWeight: FontWeight.w900,
+//                                         ),
+//                                       ),
+//                                     ),
+//                                   ],
+//                                 );
+//                               });
+//                         },
+//                         icon: const Icon(Icons.delete),
+//                       ),
+//                       IconButton(
+//                         onPressed: () {
+//                           Navigator.pushReplacement(
+//                             context,
+//                             MaterialPageRoute(
+//                               builder: (context) => CCTVReplay(
+//                                   cctv: cctv, userId: uid, storeId: storeId),
+//                             ),
+//                           );
+//                         },
+//                         icon: const Icon(Icons.replay),
+//                       ),
+//                       IconButton(
+//                         onPressed: () {
+//                           Future.microtask(() {
+//                             customShowDialog(
+//                                 context: context,
+//                                 btnText: '복사하기',
+//                                 title: 'CCTV Stream Key값',
+//                                 message: cctv.cctvStreamKey,
+//                                 onPressed: () {
+//                                   Navigator.pop(context);
+//                                 });
+//                           });
+//                         },
+//                         icon: const Icon(Icons.key),
+//                       ),
+//                     ],
+//                   ),
+//                 ],
+//               ),
+//             )
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }

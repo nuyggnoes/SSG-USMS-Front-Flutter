@@ -13,28 +13,10 @@ class PayInfoScreen extends StatelessWidget {
           icon: const Icon(Icons.arrow_back_ios_new_rounded),
         ),
       ),
-      body: SafeArea(
+      body: const SafeArea(
         child: SingleChildScrollView(
           child: Center(
-            child: Column(
-              children: [
-                Container(
-                  decoration: const BoxDecoration(color: Colors.grey),
-                  height: 400, // 아이폰 15pro
-                  width: MediaQuery.of(context).size.width * 0.9,
-                ),
-                Container(
-                  decoration: const BoxDecoration(color: Colors.amber),
-                  height: 400,
-                  width: MediaQuery.of(context).size.width * 0.9,
-                ),
-                Container(
-                  decoration: const BoxDecoration(color: Colors.green),
-                  height: 400,
-                  width: MediaQuery.of(context).size.width * 0.9,
-                ),
-              ],
-            ),
+            child: Text('유저의 결제 정보'),
           ),
         ),
       ),

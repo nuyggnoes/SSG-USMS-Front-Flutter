@@ -34,13 +34,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         setState(() {
           widgetOptions = <Widget>[
             const MainScreen(),
-            // const NotificationListScreen(
-            //   storeId: 30,
-            // ),
-            // const StatisticScreen(
-            //   storeId: 1,
-            //   uid: 1,
-            // ),
             const MyPageScreen(),
           ];
           user = value;
@@ -49,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         });
       });
     } catch (e) {
-      print("Error in initState: $e");
+      //error
     }
   }
 
@@ -87,14 +80,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               icon: Icon(Icons.home_outlined),
               label: '홈',
             ),
-            // BottomNavigationBarItem(
-            //   icon: Icon(Icons.notifications_sharp),
-            //   label: '알림',
-            // ),
-            // BottomNavigationBarItem(
-            //   icon: Icon(Icons.bar_chart_rounded),
-            //   label: '통계',
-            // ),
             BottomNavigationBarItem(
               icon: Icon(Icons.person),
               label: '내 정보',

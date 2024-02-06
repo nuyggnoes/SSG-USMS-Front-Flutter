@@ -142,7 +142,6 @@ class _RegisterStoreState extends State<RegisterStore> {
               onPressed: () {
                 setState(() {
                   filePath = null;
-                  // filePaths.removeAt(index);
                   fileList.removeAt(index);
                 });
               },
@@ -385,7 +384,6 @@ class _RegisterStoreState extends State<RegisterStore> {
                       width: MediaQuery.of(context).size.width * 0.7,
                       child: ElevatedButton(
                         onPressed: () async {
-                          // if (_formKey.currentState?.validate() ?? false) {
                           if (_formKey.currentState!.validate() == true) {
                             showDialog(
                               context: context,
@@ -409,22 +407,6 @@ class _RegisterStoreState extends State<RegisterStore> {
                                     .user
                                     .id!,
                                 context: context);
-
-                            // Get.showOverlay(
-                            //   asyncFunction: () => storeService.requestStore(
-                            //       formData: formData,
-                            //       uid: Provider.of<UserProvider>(context,
-                            //               listen: false)
-                            //           .user
-                            //           .id!,
-                            //       context: context),
-                            //   loadingWidget: Container(
-                            //     color: Colors.blueAccent,
-                            //     alignment: Alignment.center,
-                            //     child:
-                            //         const SpinKitWave(color: Colors.blueAccent),
-                            //   ),
-                            // );
                           }
                         },
                         style: ElevatedButton.styleFrom(
@@ -477,13 +459,6 @@ class _RegisterStoreState extends State<RegisterStore> {
                         Navigator.pop(context);
                       });
             },
-            // child: const Text(
-            //   '파일선택',
-            //   style: TextStyle(
-            //     color: Colors.black,
-            //     fontSize: 12,
-            //   ),
-            // ),
             child: Icon(
               Icons.upload_file_rounded,
               color: Colors.black.withOpacity(0.5),

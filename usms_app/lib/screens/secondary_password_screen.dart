@@ -34,10 +34,7 @@ class _SecondaryPasswordScreenState extends State<SecondaryPasswordScreen> {
     secondaryPassword = '';
   }
 
-  onConfirmClicked() {
-    print('ConfirmButton Clicked');
-    print('2차 비밀번호는 $secondaryPassword');
-  }
+  onConfirmClicked() {}
 
   onNumberPress(val) {
     setState(() {

@@ -1,14 +1,8 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:provider/provider.dart';
-
 import 'package:usms_app/models/user_model.dart';
-
 import 'package:usms_app/services/user_service.dart';
-import 'package:usms_app/utils/user_provider.dart';
-
 import 'package:usms_app/widget/custom_textFormField.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -97,14 +91,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // if (widget.routeCode == true && widget.flag != null) {
-    //   _phoneTextEditController.text = widget.flag! ? widget.data : '';
-    //   _emailTextEditController.text = widget.flag! ? '' : widget.data;
-    //   buttonName = '회원가입';
-    // } else if (widget.routeCode == false && widget.flag == null) {
-    //   getUserInfo();
-    //   buttonName = '수정';
-    // }
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -279,7 +265,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   });
                             }
                           }
-                          // FlutterLocalNotification.showNotification();
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.blueAccent,

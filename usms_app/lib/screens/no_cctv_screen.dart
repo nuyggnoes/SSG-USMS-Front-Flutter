@@ -8,7 +8,6 @@ class NoCCTV extends StatefulWidget {
 }
 
 class _NoCCTVState extends State<NoCCTV> {
-  final _formKey = GlobalKey<FormState>();
   final cctvNameController = TextEditingController();
 
   @override
@@ -23,11 +22,9 @@ class _NoCCTVState extends State<NoCCTV> {
           children: [
             Image.asset(
               'assets/cctv_img.png',
-              // width: double.infinity,
               scale: 5,
             ),
             const Column(
-              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   '현재 매장에 등록된 CCTV가 존재하지 않습니다.',
@@ -48,51 +45,6 @@ class _NoCCTVState extends State<NoCCTV> {
                 ),
               ],
             ),
-            // ExpansionTile(
-            //   title: const Text('CCTV 추가하기'),
-            //   children: [
-            //     SizedBox(
-            //       width: double.infinity,
-            //       height: 100,
-            //       child: AdSlider(),
-            //     ),
-            //     Form(
-            //       key: _formKey,
-            //       child: Column(
-            //         children: [
-            //           CustomTextFormField(
-            //             textController: cctvNameController,
-            //             textType: TextInputType.text,
-            //             labelText: 'CCTV 별칭',
-            //             validator: (value) {
-            //               if (value!.isEmpty) {
-            //                 return 'CCTV 별칭을 입력해주세요.';
-            //               }
-            //               return null;
-            //             },
-            //           ),
-            //           ElevatedButton(
-            //             onPressed: () {
-            //               if (_formKey.currentState?.validate() ?? false) {
-            //                 print('빈칸 없음');
-            //               }
-            //             },
-            //             style: ElevatedButton.styleFrom(
-            //               backgroundColor: Colors.blueAccent,
-            //             ),
-            //             child: const Text(
-            //               'CCTV 추가하기',
-            //               style: TextStyle(
-            //                 color: Colors.white,
-            //                 fontWeight: FontWeight.w900,
-            //               ),
-            //             ),
-            //           ),
-            //         ],
-            //       ),
-            //     ),
-            //   ],
-            // ),
           ],
         ),
       ),

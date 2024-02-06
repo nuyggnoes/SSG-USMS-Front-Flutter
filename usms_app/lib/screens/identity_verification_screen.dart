@@ -1,16 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-
-//screen
-
 import 'package:usms_app/services/user_service.dart';
 
-/* 
-  - 아이디 찾기
-  - 비밀번호 찾기(수정) ?
-  - 회원가입
-  - 회원정보 수정 ?
- */
 class VerificationScreen extends StatefulWidget {
   const VerificationScreen({super.key, required this.flagId});
   final int flagId;
@@ -34,8 +24,6 @@ class _VerificationScreenState extends State<VerificationScreen>
   final _emailFormKey = GlobalKey<FormState>();
 
   final _focusNode = FocusNode();
-
-  static const storage = FlutterSecureStorage();
 
   @override
   void initState() {
@@ -76,14 +64,12 @@ class _VerificationScreenState extends State<VerificationScreen>
                   phoneVerfication = false;
                   emailVerification = false;
                   methodState = !methodState;
-                  print('methodState : $methodState');
                 });
               },
               controller: _tabController,
               indicatorColor: Colors.blueAccent,
               labelColor: Colors.blueAccent,
               unselectedLabelColor: Colors.black54,
-              // isScrollable: true,
               tabs: const <Widget>[
                 Tab(
                   text: "휴대폰 인증",
@@ -217,33 +203,11 @@ class _VerificationScreenState extends State<VerificationScreen>
                   onPressed: () async {
                     if (formKey.currentState?.validate() ?? false) {
                       formKey.currentState!.save();
-                      // if (await getVerificationNumber(
-                      //     code, _authenticationMethod)) {
-                      //   // _showDialog('', '인증번호가 전송되었습니다.');
-                      //   _focusNode.requestFocus();
-                      //   updateVerification(true);
-                      // }
-                      // showDialog(
-                      //   context: context,
-                      //   barrierDismissible: false,
-                      //   builder: (context) => const AlertDialog(
-                      //     content: Column(
-                      //       mainAxisSize: MainAxisSize.min,
-                      //       children: [
-                      //         SpinKitWave(
-                      //           color: Colors.blueAccent,
-                      //           duration: Duration(milliseconds: 1000),
-                      //         ),
-                      //       ],
-                      //     ),
-                      //   ),
-                      // );
                       if (await userService.getVerificationNumber(
                         code: code,
                         value: _authenticationMethod,
                         context: context,
                       )) {
-                        // _showDialog('', '인증번호가 전송되었습니다.');
                         _focusNode.requestFocus();
                         updateVerification(true);
                       }
@@ -319,9 +283,6 @@ class _VerificationScreenState extends State<VerificationScreen>
                         onPressed: () {
                           if (codeForm.currentState?.validate() ?? false) {
                             codeForm.currentState!.save();
-                            // requestVerification(_code);
-                            // JWT 토큰으로 유저정보(아이디)를 가져오는데
-                            // email이 중복 가능이면 유저정보를 List로 가져와야함
                             userService.requestVerification(
                               context: context,
                               data: _authenticationMethod,

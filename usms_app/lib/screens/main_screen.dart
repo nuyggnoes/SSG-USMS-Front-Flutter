@@ -175,47 +175,12 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                                   ConnectionState.done &&
                               snapshot.hasData &&
                               snapshot.data != null) {
-                            return const SizedBox(
-                                // height:
-                                //     listViewHeightCalculation(storeList.length),
-                                // child: ListView.builder(
-                                //   shrinkWrap: true,
-                                //   padding:
-                                //       const EdgeInsets.symmetric(vertical: 30),
-                                //   itemCount: storeList.length,
-                                //   itemBuilder: (context, index) {
-                                //     height = height * storeList.length;
-                                //     Store store = storeList[index];
-                                //     return Column(
-                                //       children: [
-                                //         CurrencyCard(
-                                //           name: store.name,
-                                //           code: store.storeState,
-                                //           amount: '',
-                                //           icon:
-                                //               Icons.store_mall_directory_rounded,
-                                //           selectedCardColors: getRandomColor(),
-                                //           animationController:
-                                //               _animationController,
-                                //           opacityAnimation: _opacityAnimation,
-                                //           onTapAction: () {
-                                //             checkStoreState(store.id!);
-                                //           },
-                                //         ),
-                                //         const SizedBox(
-                                //           height: 20,
-                                //         ),
-                                //       ],
-                                //     );
-                                //   },
-                                // ),
-                                );
+                            return const SizedBox();
                           } else {
                             return Container();
                           }
                         }),
                       ),
-                      //================================================================
                       Consumer<StoreProvider>(
                         builder: (context, storeProvider, _) {
                           List<Store> storeList = storeProvider.storeList;
@@ -241,7 +206,6 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                                           name: store.name,
                                           code: store.storeState,
                                           amount: '',
-                                          // icon: Icons.store_mall_directory_rounded,
                                           icon: getRandomIconData(),
                                           selectedCardColors:
                                               Colors.blue.shade200,

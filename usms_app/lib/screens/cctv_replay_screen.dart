@@ -24,14 +24,11 @@ class CCTVReplay extends StatefulWidget {
 
 class CCTVReplayState extends State<CCTVReplay> {
   static late Future<List<dynamic>> cctvReplayUrlList;
-  DateTime selectedDate = DateTime.now();
-  // static List<VideoPlayerController> videoList = [];
   static late List<ChewieController?> chewieControllers;
   static late List<VideoPlayerController?> videoControllers;
   static List<dynamic> testList = [];
-
-  // final List<Item> data = generateItems(24);
   late List<Item> data;
+  DateTime selectedDate = DateTime.now();
 
   @override
   initState() {
@@ -43,17 +40,8 @@ class CCTVReplayState extends State<CCTVReplay> {
   }
 
   @override
-  void didChangeDependencies() {
-    print('==============didChangeDenpendecies==================');
-    // data = generateItems(testList.length);
-    super.didChangeDependencies();
-  }
-
-  @override
   void dispose() {
-    print('dispose()');
     for (var i = 0; i < videoControllers.length; i++) {
-      print('dispose for()');
       if (videoControllers[i] != null) {
         videoControllers[i]!.dispose();
       }
@@ -79,14 +67,10 @@ class CCTVReplayState extends State<CCTVReplay> {
         date: selectedDate,
         cctv: widget.cctv,
       );
-      print('getAllCCTVReplay Return [$returnValues]');
-
       setState(() {
         cctvReplayUrlList = Future.value(returnValues);
       });
       testList = await cctvReplayUrlList;
-      print(testList[0]);
-      print(testList.length);
     } catch (e) {
       print('[ERR] $e');
     }
@@ -95,8 +79,6 @@ class CCTVReplayState extends State<CCTVReplay> {
   @override
   Widget build(BuildContext context) {
     data = generateItems(testList.length);
-    print('chewie 길이 : ${CCTVReplayState.chewieControllers.length}');
-    print('video 길이 : ${CCTVReplayState.videoControllers.length}');
 
     return Scaffold(
       appBar: AppBar(
@@ -164,8 +146,6 @@ class Item {
 
 List<Item> generateItems(int numberOfItems) {
   List<String?> replayUrl = [];
-
-  print('testList 길이 : ${CCTVReplayState.testList.length}');
   for (int i = 0; i < CCTVReplayState.testList.length; i++) {
     replayUrl.add(CCTVReplayState.testList[i]);
   }
@@ -179,7 +159,6 @@ List<Item> generateItems(int numberOfItems) {
       replayTimestamp = int.parse(tmp.split('.').first);
       var replayTime =
           DateTime.fromMillisecondsSinceEpoch(replayTimestamp * 1000);
-      print(replayTime.toString());
       formattedDate = DateFormat('yyyy년 M월 d일 HH시 mm분').format(replayTime);
     }
 
@@ -193,7 +172,6 @@ List<Item> generateItems(int numberOfItems) {
 }
 
 Future<Widget> _getVideoPlayer(String videoUrl) async {
-  print(videoUrl);
   String? session;
   var streamKey = videoUrl.split('-').take(5).join('-');
 

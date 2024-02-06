@@ -8,7 +8,6 @@ import 'package:usms_app/services/user_service.dart';
 import 'package:usms_app/utils/store_provider.dart';
 import 'package:usms_app/utils/user_provider.dart';
 import 'package:usms_app/widget/custom_info_button.dart';
-import 'package:usms_app/widget/show_dialog.dart';
 
 class MyPageScreen extends StatefulWidget {
   const MyPageScreen({super.key});
@@ -222,8 +221,6 @@ class _MyPageScreenState extends State<MyPageScreen> {
                                 InkWell(
                                   onTapDown: (details) {},
                                   onTap: () {
-                                    print(
-                                        '${Provider.of<UserProvider>(context, listen: false).user.nickname} / ${Provider.of<UserProvider>(context, listen: false).user.phoneNumber}');
                                     showDialog(
                                         context: context,
                                         builder: (context) {

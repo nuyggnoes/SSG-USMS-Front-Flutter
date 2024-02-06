@@ -6,7 +6,8 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'package:usms_app/main.dart';
-import 'package:usms_app/screens/notification_screen.dart';
+import 'package:usms_app/routes.dart';
+// import 'package:usms_app/screens/notification_screen.dart';
 
 Future<void> backgroundMessageHandler(RemoteMessage message) async {
   print("=================앱이 백그라운드에서 실행 중==================");
@@ -32,7 +33,7 @@ class FirebaseApi {
   void handleMessage(RemoteMessage? message) {
     if (message == null) return;
     navigatorKey.currentState?.pushNamed(
-      NotificationScreen.route,
+      Routes.storeNotification,
       arguments: message,
     );
   }
@@ -42,7 +43,7 @@ class FirebaseApi {
     const android = AndroidInitializationSettings('@drawable/ic_launcher');
     const settins = InitializationSettings(android: android, iOS: iOS);
 
-    // FCM을 통해 받은 message를 여기서 Local_notification으로 생성하는 느낌?
+    // FCM을 통해 받은 message를 여기서 Local_notification으로 생성하는 느낌
     await _localNotifications.initialize(settins,
         onSelectNotification: (payload) {
       final message = RemoteMessage.fromMap(jsonDecode(payload!));
@@ -95,9 +96,6 @@ class FirebaseApi {
         // 알림과 연결된 데이터를 전달하기 위한 payload(여기서는 FCM메시지를 JSON으로 인코딩하여 전달)
         payload: jsonEncode(message.toMap()),
       );
-      print('채널 아이디 : ${_androidChannel.id}');
-      print('채널 이름 : ${_androidChannel.name}');
-      print(jsonEncode(message.toMap()));
     });
   }
 
@@ -107,8 +105,7 @@ class FirebaseApi {
     final fcmToken = await _firebaseMessaging.getToken();
     FlutterSecureStorage storage = const FlutterSecureStorage();
     storage.write(key: 'token', value: fcmToken);
-    // 여기서 받은 토큰을 백엔드 서버로 전송
-    // 채널 아이디와 채널 이름도 같이 전송??
+    // 여기서 저장한 토큰을 로그인 시 백엔드 서버로 전송
     print('My Token : $fcmToken');
     initPushNotifications();
     initLocalNotifications();
